@@ -146,7 +146,7 @@ namespace RTCV.Launcher
             // pnTopPanel
             // 
             this.pnTopPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
-            this.pnTopPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pnTopPanel.BackgroundImage")));
+            this.pnTopPanel.BackgroundImage = global::RTCV.Launcher.Properties.Resources.LauncherBack;
             this.pnTopPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pnTopPanel.Controls.Add(this.btnTutorials);
             this.pnTopPanel.Controls.Add(this.btnDiscord);
