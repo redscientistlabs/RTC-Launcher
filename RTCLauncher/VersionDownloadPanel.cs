@@ -1,5 +1,3 @@
-using RTCV.Launcher.Components;
-
 namespace RTCV.Launcher
 {
     using System;
@@ -11,6 +9,7 @@ namespace RTCV.Launcher
     using System.Text;
     using System.Threading.Tasks;
     using System.Windows.Forms;
+    using RTCV.Launcher.Components;
 
     public partial class VersionDownloadPanel : Form
     {
@@ -82,7 +81,7 @@ namespace RTCV.Launcher
 
                             var key = onlineVersions[i];
 
-                            onlineVersionsObjects.Add(new {key = key, value = value});
+                            onlineVersionsObjects.Add(new { key = key, value = value });
                         }
                     }
 

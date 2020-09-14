@@ -1,5 +1,3 @@
-using RTCV.Launcher.Components;
-
 namespace RTCV.Launcher
 {
     using System;
@@ -9,6 +7,7 @@ namespace RTCV.Launcher
     using System.IO;
     using System.Linq;
     using System.Windows.Forms;
+    using RTCV.Launcher.Components;
 
     public partial class LaunchPanelV2 : Form
     {

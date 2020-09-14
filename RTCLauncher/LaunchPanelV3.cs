@@ -1,5 +1,3 @@
-using RTCV.Launcher.Components;
-
 namespace RTCV.Launcher
 {
     using System;
@@ -11,6 +9,7 @@ namespace RTCV.Launcher
     using System.IO.Compression;
     using System.Linq;
     using System.Windows.Forms;
+    using RTCV.Launcher.Components;
 
     #pragma warning disable CA2213 //Component designer classes generate their own Dispose method
     public partial class LaunchPanelV3 : Form
@@ -92,7 +91,7 @@ namespace RTCV.Launcher
                     {
                         if (e.Button == MouseButtons.Right)
                         {
-                            Point locate = new Point(((Control) sender).Location.X + e.Location.X, ((Control) sender).Location.Y + e.Location.Y);
+                            Point locate = new Point(((Control)sender).Location.X + e.Location.X, ((Control)sender).Location.Y + e.Location.Y);
 
                             var columnsMenu = new Components.BuildContextMenu();
                             columnsMenu.Items.Add("Delete Addon", null, (ob, ev) => { DeleteAddon(lcji); }).Enabled = (lcji.IsAddon || AddonInstalled);
