@@ -52,7 +52,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>rtcpastel.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\rtcpastel.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -195,7 +195,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\youtube.png" />
-    <Content Include="rtcpastel.ico" />
+    <Content Include="Resources\rtcpastel.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Costura.Fody">
