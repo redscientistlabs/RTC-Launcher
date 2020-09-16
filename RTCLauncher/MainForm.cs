@@ -14,6 +14,7 @@ namespace RTCV.Launcher
     using System.Windows.Forms;
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
+    using System.Reflection;
 
     public partial class MainForm : Form
     {
@@ -59,6 +60,8 @@ namespace RTCV.Launcher
             InitializeComponent();
 
             mf = this;
+
+            versionLabel.Text = "Launcher version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             var preAnchorLeftPanelSize = new Size(pnLeftSide.Width, pnLeftSide.Height - btnVersionDownloader.Height);
 
