@@ -83,8 +83,8 @@ namespace RTCV.Launcher
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(763, 18);
             this.label5.TabIndex = 132;
-            this.label5.Text = "RTC, emulator mods and stubs are developed by Redscientist Media, consult redscie" +
-    "ntist.com for more details. Click here to view third-party licenses.";
+            this.label5.Text = "RTC, emulator mods and stubs are developed by Redscientist Labs, consult redscien" +
+    "tist.com for more details. Click here to view third-party licenses.";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
