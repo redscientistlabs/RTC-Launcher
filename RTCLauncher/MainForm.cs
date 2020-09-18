@@ -14,7 +14,6 @@ namespace RTCV.Launcher
     using System.Windows.Forms;
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
-    using System.Reflection;
 
     public partial class MainForm : Form
     {
