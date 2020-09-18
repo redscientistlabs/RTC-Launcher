@@ -48,7 +48,7 @@ namespace RTCV.Launcher
         public static DownloadForm dForm = null;
         public static Form lpForm = null;
 
-        public static int launcherVer = 27;
+        public static readonly int launcherVer = 27;
 
 
         public static int devCounter = 0;
@@ -61,7 +61,7 @@ namespace RTCV.Launcher
 
             mf = this;
 
-            versionLabel.Text = "Launcher version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            versionLabel.Text = "v" + launcherVer;
 
             var preAnchorLeftPanelSize = new Size(pnLeftSide.Width, pnLeftSide.Height - btnVersionDownloader.Height);
 

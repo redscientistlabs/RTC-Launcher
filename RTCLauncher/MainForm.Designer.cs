@@ -163,13 +163,14 @@ namespace RTCV.Launcher
             // 
             // versionLabel
             // 
-            this.versionLabel.ForeColor = System.Drawing.Color.White;
-            this.versionLabel.Location = new System.Drawing.Point(392, 8);
+            this.versionLabel.Font = new System.Drawing.Font("Segoe UI", 7F);
+            this.versionLabel.ForeColor = System.Drawing.Color.Gray;
+            this.versionLabel.Location = new System.Drawing.Point(186, 9);
             this.versionLabel.Name = "versionLabel";
-            this.versionLabel.Size = new System.Drawing.Size(208, 24);
+            this.versionLabel.Size = new System.Drawing.Size(208, 23);
             this.versionLabel.TabIndex = 133;
             this.versionLabel.Text = "(launcher version)";
-            this.versionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.versionLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // btnTutorials
             // 
