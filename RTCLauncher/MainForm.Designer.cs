@@ -33,10 +33,11 @@ namespace RTCV.Launcher
             this.lbMOTD = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.pnLeftSide = new System.Windows.Forms.Panel();
+            this.pbNewVersionNotification = new System.Windows.Forms.PictureBox();
             this.btnVersionDownloader = new System.Windows.Forms.Button();
             this.pnAnchorRight = new System.Windows.Forms.Panel();
-            this.pbNewVersionNotification = new System.Windows.Forms.PictureBox();
             this.pnTopPanel = new System.Windows.Forms.Panel();
+            this.versionLabel = new System.Windows.Forms.Label();
             this.btnTutorials = new System.Windows.Forms.Button();
             this.btnDiscord = new System.Windows.Forms.Button();
             this.btnMinimize = new System.Windows.Forms.Button();
@@ -101,6 +102,18 @@ namespace RTCV.Launcher
             this.pnLeftSide.Size = new System.Drawing.Size(170, 509);
             this.pnLeftSide.TabIndex = 134;
             // 
+            // pbNewVersionNotification
+            // 
+            this.pbNewVersionNotification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pbNewVersionNotification.Image = global::RTCV.Launcher.Properties.Resources.notificationBadge;
+            this.pbNewVersionNotification.InitialImage = global::RTCV.Launcher.Properties.Resources.notificationBadge;
+            this.pbNewVersionNotification.Location = new System.Drawing.Point(142, 469);
+            this.pbNewVersionNotification.Name = "pbNewVersionNotification";
+            this.pbNewVersionNotification.Size = new System.Drawing.Size(14, 14);
+            this.pbNewVersionNotification.TabIndex = 131;
+            this.pbNewVersionNotification.TabStop = false;
+            this.pbNewVersionNotification.Visible = false;
+            // 
             // btnVersionDownloader
             // 
             this.btnVersionDownloader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -131,23 +144,12 @@ namespace RTCV.Launcher
             this.pnAnchorRight.Size = new System.Drawing.Size(765, 464);
             this.pnAnchorRight.TabIndex = 133;
             // 
-            // pbNewVersionNotification
-            // 
-            this.pbNewVersionNotification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbNewVersionNotification.Image = global::RTCV.Launcher.Properties.Resources.notificationBadge;
-            this.pbNewVersionNotification.InitialImage = global::RTCV.Launcher.Properties.Resources.notificationBadge;
-            this.pbNewVersionNotification.Location = new System.Drawing.Point(142, 469);
-            this.pbNewVersionNotification.Name = "pbNewVersionNotification";
-            this.pbNewVersionNotification.Size = new System.Drawing.Size(14, 14);
-            this.pbNewVersionNotification.TabIndex = 131;
-            this.pbNewVersionNotification.TabStop = false;
-            this.pbNewVersionNotification.Visible = false;
-            // 
             // pnTopPanel
             // 
             this.pnTopPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
             this.pnTopPanel.BackgroundImage = global::RTCV.Launcher.Properties.Resources.LauncherBack;
             this.pnTopPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pnTopPanel.Controls.Add(this.versionLabel);
             this.pnTopPanel.Controls.Add(this.btnTutorials);
             this.pnTopPanel.Controls.Add(this.btnDiscord);
             this.pnTopPanel.Controls.Add(this.btnMinimize);
@@ -158,6 +160,17 @@ namespace RTCV.Launcher
             this.pnTopPanel.Name = "pnTopPanel";
             this.pnTopPanel.Size = new System.Drawing.Size(935, 41);
             this.pnTopPanel.TabIndex = 131;
+            // 
+            // versionLabel
+            // 
+            this.versionLabel.Font = new System.Drawing.Font("Segoe UI", 7F);
+            this.versionLabel.ForeColor = System.Drawing.Color.Gray;
+            this.versionLabel.Location = new System.Drawing.Point(186, 9);
+            this.versionLabel.Name = "versionLabel";
+            this.versionLabel.Size = new System.Drawing.Size(208, 23);
+            this.versionLabel.TabIndex = 133;
+            this.versionLabel.Text = "(launcher version)";
+            this.versionLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // btnTutorials
             // 
@@ -305,6 +318,7 @@ namespace RTCV.Launcher
         private System.Windows.Forms.PictureBox pbNewVersionNotification;
         public System.Windows.Forms.Button btnVersionDownloader;
         private System.Windows.Forms.Button btnTutorials;
+        private System.Windows.Forms.Label versionLabel;
     }
 }
 
