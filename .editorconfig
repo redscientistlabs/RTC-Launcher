@@ -299,9 +299,6 @@ dotnet_diagnostic.CA1816.severity = none
 # Properties should not return arrays
 dotnet_diagnostic.CA1819.severity = none
 
-# Mark assemblies with NeutralResourcesLaunguageAttribute
-dotnet_diagnostic.CA1824.severity = none
-
 # Call on object before all references to it are out of scope
 dotnet_diagnostic.CA2000.severity = none
 
