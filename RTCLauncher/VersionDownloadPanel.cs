@@ -13,7 +13,7 @@ namespace RTCV.Launcher
 
     public partial class VersionDownloadPanel : Form
     {
-        public string latestVersionString = " (Latest version)";
+        internal string latestVersionString = " (Latest version)";
         private List<dynamic> onlineVersionsObjects = null;
 
         public VersionDownloadPanel()
@@ -34,7 +34,7 @@ namespace RTCV.Launcher
         {
             try
             {
-                byte[] versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webRessourceDomain}/rtc/releases/version.php"));
+                byte[] versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webResourceDomain}/rtc/releases/version.php"));
                 if (versionFile == null)
                     return null;
 
@@ -51,12 +51,11 @@ namespace RTCV.Launcher
             }
         }
 
-
         public void refreshVersions()
         {
             Action a = () =>
             {
-                byte[] versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webRessourceDomain}/rtc/releases/version.php"));
+                byte[] versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webResourceDomain}/rtc/releases/version.php"));
 
                 if (versionFile == null)
                     return;
@@ -125,7 +124,7 @@ namespace RTCV.Launcher
                 }
             }
 
-            var downloadUrl = $"{MainForm.webRessourceDomain}/rtc/releases/" + version + ".zip";
+            var downloadUrl = $"{MainForm.webResourceDomain}/rtc/releases/" + version + ".zip";
             var downloadedFile = MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + version + ".zip";
             var extractDirectory = MainForm.launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version;
 
@@ -147,7 +146,6 @@ namespace RTCV.Launcher
                 Console.Beep(220 + 20 * devCounter, 100);
 
             devCounter++;
-
 
             if (devCounter >= 20 || devOn)
             {

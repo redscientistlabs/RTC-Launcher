@@ -12,12 +12,12 @@ namespace RTCV.Launcher
 
     public class LauncherConf
     {
-        public string launcherAssetLocation;
-        public string launcherConfLocation;
-        public string batchFilesLocation;
-        public string version;
+        internal string launcherAssetLocation;
+        private string launcherConfLocation;
+        internal string batchFilesLocation;
+        internal string version;
 
-        public LauncherConfItem[] items = { };
+        internal LauncherConfItem[] items = { };
 
         public LauncherConf(string _version)
         {
@@ -35,19 +35,18 @@ namespace RTCV.Launcher
         }
     }
 
-    public class LauncherConfItem
+    internal class LauncherConfItem
     {
-        public string[] lineItems;
-        public string imageLocation;
-        public string batchName;
-        public string batchLocation;
-        public string folderName;
-        public string folderLocation;
-        public string downloadVersion;
-        public string line;
+        internal string[] lineItems;
+        internal string imageLocation;
+        internal string batchName;
+        internal string batchLocation;
+        internal string folderName;
+        internal string folderLocation;
+        internal string downloadVersion;
+        internal string line;
 
-
-        public LauncherConfItem(LauncherConf lc, string _line)
+        internal LauncherConfItem(LauncherConf lc, string _line)
         {
             line = _line;
             lineItems = _line.Split('|');
@@ -60,18 +59,17 @@ namespace RTCV.Launcher
         }
     }
 
-
     public class ExecutableCommand
     {
-        public string DisplayName;
-        public string FileName;
-        public string Arguments;
-        public bool WaitForExit;
-        public int WaitForExitTimeout = int.MaxValue;
+        internal string DisplayName;
+        internal string FileName;
+        internal string Arguments;
+        internal bool WaitForExit;
+        internal int WaitForExitTimeout = int.MaxValue;
         [JsonConverter(typeof(StringEnumConverter))]
-        public ProcessWindowStyle WindowStyle = ProcessWindowStyle.Normal;
-        public List<ExecutableCommand> PreExecuteCommands = new List<ExecutableCommand>();
-        public List<ExecutableCommand> PostExecuteCommands = new List<ExecutableCommand>();
+        internal ProcessWindowStyle WindowStyle = ProcessWindowStyle.Normal;
+        internal List<ExecutableCommand> PreExecuteCommands = new List<ExecutableCommand>();
+        internal List<ExecutableCommand> PostExecuteCommands = new List<ExecutableCommand>();
 
         public ExecutableCommand(string displayName, string fileName, string arguments, bool waitForExit)
         {
@@ -136,13 +134,13 @@ namespace RTCV.Launcher
 
     public class LauncherConfJson
     {
-        public string LauncherAssetLocation;
-        public string LauncherConfLocation;
-        public string[] LauncherAddonConfLocations;
-        public string VersionLocation;
-        public string Version;
+        internal string LauncherAssetLocation;
+        internal string LauncherConfLocation;
+        internal string[] LauncherAddonConfLocations;
+        internal string VersionLocation;
+        internal string Version;
 
-        public LauncherConfJsonItem[] Items = { };
+        internal LauncherConfJsonItem[] Items = { };
 
         public LauncherConfJson(string _version)
         {
@@ -159,7 +157,6 @@ namespace RTCV.Launcher
                 return;
 
             Directory.SetCurrentDirectory(VersionLocation); //Move ourselves to this working directory
-
 
             var launcherJson = File.ReadAllText(LauncherConfLocation);
             List<LauncherConfJsonItem> lcjiList = new List<LauncherConfJsonItem>();
@@ -208,29 +205,28 @@ namespace RTCV.Launcher
     public class LauncherConfJsonItem
     {
         [JsonProperty]
-        public readonly string FolderName;
+        internal readonly string FolderName;
         [JsonProperty]
-        public readonly string ImageName;
+        internal readonly string ImageName;
         [JsonProperty]
-        public readonly string DownloadVersion;
+        internal readonly string DownloadVersion;
         [JsonProperty]
-        public readonly ReadOnlyDictionary<string, ExecutableCommand> ExecutableCommands;
+        internal readonly ReadOnlyDictionary<string, ExecutableCommand> ExecutableCommands;
 
         //Used for the sidepanel and ordering of cards
         [JsonProperty]
-        public readonly string ItemName;
+        internal readonly string ItemName;
         [JsonProperty]
-        public readonly string ItemSubtitle;
+        internal readonly string ItemSubtitle;
         [JsonProperty]
-        public readonly string ItemDescription;
+        internal readonly string ItemDescription;
 
         [JsonProperty]
-        public readonly bool HideItem; //makes the card hide
+        internal readonly bool HideItem; //makes the card hide
 
         //Addon vars that are automatically set when the json is loaded
-        public bool IsAddon;
-        public string ConfigFilename;
-
+        internal bool IsAddon;
+        internal string ConfigFilename;
 
         public LauncherConfJsonItem(string imageName, string downloadVersion, string folderName, ReadOnlyDictionary<string, ExecutableCommand> executableCommands, string itemName, string itemSubtitle, string itemDescription, bool hideItem, bool isAddon, string configFilename)
         {

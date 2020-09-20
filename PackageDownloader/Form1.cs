@@ -8,8 +8,8 @@ namespace Package_Downloader
 
     public partial class PackageDownloader : Form
     {
-        public string RtcVer = "TEST";
-        public DirectoryInfo RtcDir = null;
+        private string RtcVer = "TEST";
+        private DirectoryInfo RtcDir = null;
         public PackageDownloader()
         {
             InitializeComponent();
@@ -70,7 +70,6 @@ namespace Package_Downloader
                     {
                         wc.DownloadFile(url, pkgPath);
                     }
-
 
                     try
                     {

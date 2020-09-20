@@ -28,29 +28,26 @@ namespace RTCV.Launcher
         private const int HT_BOTTOMLEFT = 0x10;
         private const int HT_BOTTOMRIGHT = 0x11;
 
-
         [DllImportAttribute("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
 
+        internal static string launcherDir = Path.GetDirectoryName(Application.ExecutablePath);
+        internal static string webResourceDomain = "http://redscientist.com/software";
 
-        public static string launcherDir = Path.GetDirectoryName(Application.ExecutablePath);
-        public static string webRessourceDomain = "http://redscientist.com/software";
+        internal static MainForm mf = null;
+        internal static VersionDownloadPanel vdppForm = null;
+        internal static SidebarInfoPanel sideinfoForm = null;
+        internal static SidebarVersionsPanel sideversionForm = null;
 
-        public static MainForm mf = null;
-        public static VersionDownloadPanel vdppForm = null;
-        public static SidebarInfoPanel sideinfoForm = null;
-        public static SidebarVersionsPanel sideversionForm = null;
-
-        public static DownloadForm dForm = null;
-        public static Form lpForm = null;
+        internal static DownloadForm dForm = null;
+        internal static Form lpForm = null;
 
         public static readonly int launcherVer = 27;
 
-
-        public static int devCounter = 0;
+        internal static int devCounter = 0;
         internal static string SelectedVersion = null;
         internal static string lastSelectedVersion = null;
 
@@ -92,8 +89,7 @@ namespace RTCV.Launcher
                 Directory.CreateDirectory(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar);
 
             if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
-                webRessourceDomain = "http://cc.r5x.cc";
-
+                webResourceDomain = "http://cc.r5x.cc";
 
             //Will trigger after an update from the original launcher
             if (Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher"))
@@ -146,7 +142,7 @@ namespace RTCV.Launcher
             {
                 Action a = () =>
                 {
-                    byte[] motdFile = GetFileViaHttp(new Uri($"{webRessourceDomain}/rtc/releases/MOTD.txt"));
+                    byte[] motdFile = GetFileViaHttp(new Uri($"{webResourceDomain}/rtc/releases/MOTD.txt"));
                     var motd = "";
                     if (motdFile == null)
                         motd = "Couldn't load the RTC MOTD from Redscientist.com";
@@ -214,7 +210,6 @@ namespace RTCV.Launcher
             PerformLayout();
             SelectedVersion = null;
 
-
             Action a = () =>
             {
                 var latestVersion = VersionDownloadPanel.getLatestVersion();
@@ -266,16 +261,15 @@ namespace RTCV.Launcher
             }
         }
 
-        public static string getFilenameFromFullFilename(string fullFilename)
+        internal static string getFilenameFromFullFilename(string fullFilename)
         {
             return fullFilename.Substring(fullFilename.LastIndexOf('\\') + 1);
         }
 
-        public static string removeExtension(string filename)
+        internal static string removeExtension(string filename)
         {
             return filename.Substring(0, filename.LastIndexOf('.'));
         }
-
 
         public void lbVersions_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -291,14 +285,12 @@ namespace RTCV.Launcher
                 lastSelectedVersion = SelectedVersion;
             }
 
-
             if (File.Exists(Path.Combine(launcherDir, "VERSIONS", SelectedVersion, "Launcher", "launcher.json")))
                 lpForm = new LaunchPanelV3();
             else if (File.Exists(Path.Combine(launcherDir, "VERSIONS", SelectedVersion, "Launcher", "launcher.ini")))
                 lpForm = new LaunchPanelV2();
             else
                 lpForm = new LaunchPanelV1();
-
 
             lpForm.Size = pnAnchorRight.Size;
             lpForm.TopLevel = false;
@@ -310,7 +302,6 @@ namespace RTCV.Launcher
             lpForm.Dock = DockStyle.Fill;
             lpForm.Show();
         }
-
 
         public void InvokeUI(Action a)
         {
@@ -346,7 +337,6 @@ namespace RTCV.Launcher
                         RTC_Extensions.RecursiveDeleteNukeReadOnly(extractDirectory);
                     return;
                 }
-
 
                 //This checks every extracted files against the contents of the zip file
                 using (ZipArchive za = ZipFile.OpenRead(downloadedFile))
@@ -406,7 +396,6 @@ namespace RTCV.Launcher
                 if (File.Exists(downloadedFile))
                     File.Delete(downloadedFile);
 
-
                 var preReqChecker = Path.Combine(extractDirectory, "Launcher", "PrereqChecker.exe");
                 if (File.Exists(preReqChecker))
                 {
@@ -461,7 +450,6 @@ namespace RTCV.Launcher
                     vdppForm.lbOnlineVersions.SelectedIndex = -1;
                     vdppForm.btnDownloadVersion.Visible = false;
                 }
-
 
                 dForm.Close();
                 dForm = null;
@@ -542,7 +530,7 @@ namespace RTCV.Launcher
                 Process.Start(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version);
         }
 
-        public void lbVersions_MouseDown(object sender, MouseEventArgs e)
+        internal void lbVersions_MouseDown(object sender, MouseEventArgs e)
         {
             if (sideversionForm.lbVersions.SelectedIndex == -1)
                 return;
@@ -660,7 +648,6 @@ THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMP
         private Rectangle RectTopRight => new Rectangle(ClientSize.Width - grabBorderSize, 0, grabBorderSize, grabBorderSize);
         private Rectangle RectBottomLeft => new Rectangle(0, ClientSize.Height - grabBorderSize, grabBorderSize, grabBorderSize);
         private Rectangle RectBottomRight => new Rectangle(ClientSize.Width - grabBorderSize, ClientSize.Height - grabBorderSize, grabBorderSize, grabBorderSize);
-
 
         private void ResizeWindow(MouseEventArgs e, int wParam)
         {

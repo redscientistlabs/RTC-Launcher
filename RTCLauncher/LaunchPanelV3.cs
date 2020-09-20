@@ -39,7 +39,7 @@ namespace RTCV.Launcher
             Size? btnSize = null;
             HiddenButtons.Clear();
 
-            foreach (var lcji in lc.Items)//.Where(it => !it.HideItem))
+            foreach (var lcji in lc.Items) //.Where(it => !it.HideItem))
             {
                 Bitmap btnImage;
                 using (var bmpTemp = new Bitmap(Path.Combine(lc.LauncherAssetLocation, lcji.ImageName)))
@@ -75,10 +75,8 @@ namespace RTCV.Launcher
                     newButton.Click += this.btnBatchfile_Click;
                 }
 
-
                 newButton.MouseEnter += NewButton_MouseEnter;
                 newButton.MouseLeave += NewButton_MouseLeave;
-
 
                 bool isAddon = !string.IsNullOrWhiteSpace(lcji.DownloadVersion);
                 bool AddonInstalled = false;
@@ -166,7 +164,7 @@ namespace RTCV.Launcher
                 InstallCustomPackages(fileNames);
         }
 
-        public void InstallCustomPackages(string[] files)
+        internal void InstallCustomPackages(string[] files)
         {
             if (files != null && files.Length > 0)
             {
@@ -268,7 +266,6 @@ namespace RTCV.Launcher
                 InstallCustomPackages();
             }));
 
-
             var title = new ToolStripMenuItem("Extra addons for this RTC version");
             title.Enabled = false;
             var sep = new ToolStripSeparator();
@@ -331,7 +328,7 @@ namespace RTCV.Launcher
             }
         }
 
-        public void DeleteAddon(LauncherConfJsonItem lcji)
+        internal void DeleteAddon(LauncherConfJsonItem lcji)
         {
             string AddonFolderName = lcji.FolderName;
             string targetFolder = Path.Combine(MainForm.launcherDir, "VERSIONS", lc.Version, AddonFolderName);
@@ -438,7 +435,7 @@ namespace RTCV.Launcher
 
                 if (result == DialogResult.Yes)
                 {
-                    string downloadUrl = $"{MainForm.webRessourceDomain}/rtc/addons/" + lcji.DownloadVersion + ".zip";
+                    string downloadUrl = $"{MainForm.webResourceDomain}/rtc/addons/" + lcji.DownloadVersion + ".zip";
                     string downloadedFile = Path.Combine(MainForm.launcherDir, "PACKAGES", lcji.DownloadVersion + ".zip");
                     string extractDirectory = Path.Combine(lc.VersionLocation, lcji.FolderName);
 

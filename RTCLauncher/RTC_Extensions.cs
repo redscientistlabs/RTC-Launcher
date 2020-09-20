@@ -76,7 +76,6 @@ namespace RTCV.Launcher
             return dialogResult;
         }
 
-
         #region ARRAY EXTENSIONS
         public static T[] SubArray<T>(this T[] data, long index, long length)
         {
@@ -103,7 +102,7 @@ namespace RTCV.Launcher
             return Encoding.UTF8.GetString(data);
         }
 
-        public static byte[] GetBytes(this string str)
+        internal static byte[] GetBytes(this string str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)];
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
@@ -149,7 +148,7 @@ namespace RTCV.Launcher
 
         #region CONTROL EXTENSIONS
 
-        public static List<Control> getControlsWithTag(this Control.ControlCollection controls)
+        internal static List<Control> getControlsWithTag(this Control.ControlCollection controls)
         {
             List<Control> allControls = new List<Control>();
 
@@ -166,7 +165,7 @@ namespace RTCV.Launcher
         }
 
         #endregion
-        public static void RecursiveCopyNukeReadOnly(DirectoryInfo source, DirectoryInfo target)
+        internal static void RecursiveCopyNukeReadOnly(DirectoryInfo source, DirectoryInfo target)
         {
             foreach (DirectoryInfo dir in source.GetDirectories())
                 RecursiveCopyNukeReadOnly(dir, target.CreateSubdirectory(dir.Name));
@@ -191,7 +190,7 @@ namespace RTCV.Launcher
         {
             return RecursiveDeleteNukeReadOnly(new DirectoryInfo(path));
         }
-        public static List<string> RecursiveDeleteNukeReadOnly(DirectoryInfo target)
+        internal static List<string> RecursiveDeleteNukeReadOnly(DirectoryInfo target)
         {
             var failedList = new List<string>();
             foreach (DirectoryInfo dir in target.GetDirectories())
