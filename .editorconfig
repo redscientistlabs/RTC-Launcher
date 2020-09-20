@@ -251,41 +251,23 @@ dotnet_diagnostic.CA1401.severity = none
 # Remove underscore for member name
 dotnet_diagnostic.CA1707.severity = none
 
-# Identifier contains type name
-dotnet_diagnostic.CA1720.severity = none
-
-# Naming conflict
-dotnet_diagnostic.CA1724.severity = none
-
 # Member is explicitly initialized to its default value
 dotnet_diagnostic.CA1805.severity = none
 
 # Using method without reference to error
 dotnet_diagnostic.CA1806.severity = none
 
-# internal class never instatiated
-dotnet_diagnostic.CA1812.severity = none
-
 # Change Dispose() to call GC.SuppressFinalize(object). This will prevent derived types that introduce a finalizer from needing to re-implement 'IDisposable' to call it.
 dotnet_diagnostic.CA1816.severity = none
 
-# Properties should not return arrays
-dotnet_diagnostic.CA1819.severity = none
-
 # Call on object before all references to it are out of scope
 dotnet_diagnostic.CA2000.severity = none
-
-# XML comments
-dotnet_diagnostic.SA0001.severity = none
 
 # Documentation line should begin with a space
 dotnet_diagnostic.SA1004.severity = none
 
 # Single line comment should begin with a space
 dotnet_diagnostic.SA1005.severity = none
-
-# Closing parenthesis should not be preceded by a space
-dotnet_diagnostic.SA1009.severity = none
 
 # Code should not contain multiple whitespace characters in a row
 dotnet_diagnostic.SA1025.severity = none

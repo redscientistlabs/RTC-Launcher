@@ -39,7 +39,7 @@ namespace RTCV.Launcher
             Size? btnSize = null;
             HiddenButtons.Clear();
 
-            foreach (var lcji in lc.Items)//.Where(it => !it.HideItem))
+            foreach (var lcji in lc.Items) //.Where(it => !it.HideItem))
             {
                 Bitmap btnImage;
                 using (var bmpTemp = new Bitmap(Path.Combine(lc.LauncherAssetLocation, lcji.ImageName)))
