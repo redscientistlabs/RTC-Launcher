@@ -10,7 +10,7 @@ namespace RTCV.Launcher
 
     public partial class LaunchPanelV1 : Form
     {
-        public Button[] buttons;
+        private Button[] buttons;
 
         public LaunchPanelV1()
         {

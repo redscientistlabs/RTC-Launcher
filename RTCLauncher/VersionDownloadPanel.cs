@@ -13,7 +13,7 @@ namespace RTCV.Launcher
 
     public partial class VersionDownloadPanel : Form
     {
-        public string latestVersionString = " (Latest version)";
+        internal string latestVersionString = " (Latest version)";
         private List<dynamic> onlineVersionsObjects = null;
 
         public VersionDownloadPanel()

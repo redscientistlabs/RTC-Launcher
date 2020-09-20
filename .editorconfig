@@ -224,23 +224,8 @@ csharp_prefer_simple_using_statement = false # Prefer the old using statement fo
 # Code files
 [*.{cs,vb}]
 
-# Remove original exception from throw statement
-dotnet_diagnostic.RCS1044.severity = none
-
-# Remove original exception from throw statement
-dotnet_diagnostic.RCS1059.severity = none
-
-# Lock on private field instead of locking on `this`
-dotnet_diagnostic.RCS1059.severity = none
-
-# Add summary element to documentation comment
-dotnet_diagnostic.RCS1139.severity = none
-
 # Catch more specific exception type
 dotnet_diagnostic.CA1031.severity = none
-
-# Do not declare visible instance fields
-dotnet_diagnostic.CA1051.severity = none
 
 # Move pinvokes to native methods class
 dotnet_diagnostic.CA1060.severity = none
@@ -289,9 +274,6 @@ dotnet_diagnostic.CA1806.severity = none
 
 # internal class never instatiated
 dotnet_diagnostic.CA1812.severity = none
-
-# .ctor uses a multidimensional array. Replace it with a jagged array if possible.
-dotnet_diagnostic.CA1814.severity = none
 
 # Change Dispose() to call GC.SuppressFinalize(object). This will prevent derived types that introduce a finalizer from needing to re-implement 'IDisposable' to call it.
 dotnet_diagnostic.CA1816.severity = none
