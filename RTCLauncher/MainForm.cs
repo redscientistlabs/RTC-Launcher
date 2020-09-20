@@ -266,12 +266,12 @@ namespace RTCV.Launcher
             }
         }
 
-        public static string getFilenameFromFullFilename(string fullFilename)
+        internal static string getFilenameFromFullFilename(string fullFilename)
         {
             return fullFilename.Substring(fullFilename.LastIndexOf('\\') + 1);
         }
 
-        public static string removeExtension(string filename)
+        internal static string removeExtension(string filename)
         {
             return filename.Substring(0, filename.LastIndexOf('.'));
         }
@@ -542,7 +542,7 @@ namespace RTCV.Launcher
                 Process.Start(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version);
         }
 
-        public void lbVersions_MouseDown(object sender, MouseEventArgs e)
+        internal void lbVersions_MouseDown(object sender, MouseEventArgs e)
         {
             if (sideversionForm.lbVersions.SelectedIndex == -1)
                 return;

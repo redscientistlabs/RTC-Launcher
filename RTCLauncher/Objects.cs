@@ -35,7 +35,7 @@ namespace RTCV.Launcher
         }
     }
 
-    public class LauncherConfItem
+    internal class LauncherConfItem
     {
         internal string[] lineItems;
         internal string imageLocation;
@@ -47,7 +47,7 @@ namespace RTCV.Launcher
         internal string line;
 
 
-        public LauncherConfItem(LauncherConf lc, string _line)
+        internal LauncherConfItem(LauncherConf lc, string _line)
         {
             line = _line;
             lineItems = _line.Split('|');

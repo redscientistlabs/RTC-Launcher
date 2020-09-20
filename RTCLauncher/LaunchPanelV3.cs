@@ -166,7 +166,7 @@ namespace RTCV.Launcher
                 InstallCustomPackages(fileNames);
         }
 
-        public void InstallCustomPackages(string[] files)
+        internal void InstallCustomPackages(string[] files)
         {
             if (files != null && files.Length > 0)
             {
@@ -331,7 +331,7 @@ namespace RTCV.Launcher
             }
         }
 
-        public void DeleteAddon(LauncherConfJsonItem lcji)
+        internal void DeleteAddon(LauncherConfJsonItem lcji)
         {
             string AddonFolderName = lcji.FolderName;
             string targetFolder = Path.Combine(MainForm.launcherDir, "VERSIONS", lc.Version, AddonFolderName);
