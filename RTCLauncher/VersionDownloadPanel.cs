@@ -34,7 +34,7 @@ namespace RTCV.Launcher
         {
             try
             {
-                byte[] versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webRessourceDomain}/rtc/releases/version.php"));
+                byte[] versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webResourceDomain}/rtc/releases/version.php"));
                 if (versionFile == null)
                     return null;
 
@@ -56,7 +56,7 @@ namespace RTCV.Launcher
         {
             Action a = () =>
             {
-                byte[] versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webRessourceDomain}/rtc/releases/version.php"));
+                byte[] versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webResourceDomain}/rtc/releases/version.php"));
 
                 if (versionFile == null)
                     return;
@@ -125,7 +125,7 @@ namespace RTCV.Launcher
                 }
             }
 
-            var downloadUrl = $"{MainForm.webRessourceDomain}/rtc/releases/" + version + ".zip";
+            var downloadUrl = $"{MainForm.webResourceDomain}/rtc/releases/" + version + ".zip";
             var downloadedFile = MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + version + ".zip";
             var extractDirectory = MainForm.launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version;
 

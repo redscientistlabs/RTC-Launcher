@@ -36,21 +36,21 @@ namespace RTCV.Launcher
         public static extern bool ReleaseCapture();
 
 
-        public static string launcherDir = Path.GetDirectoryName(Application.ExecutablePath);
-        public static string webRessourceDomain = "http://redscientist.com/software";
+        internal static string launcherDir = Path.GetDirectoryName(Application.ExecutablePath);
+        internal static string webResourceDomain = "http://redscientist.com/software";
 
-        public static MainForm mf = null;
-        public static VersionDownloadPanel vdppForm = null;
-        public static SidebarInfoPanel sideinfoForm = null;
-        public static SidebarVersionsPanel sideversionForm = null;
+        internal static MainForm mf = null;
+        internal static VersionDownloadPanel vdppForm = null;
+        internal static SidebarInfoPanel sideinfoForm = null;
+        internal static SidebarVersionsPanel sideversionForm = null;
 
-        public static DownloadForm dForm = null;
-        public static Form lpForm = null;
+        internal static DownloadForm dForm = null;
+        internal static Form lpForm = null;
 
         public static readonly int launcherVer = 27;
 
 
-        public static int devCounter = 0;
+        internal static int devCounter = 0;
         internal static string SelectedVersion = null;
         internal static string lastSelectedVersion = null;
 
@@ -92,7 +92,7 @@ namespace RTCV.Launcher
                 Directory.CreateDirectory(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar);
 
             if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
-                webRessourceDomain = "http://cc.r5x.cc";
+                webResourceDomain = "http://cc.r5x.cc";
 
 
             //Will trigger after an update from the original launcher
@@ -146,7 +146,7 @@ namespace RTCV.Launcher
             {
                 Action a = () =>
                 {
-                    byte[] motdFile = GetFileViaHttp(new Uri($"{webRessourceDomain}/rtc/releases/MOTD.txt"));
+                    byte[] motdFile = GetFileViaHttp(new Uri($"{webResourceDomain}/rtc/releases/MOTD.txt"));
                     var motd = "";
                     if (motdFile == null)
                         motd = "Couldn't load the RTC MOTD from Redscientist.com";

@@ -438,7 +438,7 @@ namespace RTCV.Launcher
 
                 if (result == DialogResult.Yes)
                 {
-                    string downloadUrl = $"{MainForm.webRessourceDomain}/rtc/addons/" + lcji.DownloadVersion + ".zip";
+                    string downloadUrl = $"{MainForm.webResourceDomain}/rtc/addons/" + lcji.DownloadVersion + ".zip";
                     string downloadedFile = Path.Combine(MainForm.launcherDir, "PACKAGES", lcji.DownloadVersion + ".zip");
                     string extractDirectory = Path.Combine(lc.VersionLocation, lcji.FolderName);
 
