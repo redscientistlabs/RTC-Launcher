@@ -51,7 +51,6 @@ namespace RTCV.Launcher
             }
         }
 
-
         public void refreshVersions()
         {
             Action a = () =>
@@ -147,7 +146,6 @@ namespace RTCV.Launcher
                 Console.Beep(220 + 20 * devCounter, 100);
 
             devCounter++;
-
 
             if (devCounter >= 20 || devOn)
             {

@@ -71,7 +71,6 @@ namespace Package_Downloader
                         wc.DownloadFile(url, pkgPath);
                     }
 
-
                     try
                     {
                         using (ZipArchive archive = ZipFile.OpenRead(pkgPath))

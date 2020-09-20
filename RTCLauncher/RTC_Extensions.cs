@@ -76,7 +76,6 @@ namespace RTCV.Launcher
             return dialogResult;
         }
 
-
         #region ARRAY EXTENSIONS
         public static T[] SubArray<T>(this T[] data, long index, long length)
         {

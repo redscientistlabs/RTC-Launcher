@@ -75,10 +75,8 @@ namespace RTCV.Launcher
                     newButton.Click += this.btnBatchfile_Click;
                 }
 
-
                 newButton.MouseEnter += NewButton_MouseEnter;
                 newButton.MouseLeave += NewButton_MouseLeave;
-
 
                 bool isAddon = !string.IsNullOrWhiteSpace(lcji.DownloadVersion);
                 bool AddonInstalled = false;
@@ -267,7 +265,6 @@ namespace RTCV.Launcher
             {
                 InstallCustomPackages();
             }));
-
 
             var title = new ToolStripMenuItem("Extra addons for this RTC version");
             title.Enabled = false;

@@ -29,7 +29,6 @@ namespace RTCV.Launcher
             if (!Directory.Exists(folderPath))
                 return;
 
-
             foreach (LauncherConfItem lci in lc.items)
             {
                 Button newButton = new Button();
@@ -38,7 +37,6 @@ namespace RTCV.Launcher
                 newButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
                 newButton.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
                 newButton.ForeColor = System.Drawing.Color.Black;
-
 
                 Bitmap btnImage;
                 using (var bmpTemp = new Bitmap(lci.imageLocation))
@@ -60,7 +58,6 @@ namespace RTCV.Launcher
                 newButton.Text = "";
                 newButton.UseVisualStyleBackColor = false;
                 newButton.Click += new System.EventHandler(this.btnBatchfile_Click);
-
 
                 bool isAddon = !string.IsNullOrWhiteSpace(lci.downloadVersion);
                 bool AddonInstalled = false;
@@ -98,12 +95,10 @@ namespace RTCV.Launcher
                     }
                 }
 
-
                 newButton.Image = btnImage;
                 newButton.Visible = true;
                 flowLayoutPanel1.Controls.Add(newButton);
             }
-
 
             lbSelectedVersion.Text = lc.version;
             lbSelectedVersion.Visible = true;
@@ -151,7 +146,6 @@ namespace RTCV.Launcher
                     MessageBox.Show($"A required folder is missing: {lci.downloadVersion}\nNo download location was provided", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-
 
                 LauncherConf lcCandidateForPull = getFolderFromPreviousVersion(lci.downloadVersion);
                 if (lcCandidateForPull != null)

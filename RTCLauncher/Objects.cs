@@ -46,7 +46,6 @@ namespace RTCV.Launcher
         internal string downloadVersion;
         internal string line;
 
-
         internal LauncherConfItem(LauncherConf lc, string _line)
         {
             line = _line;
@@ -59,7 +58,6 @@ namespace RTCV.Launcher
             downloadVersion = lineItems[3];
         }
     }
-
 
     public class ExecutableCommand
     {
@@ -160,7 +158,6 @@ namespace RTCV.Launcher
 
             Directory.SetCurrentDirectory(VersionLocation); //Move ourselves to this working directory
 
-
             var launcherJson = File.ReadAllText(LauncherConfLocation);
             List<LauncherConfJsonItem> lcjiList = new List<LauncherConfJsonItem>();
             lcjiList.AddRange(JsonConvert.DeserializeObject<LauncherConfJsonItem[]>(launcherJson));
@@ -230,7 +227,6 @@ namespace RTCV.Launcher
         //Addon vars that are automatically set when the json is loaded
         internal bool IsAddon;
         internal string ConfigFilename;
-
 
         public LauncherConfJsonItem(string imageName, string downloadVersion, string folderName, ReadOnlyDictionary<string, ExecutableCommand> executableCommands, string itemName, string itemSubtitle, string itemDescription, bool hideItem, bool isAddon, string configFilename)
         {

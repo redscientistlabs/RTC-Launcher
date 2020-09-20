@@ -272,14 +272,8 @@ dotnet_diagnostic.SA1005.severity = none
 # Code should not contain multiple whitespace characters in a row
 dotnet_diagnostic.SA1025.severity = none
 
-# Do not prefix calls with base unless local implementation exists
-dotnet_diagnostic.SA1100.severity = none
-
 # Prefix local calls with this
 dotnet_diagnostic.SA1101.severity = none
-
-# Code should not contain multiple statements on one line
-dotnet_diagnostic.SA1107.severity = none
 
 # Block statements should not contain embedded comments
 dotnet_diagnostic.SA1108.severity = none
@@ -427,9 +421,6 @@ dotnet_diagnostic.SA1504.severity = none
 
 # Element documentation headers should not be followed by blank line [CorruptCore]
 dotnet_diagnostic.SA1506.severity = none
-
-# Code should not contain multiple blank lines in a row
-dotnet_diagnostic.SA1507.severity = none
 
 # Single-line comments should not be followed by blank line
 dotnet_diagnostic.SA1512.severity = none
