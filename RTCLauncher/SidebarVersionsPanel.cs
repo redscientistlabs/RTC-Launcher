@@ -35,10 +35,9 @@ namespace RTCV.Launcher
             e.Effect = DragDropEffects.Move;
         }
 
-
         private void SidebarVersionsPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y );
+            var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y);
 
             if (!lbVersions.Visible)
             {
