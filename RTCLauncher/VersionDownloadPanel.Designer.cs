@@ -32,6 +32,7 @@ namespace RTCV.Launcher
             this.label3 = new System.Windows.Forms.Label();
             this.btnDownloadVersion = new System.Windows.Forms.Button();
             this.cbDevBuids = new System.Windows.Forms.CheckBox();
+            this.btnOfflineInstall = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbOnlineVersions
@@ -101,12 +102,33 @@ namespace RTCV.Launcher
             this.cbDevBuids.UseVisualStyleBackColor = true;
             this.cbDevBuids.CheckedChanged += new System.EventHandler(this.cbDevBuids_CheckedChanged);
             // 
+            // btnOfflineInstall
+            // 
+            this.btnOfflineInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOfflineInstall.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.btnOfflineInstall.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.btnOfflineInstall.FlatAppearance.BorderSize = 0;
+            this.btnOfflineInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOfflineInstall.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
+            this.btnOfflineInstall.ForeColor = System.Drawing.Color.White;
+            this.btnOfflineInstall.Location = new System.Drawing.Point(299, 10);
+            this.btnOfflineInstall.Margin = new System.Windows.Forms.Padding(0);
+            this.btnOfflineInstall.Name = "btnOfflineInstall";
+            this.btnOfflineInstall.Size = new System.Drawing.Size(85, 20);
+            this.btnOfflineInstall.TabIndex = 133;
+            this.btnOfflineInstall.TabStop = false;
+            this.btnOfflineInstall.Tag = "color:light";
+            this.btnOfflineInstall.Text = "Offline Install";
+            this.btnOfflineInstall.UseVisualStyleBackColor = false;
+            this.btnOfflineInstall.Click += new System.EventHandler(this.btnOfflineInstall_Click);
+            // 
             // VersionDownloadPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.ClientSize = new System.Drawing.Size(490, 268);
+            this.Controls.Add(this.btnOfflineInstall);
             this.Controls.Add(this.btnDownloadVersion);
             this.Controls.Add(this.cbDevBuids);
             this.Controls.Add(this.lbOnlineVersions);
@@ -127,5 +149,6 @@ namespace RTCV.Launcher
         private System.Windows.Forms.Label label3;
         public System.Windows.Forms.Button btnDownloadVersion;
         private System.Windows.Forms.CheckBox cbDevBuids;
+        public System.Windows.Forms.Button btnOfflineInstall;
     }
 }

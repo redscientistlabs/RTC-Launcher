@@ -132,6 +132,7 @@ namespace RTCV.Launcher
             this.btnVersionDownloader.Text = "Downloader";
             this.btnVersionDownloader.UseVisualStyleBackColor = false;
             this.btnVersionDownloader.Click += new System.EventHandler(this.btnVersionDownloader_Click);
+            this.btnVersionDownloader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnVersionDownloader_MouseDown);
             // 
             // pnAnchorRight
             // 

@@ -201,5 +201,7 @@ namespace RTCV.Launcher
                 columnsMenu.Show(this, locate);
             }
         }
+
+        private void btnOfflineInstall_Click(object sender, EventArgs e) => MainForm.mf.InstallFromZip();
     }
 }

@@ -34,6 +34,18 @@ namespace RTCV.Launcher
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
 
+        internal void SuggestInstallZip(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y + pnTopPanel.Height);
+
+                var columnsMenu = new Components.BuildContextMenu();
+                columnsMenu.Items.Add("Install from Zip file", null, new EventHandler((ob, ev) => { InstallFromZip(); }));
+                columnsMenu.Show(this, locate);
+            }
+        }
+
         internal static string launcherDir = Path.GetDirectoryName(Application.ExecutablePath);
         internal static string webResourceDomain = "http://redscientist.com/software";
 
@@ -478,12 +490,105 @@ namespace RTCV.Launcher
             }
         }
 
-        public void DeleteSelected()
+        internal void InstallFromZip(string[] files = null)
         {
-            if (sideversionForm.lbVersions.SelectedIndex == -1)
+            string versionLocation = Path.Combine(MainForm.launcherDir, "VERSIONS");
+
+
+            if (files != null && files.Length > 0)
+            {
+                var nonPkg = files.Where(it => !it.ToUpper().EndsWith(".ZIP")).ToList();
+                if (nonPkg.Count > 0)
+                {
+                    MessageBox.Show("The installer can only process ZIP files. Aborting.");
+                    return;
+                }
+            }
+
+            if (files == null || files.Length == 0)
+            {
+
+                OpenFileDialog ofd = new OpenFileDialog
+                {
+                    DefaultExt = "zip",
+                    Title = "Open Zip Package files",
+                    Filter = "ZIP files|*.zip",
+                    RestoreDirectory = true,
+                    Multiselect = true
+                };
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    files = ofd.FileNames;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else if (files.Length == 1 && MessageBox.Show("You are about to install a zip package in your RTC Launcher. If an install with the same name already exists, it will be deleted.\n\nDo you wish to continue?", "Zip packge install", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                return;
+            else if (files.Length > 1 && MessageBox.Show("You are about to install multiple zip packages in your RTC Launcher. If an install with the same name already exists, it will be deleted.\n\nDo you wish to continue?", "Zip packge install", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 return;
 
-            var version = sideversionForm.lbVersions.SelectedItem.ToString();
+
+            foreach (var file in files)
+            {
+                try
+                {
+                    string versionFolderName = Path.GetFileNameWithoutExtension(file);
+
+
+                    string versionFolderPath = Path.Combine(versionLocation, versionFolderName);
+
+                    if (Directory.Exists(versionFolderPath))
+                        DeleteSelected(versionFolderName);
+
+                    if (!Directory.Exists(versionFolderPath))
+                        Directory.CreateDirectory(versionFolderPath);
+
+                    using (ZipArchive archive = ZipFile.OpenRead(file))
+                    {
+                        foreach (var entry in archive.Entries)
+                        {
+                            var entryPath = Path.Combine(versionFolderPath, entry.FullName).Replace("/", "\\");
+
+                            if (entryPath.EndsWith("\\"))
+                            {
+                                if (!Directory.Exists(entryPath))
+                                    Directory.CreateDirectory(entryPath);
+                            }
+                            else
+                            {
+                                entry.ExtractToFile(entryPath, true);
+                            }
+                        }
+                    }
+
+                    //System.IO.Compression.ZipFile.ExtractToDirectory(file, versionFolder,);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred during extraction and your RTC installation is possibly corrupted. \n\nYou may need to delete your RTC installation and reinstall it from the launcher. To do so, you can right click the version on the left side panel and select Delete from the menu.\n\nIf you need to backup any downloaded emulator to keep configurations or particular setups, you will find the content to backup by right clicking the card and selecting Open Folder.\n\n{ex}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    return;
+                }
+
+                MainForm.mf.RefreshPanel();
+            }
+        }
+
+
+        public void DeleteSelected(string version = null)
+        {
+            //if (sideversionForm.lbVersions.SelectedIndex == -1)
+            //    return;
+
+            if (version == null && sideversionForm.lbVersions.SelectedIndex != -1)
+                version = sideversionForm.lbVersions.SelectedItem.ToString();
+
+            if (version == null)
+                return;
+
             DialogResult result = MessageBox.Show($"Are you sure you want to delete version {version}?", "Build Deletion", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
             if (result == DialogResult.Cancel)
             {
@@ -532,22 +637,33 @@ namespace RTCV.Launcher
 
         internal void lbVersions_MouseDown(object sender, MouseEventArgs e)
         {
+            var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y + pnTopPanel.Height);
+
             if (sideversionForm.lbVersions.SelectedIndex == -1)
-                return;
-
-            var version = sideversionForm.lbVersions.SelectedItem.ToString();
-            if (!Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version))
-                return;
-
-            if (e.Button == MouseButtons.Right)
             {
-                var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y + pnTopPanel.Height);
+                if (e.Button == MouseButtons.Right)
+                {
+                    var columnsMenu = new Components.BuildContextMenu();
+                    columnsMenu.Items.Add("Install from Zip file", null, new EventHandler((ob, ev) => { InstallFromZip(); }));
+                    columnsMenu.Show(this, locate);
+                }
+            }
+            else
+            {
+                var version = sideversionForm.lbVersions.SelectedItem.ToString();
+                if (!Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version))
+                    return;
 
-                var columnsMenu = new Components.BuildContextMenu();
-                columnsMenu.Items.Add("Open Folder", null, new EventHandler((ob, ev) => { OpenFolder(); }));
-                columnsMenu.Items.Add(new ToolStripSeparator());
-                columnsMenu.Items.Add("Delete", null, new EventHandler((ob, ev) => { DeleteSelected(); }));
-                columnsMenu.Show(this, locate);
+                if (e.Button == MouseButtons.Right)
+                {
+                    var columnsMenu = new Components.BuildContextMenu();
+                    columnsMenu.Items.Add("Open Folder", null, new EventHandler((ob, ev) => { OpenFolder(); }));
+                    columnsMenu.Items.Add(new ToolStripSeparator());
+                    columnsMenu.Items.Add("Delete", null, new EventHandler((ob, ev) => { DeleteSelected(); }));
+                    columnsMenu.Items.Add(new ToolStripSeparator());
+                    columnsMenu.Items.Add("Install from Zip file", null, new EventHandler((ob, ev) => { InstallFromZip(); }));
+                    columnsMenu.Show(this, locate);
+                }
             }
         }
 
@@ -721,5 +837,7 @@ THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMP
                 }
             }
         }
+
+        private void btnVersionDownloader_MouseDown(object sender, MouseEventArgs e) => SuggestInstallZip(sender, e);
     }
 }

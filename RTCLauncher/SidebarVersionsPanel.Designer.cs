@@ -34,6 +34,7 @@ namespace RTCV.Launcher
             // 
             // lbVersions
             // 
+            this.lbVersions.AllowDrop = true;
             this.lbVersions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -51,6 +52,8 @@ namespace RTCV.Launcher
             this.lbVersions.TabIndex = 83;
             this.lbVersions.Tag = "";
             this.lbVersions.SelectedIndexChanged += new System.EventHandler(this.lbVersions_SelectedIndexChanged);
+            this.lbVersions.DragDrop += new System.Windows.Forms.DragEventHandler(this.lbVersions_DragDrop);
+            this.lbVersions.DragEnter += new System.Windows.Forms.DragEventHandler(this.lbVersions_DragEnter);
             this.lbVersions.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbVersions_MouseDown);
             // 
             // lbDefaultText
@@ -64,9 +67,11 @@ namespace RTCV.Launcher
             this.lbDefaultText.Size = new System.Drawing.Size(120, 21);
             this.lbDefaultText.TabIndex = 84;
             this.lbDefaultText.Text = "None Installed";
+            this.lbDefaultText.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbVersions_MouseDown);
             // 
             // SidebarVersionsPanel
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
@@ -77,6 +82,9 @@ namespace RTCV.Launcher
             this.Name = "SidebarVersionsPanel";
             this.Text = "VesionSelectPanel";
             this.Load += new System.EventHandler(this.SidebarVersionsPanel_Load);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.lbVersions_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.lbVersions_DragEnter);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SidebarVersionsPanel_MouseDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
