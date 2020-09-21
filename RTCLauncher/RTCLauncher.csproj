@@ -21,6 +21,8 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
+    <!-- Use Build\ instead of Build\net471\ for output -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\rtcpastel.ico</ApplicationIcon>

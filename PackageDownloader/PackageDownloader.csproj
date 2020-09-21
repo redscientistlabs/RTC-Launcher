@@ -6,6 +6,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Use Build\ instead of Build\net471\ for output -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>cubeicon.ico</ApplicationIcon>
