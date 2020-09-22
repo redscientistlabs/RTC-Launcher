@@ -13,6 +13,11 @@
     <ApplicationIcon>cubeicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Update="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.mshtml">
       <HintPath>C:\Program Files (x86)\Microsoft.NET\Primary Interop Assemblies\Microsoft.mshtml.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>

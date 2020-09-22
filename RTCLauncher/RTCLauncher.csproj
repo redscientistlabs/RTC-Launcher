@@ -34,6 +34,29 @@
     <Reference Include="System.IO.Compression" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="LaunchPanelV1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LaunchPanelV2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LaunchPanelV3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="SidebarInfoPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="SidebarVersionsPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="VersionDownloadPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
