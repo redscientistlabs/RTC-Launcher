@@ -326,6 +326,7 @@ namespace RTCV.Launcher
             var psi = new ProcessStartInfo();
             psi.FileName = Path.GetFileName(batchLocation);
             psi.WorkingDirectory = Path.GetDirectoryName(batchLocation);
+            psi.Arguments = Path.GetFileName(Application.ExecutablePath);
             Process.Start(psi);
             Environment.Exit(0);
         }
