@@ -6,7 +6,7 @@ namespace Package_Downloader
     using System.Net;
     using System.Windows.Forms;
 
-    internal partial class PackageDownloader : Form
+    public partial class PackageDownloader : Form
     {
         private string RtcVer = "TEST";
         private DirectoryInfo RtcDir = null;
