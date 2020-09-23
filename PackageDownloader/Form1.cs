@@ -8,8 +8,8 @@ namespace Package_Downloader
 
     internal partial class PackageDownloader : Form
     {
-        private string RtcVer = "TEST";
-        private DirectoryInfo RtcDir = null;
+        private readonly string RtcVer = "TEST";
+        private readonly DirectoryInfo RtcDir = null;
         public PackageDownloader()
         {
             InitializeComponent();
@@ -55,18 +55,20 @@ namespace Package_Downloader
             {
                 bCancel = true;
 
-                string urlFilename = url.Substring(url.LastIndexOf('/') + 1);
+                var urlFilename = url.Substring(url.LastIndexOf('/') + 1);
                 var result = MessageBox.Show($"Do you want to install package {urlFilename} to your {RtcVer} install?", "Install Package?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
                 {
-                    string versionFolder = RtcDir.FullName;
-                    string pkgPath = Path.Combine(versionFolder, urlFilename);
+                    var versionFolder = RtcDir.FullName;
+                    var pkgPath = Path.Combine(versionFolder, urlFilename);
 
                     if (File.Exists(pkgPath))
+                    {
                         File.Delete(pkgPath);
+                    }
 
-                    using (WebClient wc = new WebClient())
+                    using (var wc = new WebClient())
                     {
                         wc.DownloadFile(url, pkgPath);
                     }
@@ -82,7 +84,9 @@ namespace Package_Downloader
                                 if (entryPath.EndsWith("\\"))
                                 {
                                     if (!Directory.Exists(entryPath))
+                                    {
                                         Directory.CreateDirectory(entryPath);
+                                    }
                                 }
                                 else
                                 {
@@ -104,7 +108,9 @@ namespace Package_Downloader
                     finally
                     {
                         if (File.Exists(pkgPath))
+                        {
                             File.Delete(pkgPath);
+                        }
                     }
                 }
             }

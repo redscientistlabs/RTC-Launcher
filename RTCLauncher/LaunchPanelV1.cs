@@ -10,7 +10,7 @@ namespace RTCV.Launcher
 
     public partial class LaunchPanelV1 : Form
     {
-        private Button[] buttons;
+        private readonly Button[] buttons;
 
         public LaunchPanelV1()
         {
@@ -38,14 +38,16 @@ namespace RTCV.Launcher
 
         public void DisplayVersion()
         {
-            string folderPath = Path.Combine(MainForm.launcherDir, "VERSIONS", MainForm.SelectedVersion);
+            var folderPath = Path.Combine(MainForm.launcherDir, "VERSIONS", MainForm.SelectedVersion);
             if (!Directory.Exists(folderPath))
+            {
                 return;
+            }
 
-            List<string> batchFiles = new List<string>(Directory.GetFiles(folderPath));
-            List<string> batchFileNames = new List<string>(batchFiles.Select(it => MainForm.removeExtension(MainForm.getFilenameFromFullFilename(it))));
+            var batchFiles = new List<string>(Directory.GetFiles(folderPath));
+            var batchFileNames = new List<string>(batchFiles.Select(it => MainForm.removeExtension(MainForm.getFilenameFromFullFilename(it))));
 
-            bool isDefaultStartPresent = false;
+            var isDefaultStartPresent = false;
 
             if (batchFileNames.Contains("START"))
             {
@@ -55,18 +57,24 @@ namespace RTCV.Launcher
 
             string startfilename = null;
 
-            foreach (string file in batchFiles)
+            foreach (var file in batchFiles)
+            {
                 if (file.ToUpper().Contains(Path.DirectorySeparatorChar + "START.BAT"))
                 {
                     startfilename = file;
                     break;
                 }
+            }
 
             if (startfilename != null)
+            {
                 batchFiles.Remove(startfilename);
+            }
 
             foreach (Button btn in buttons)
+            {
                 btn.Visible = false;
+            }
 
             if (batchFileNames.Count == 0)
             {
@@ -75,7 +83,7 @@ namespace RTCV.Launcher
             }
             lbError.Visible = false;
 
-            for (int i = 0; i < batchFileNames.Count; i++)
+            for (var i = 0; i < batchFileNames.Count; i++)
             {
                 buttons[i].Visible = true;
                 buttons[i].Text = batchFileNames[i];
@@ -96,21 +104,27 @@ namespace RTCV.Launcher
 
         private void btnBatchfile_Click(object sender, EventArgs e)
         {
-            Button currentButton = (Button)sender;
+            var currentButton = (Button)sender;
 
             //string version = MainForm.mf.lbVersions.SelectedItem.ToString();
 
-            string version = MainForm.SelectedVersion;
+            var version = MainForm.SelectedVersion;
             string fullPath;
 
             if (currentButton.Text == "START")
+            {
                 fullPath = MainForm.launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version + Path.DirectorySeparatorChar + "START.bat";
+            }
             else
+            {
                 fullPath = (currentButton.Tag as string).Split(';')[1];
+            }
 
-            ProcessStartInfo psi = new ProcessStartInfo();
-            psi.FileName = Path.GetFileName(fullPath);
-            psi.WorkingDirectory = Path.GetDirectoryName(fullPath);
+            var psi = new ProcessStartInfo
+            {
+                FileName = Path.GetFileName(fullPath),
+                WorkingDirectory = Path.GetDirectoryName(fullPath)
+            };
             Process.Start(psi);
         }
     }

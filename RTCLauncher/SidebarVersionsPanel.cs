@@ -25,7 +25,7 @@ namespace RTCV.Launcher
                 var formats = e.Data.GetFormats();
                 e.Effect = DragDropEffects.Move;
 
-                string[] fd = (string[])e.Data.GetData(DataFormats.FileDrop); //file drop
+                var fd = (string[])e.Data.GetData(DataFormats.FileDrop); //file drop
 
                 MainForm.mf.InstallFromZip(fd);
         }
@@ -44,7 +44,7 @@ namespace RTCV.Launcher
                 if (e.Button == MouseButtons.Right)
                 {
                     var columnsMenu = new Components.BuildContextMenu();
-                    columnsMenu.Items.Add("Install from Zip file", null, new EventHandler((ob, ev) => { MainForm.mf.InstallFromZip(); }));
+                    columnsMenu.Items.Add("Install from Zip file", null, new EventHandler((ob, ev) => MainForm.mf.InstallFromZip()));
                     columnsMenu.Show(this, locate);
                 }
             }

@@ -13,7 +13,7 @@ namespace RTCV.Launcher
     public class LauncherConf
     {
         internal string launcherAssetLocation;
-        private string launcherConfLocation;
+        private readonly string launcherConfLocation;
         internal string batchFilesLocation;
         internal string version;
 
@@ -27,9 +27,11 @@ namespace RTCV.Launcher
             batchFilesLocation = Path.Combine(MainForm.launcherDir, "VERSIONS", version);
 
             if (!File.Exists(launcherConfLocation))
+            {
                 return;
+            }
 
-            string[] confLines = File.ReadAllLines(launcherConfLocation);
+            var confLines = File.ReadAllLines(launcherConfLocation);
 
             items = confLines.Select(it => new LauncherConfItem(this, it)).ToArray();
         }
@@ -81,14 +83,16 @@ namespace RTCV.Launcher
 
         public bool Execute(bool runPreExecute = true, bool runPostExecute = true)
         {
-            bool success = true;
+            var success = true;
 
             if (runPreExecute)
             {
                 foreach (var exe in PreExecuteCommands)
                 {
                     if (!exe.Execute())
+                    {
                         Console.WriteLine($"Executing PreExecuteCommand {exe.DisplayName} failed!");
+                    }
                 }
             }
 
@@ -105,14 +109,18 @@ namespace RTCV.Launcher
                 psi.WorkingDirectory = Path.GetDirectoryName(Path.GetFullPath(FileName)) ?? "";
             }
             else
+            {
                 psi.FileName = FileName;
+            }
 
             try
             {
                 var p = Process.Start(psi);
 
                 if (WaitForExit)
+                {
                     success = p?.WaitForExit(WaitForExitTimeout) ?? false;
+                }
             }
             catch (Exception e)
             {
@@ -124,7 +132,9 @@ namespace RTCV.Launcher
                 foreach (var exe in PostExecuteCommands)
                 {
                     if (!exe.Execute())
+                    {
                         Console.WriteLine($"Executing PostExecuteCommand {exe.DisplayName} failed!");
+                    }
                 }
             }
 
@@ -149,17 +159,21 @@ namespace RTCV.Launcher
             LauncherConfLocation = Path.Combine(LauncherAssetLocation, "launcher.json");
 
             if (Directory.Exists(LauncherAssetLocation))
+            {
                 LauncherAddonConfLocations = Directory.GetFiles(LauncherAssetLocation).Where(it => it.Contains("addon_") && it.Contains(".json")).ToArray();
+            }
 
             VersionLocation = Path.Combine(MainForm.launcherDir, "VERSIONS", Version);
 
             if (!File.Exists(LauncherConfLocation))
+            {
                 return;
+            }
 
             Directory.SetCurrentDirectory(VersionLocation); //Move ourselves to this working directory
 
             var launcherJson = File.ReadAllText(LauncherConfLocation);
-            List<LauncherConfJsonItem> lcjiList = new List<LauncherConfJsonItem>();
+            var lcjiList = new List<LauncherConfJsonItem>();
             lcjiList.AddRange(JsonConvert.DeserializeObject<LauncherConfJsonItem[]>(launcherJson));
 
             foreach (var addonJsonConfLocation in LauncherAddonConfLocations)
@@ -179,7 +193,7 @@ namespace RTCV.Launcher
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Could not load addon json config file at\n{addonJsonConfLocation}\n\n{ex.ToString()}\n\n{(ex.InnerException != null ? ex.InnerException.ToString() : "")}");
+                    MessageBox.Show($"Could not load addon json config file at\n{addonJsonConfLocation}\n\n{ex}\n\n{(ex.InnerException != null ? ex.InnerException.ToString() : "")}");
                     //eat it
                 }
             }
@@ -246,9 +260,12 @@ namespace RTCV.Launcher
 
         public bool Execute(bool runPreExecute = true, bool runPostExecute = true)
         {
-            bool success = true;
+            var success = true;
             foreach (var e in ExecutableCommands.Values)
+            {
                 success = (e.Execute(runPreExecute, runPostExecute) & success);
+            }
+
             return success;
         }
 

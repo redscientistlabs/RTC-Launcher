@@ -17,7 +17,7 @@ namespace RTCV.Launcher
         {
             var regex = new Regex(@"\d+", RegexOptions.Compiled);
 
-            int maxDigits = items
+            var maxDigits = items
                                 .SelectMany(i => regex.Matches(selector(i)).Cast<Match>().Select(digitChunk => (int?)digitChunk.Value.Length))
                                 .Max() ?? 0;
 
@@ -27,7 +27,7 @@ namespace RTCV.Launcher
         {
             var regex = new Regex(@"\d+", RegexOptions.Compiled);
 
-            int maxDigits = items
+            var maxDigits = items
                                 .SelectMany(i => regex.Matches(selector(i)).Cast<Match>().Select(digitChunk => (int?)digitChunk.Value.Length))
                                 .Max() ?? 0;
 
@@ -36,11 +36,11 @@ namespace RTCV.Launcher
 
         public static DialogResult getInputBox(string title, string promptText, ref string value)
         {
-            Form form = new Form();
-            Label label = new Label();
-            TextBox textBox = new TextBox();
-            Button buttonOk = new Button();
-            Button buttonCancel = new Button();
+            var form = new Form();
+            var label = new Label();
+            var textBox = new TextBox();
+            var buttonOk = new Button();
+            var buttonCancel = new Button();
 
             form.Text = title;
             label.Text = promptText;
@@ -57,7 +57,7 @@ namespace RTCV.Launcher
             buttonCancel.SetBounds(309, 72, 75, 23);
 
             label.AutoSize = true;
-            textBox.Anchor = textBox.Anchor | AnchorStyles.Right;
+            textBox.Anchor |= AnchorStyles.Right;
             buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 
@@ -79,10 +79,12 @@ namespace RTCV.Launcher
         #region ARRAY EXTENSIONS
         public static T[] SubArray<T>(this T[] data, long index, long length)
         {
-            T[] result = new T[length];
+            var result = new T[length];
 
             if (data == null)
+            {
                 return null;
+            }
 
             Array.Copy(data, index, result, 0, length);
             return result;
@@ -104,7 +106,7 @@ namespace RTCV.Launcher
 
         internal static byte[] GetBytes(this string str)
         {
-            byte[] bytes = new byte[str.Length * sizeof(char)];
+            var bytes = new byte[str.Length * sizeof(char)];
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
@@ -123,9 +125,9 @@ namespace RTCV.Launcher
         /// </returns>
         public static Color ChangeColorBrightness(this Color color, float correctionFactor)
         {
-            float red = (float)color.R;
-            float green = (float)color.G;
-            float blue = (float)color.B;
+            var red = (float)color.R;
+            var green = (float)color.G;
+            var blue = (float)color.B;
 
             if (correctionFactor < 0)
             {
@@ -150,15 +152,19 @@ namespace RTCV.Launcher
 
         internal static List<Control> getControlsWithTag(this Control.ControlCollection controls)
         {
-            List<Control> allControls = new List<Control>();
+            var allControls = new List<Control>();
 
             foreach (Control c in controls)
             {
                 if (c.Tag != null)
+                {
                     allControls.Add(c);
+                }
 
                 if (c.HasChildren)
+                {
                     allControls.AddRange(c.Controls.getControlsWithTag()); //Recursively check all children controls as well; ie groupboxes or tabpages
+                }
             }
 
             return allControls;
@@ -168,9 +174,15 @@ namespace RTCV.Launcher
         internal static void RecursiveCopyNukeReadOnly(DirectoryInfo source, DirectoryInfo target)
         {
             foreach (DirectoryInfo dir in source.GetDirectories())
+            {
                 RecursiveCopyNukeReadOnly(dir, target.CreateSubdirectory(dir.Name));
+            }
+
             if (!target.Exists)
+            {
                 target.Create();
+            }
+
             foreach (FileInfo file in source.GetFiles())
             {
                 try
@@ -219,7 +231,10 @@ namespace RTCV.Launcher
                 }
             }
             if (target.GetFiles().Length == 0)
+            {
                 target.Delete();
+            }
+
             return failedList;
         }
     }
@@ -230,7 +245,7 @@ namespace RTCV.Launcher
     {
         public static long RandomLong(this Random rnd)
         {
-            byte[] buffer = new byte[8];
+            var buffer = new byte[8];
             rnd.NextBytes(buffer);
             return BitConverter.ToInt64(buffer, 0);
         }
@@ -238,15 +253,21 @@ namespace RTCV.Launcher
         public static long RandomLong(this Random rnd, long min, long max)
         {
             EnsureMinLEQMax(ref min, ref max);
-            long numbersInRange = unchecked(max - min + 1);
+            var numbersInRange = unchecked(max - min + 1);
             if (numbersInRange < 0)
+            {
                 throw new ArgumentException("Size of range between min and max must be less than or equal to Int64.MaxValue");
+            }
 
-            long randomOffset = RandomLong(rnd);
+            var randomOffset = RandomLong(rnd);
             if (IsModuloBiased(randomOffset, numbersInRange))
+            {
                 return RandomLong(rnd, min, max); // Try again
+            }
             else
+            {
                 return min + PositiveModuloOrZero(randomOffset, numbersInRange);
+            }
         }
 
         public static long RandomLong(this Random rnd, long max)
@@ -256,24 +277,29 @@ namespace RTCV.Launcher
 
         static bool IsModuloBiased(long randomOffset, long numbersInRange)
         {
-            long greatestCompleteRange = numbersInRange * (long.MaxValue / numbersInRange);
+            var greatestCompleteRange = numbersInRange * (long.MaxValue / numbersInRange);
             return randomOffset > greatestCompleteRange;
         }
 
         static long PositiveModuloOrZero(long dividend, long divisor)
         {
-            long mod;
-            Math.DivRem(dividend, divisor, out mod);
+            Math.DivRem(dividend, divisor, out var mod);
             if (mod < 0)
+            {
                 mod += divisor;
+            }
+
             return mod;
         }
 
         static void EnsureMinLEQMax(ref long min, ref long max)
         {
             if (min <= max)
+            {
                 return;
-            long temp = min;
+            }
+
+            var temp = min;
             min = max;
             max = temp;
         }
@@ -302,7 +328,7 @@ namespace RTCV.Launcher
             // Don't serialize a null object, simply return the default for that object
             if (source == null)
             {
-                return default(T);
+                return default;
             }
 
             IFormatter formatter = new BinaryFormatter();

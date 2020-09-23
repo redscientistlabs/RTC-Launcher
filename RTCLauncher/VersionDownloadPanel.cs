@@ -22,7 +22,9 @@ namespace RTCV.Launcher
             cbDevBuids.Checked = File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt");
 
             if (cbDevBuids.Checked)
+            {
                 lbOnlineVersions.BackColor = Color.FromArgb(32, 16, 16);
+            }
         }
 
         private void VersionDownloadPanel_Load(object sender, EventArgs e)
@@ -34,9 +36,11 @@ namespace RTCV.Launcher
         {
             try
             {
-                byte[] versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webResourceDomain}/rtc/releases/version.php"));
+                var versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webResourceDomain}/rtc/releases/version.php"));
                 if (versionFile == null)
+                {
                     return null;
+                }
 
                 var str = Encoding.UTF8.GetString(versionFile);
                 var onlineVersions = new List<string>(str.Split('|').Where(it => !it.Contains("Launcher")).ToArray());
@@ -55,15 +59,17 @@ namespace RTCV.Launcher
         {
             Action a = () =>
             {
-                byte[] versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webResourceDomain}/rtc/releases/version.php"));
+                var versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webResourceDomain}/rtc/releases/version.php"));
 
                 if (versionFile == null)
+                {
                     return;
+                }
 
                 var str = Encoding.UTF8.GetString(versionFile);
 
                 //Ignores any build containing the word Launcher in it
-                string[] onlineVersions = str.Split('|').Where(it => !it.Contains("Launcher")).OrderByNaturalDescending(x => x).Select(it => it.Replace(".zip", "")).ToArray();
+                var onlineVersions = str.Split('|').Where(it => !it.Contains("Launcher")).OrderByNaturalDescending(x => x).Select(it => it.Replace(".zip", "")).ToArray();
                 Invoke(new MethodInvoker(() =>
                 {
                     onlineVersionsObjects = new List<dynamic>();
@@ -76,11 +82,13 @@ namespace RTCV.Launcher
                             var value = onlineVersions[i];
 
                             if (i == 0)
+                            {
                                 onlineVersions[i] += latestVersionString;
+                            }
 
                             var key = onlineVersions[i];
 
-                            onlineVersionsObjects.Add(new { key = key, value = value });
+                            onlineVersionsObjects.Add(new { key, value });
                         }
                     }
 
@@ -96,7 +104,9 @@ namespace RTCV.Launcher
         private void lbOnlineVersions_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbOnlineVersions.SelectedIndex == -1)
+            {
                 return;
+            }
 
             btnDownloadVersion.Visible = true;
         }
@@ -104,7 +114,9 @@ namespace RTCV.Launcher
         private void btnDownloadVersion_Click(object sender, EventArgs e)
         {
             if (lbOnlineVersions.SelectedIndex == -1)
+            {
                 return;
+            }
 
             dynamic itemData = lbOnlineVersions.SelectedItem;
 
@@ -138,12 +150,16 @@ namespace RTCV.Launcher
         private void cbDevBuids_CheckedChanged(object sender, EventArgs e)
         {
             if (!Visible)
+            {
                 return;
+            }
 
             var devOn = File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt");
 
             if (!devOn && devCounter % 2 == 0)
+            {
                 Console.Beep(220 + 20 * devCounter, 100);
+            }
 
             devCounter++;
 
@@ -168,7 +184,9 @@ namespace RTCV.Launcher
                     if (devOn)
                     {
                         if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
+                        {
                             File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt");
+                        }
 
                         Application.Restart();
                     }
@@ -197,7 +215,7 @@ namespace RTCV.Launcher
                 var locate = new Point(((Control)sender).Location.X + e.Location.X, ((Control)sender).Location.Y + e.Location.Y);
 
                 var columnsMenu = new BuildContextMenu();
-                columnsMenu.Items.Add("Download", null, new EventHandler((ob, ev) => { btnDownloadVersion_Click(sender, e); }));
+                columnsMenu.Items.Add("Download", null, new EventHandler((ob, ev) => btnDownloadVersion_Click(sender, e)));
                 columnsMenu.Show(this, locate);
             }
         }
