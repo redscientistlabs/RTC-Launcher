@@ -495,7 +495,6 @@ namespace RTCV.Launcher
         {
             string versionLocation = Path.Combine(MainForm.launcherDir, "VERSIONS");
 
-
             if (files != null && files.Length > 0)
             {
                 var nonPkg = files.Where(it => !it.ToUpper().EndsWith(".ZIP")).ToList();
@@ -508,7 +507,6 @@ namespace RTCV.Launcher
 
             if (files == null || files.Length == 0)
             {
-
                 OpenFileDialog ofd = new OpenFileDialog
                 {
                     DefaultExt = "zip",
@@ -531,13 +529,11 @@ namespace RTCV.Launcher
             else if (files.Length > 1 && MessageBox.Show("You are about to install multiple zip packages in your RTC Launcher. If an install with the same name already exists, it will be deleted.\n\nDo you wish to continue?", "Zip packge install", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 return;
 
-
             foreach (var file in files)
             {
                 try
                 {
                     string versionFolderName = Path.GetFileNameWithoutExtension(file);
-
 
                     string versionFolderPath = Path.Combine(versionLocation, versionFolderName);
 
@@ -577,7 +573,6 @@ namespace RTCV.Launcher
                 MainForm.mf.RefreshPanel();
             }
         }
-
 
         public void DeleteSelected(string version = null)
         {
