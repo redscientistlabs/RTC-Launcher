@@ -14,6 +14,7 @@ namespace RTCV.Launcher
     using System.Windows.Forms;
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
+    using Semver;
 
     public partial class MainForm : Form
     {
@@ -57,7 +58,7 @@ namespace RTCV.Launcher
         internal static DownloadForm dForm = null;
         internal static Form lpForm = null;
 
-        public static readonly int launcherVer = 27;
+        public static readonly SemVersion launcherVer = SemVersion.Parse("28.0.0");
 
         internal static int devCounter = 0;
         internal static string SelectedVersion = null;
@@ -420,11 +421,11 @@ namespace RTCV.Launcher
 
                 if (File.Exists(Path.Combine(extractDirectory, "Launcher", "ver.ini")))
                 {
-                    var newVer = Convert.ToInt32(File.ReadAllText(Path.Combine(extractDirectory, "Launcher", "ver.ini")));
+                    var newVer = SemVersion.Parse(File.ReadAllText(Path.Combine(extractDirectory, "Launcher", "ver.ini")));
                     if (newVer > launcherVer)
                     {
                         if (File.Exists(Path.Combine(extractDirectory, "Launcher", "minver.ini")) && //Do we have minver
-                            Convert.ToInt32(File.ReadAllText(Path.Combine(extractDirectory, "Launcher", "minver.ini"))) > launcherVer) //Is minver > launcherVer
+                            SemVersion.Parse(File.ReadAllText(Path.Combine(extractDirectory, "Launcher", "minver.ini"))) > launcherVer) //Is minver > launcherVer
                         {
                             if (MessageBox.Show("A mandatory launcher update is required to use this version. Click \"OK\" to update the launcher.",
                                 "Launcher update required",
