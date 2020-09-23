@@ -59,7 +59,7 @@ namespace RTCV.Launcher
                 newButton.TabIndex = 134;
                 newButton.TabStop = false;
                 newButton.Tag = lci.line;
-                newButton.Text = "";
+                newButton.Text = string.Empty;
                 newButton.UseVisualStyleBackColor = false;
                 newButton.Click += new System.EventHandler(this.btnBatchfile_Click);
 

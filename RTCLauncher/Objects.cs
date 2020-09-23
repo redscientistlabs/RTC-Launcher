@@ -106,7 +106,7 @@ namespace RTCV.Launcher
             if (File.Exists(Path.GetFullPath(FileName)))
             {
                 psi.FileName = Path.GetFullPath(FileName);
-                psi.WorkingDirectory = Path.GetDirectoryName(Path.GetFullPath(FileName)) ?? "";
+                psi.WorkingDirectory = Path.GetDirectoryName(Path.GetFullPath(FileName)) ?? string.Empty;
             }
             else
             {
@@ -193,7 +193,7 @@ namespace RTCV.Launcher
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Could not load addon json config file at\n{addonJsonConfLocation}\n\n{ex}\n\n{(ex.InnerException != null ? ex.InnerException.ToString() : "")}");
+                    MessageBox.Show($"Could not load addon json config file at\n{addonJsonConfLocation}\n\n{ex}\n\n{(ex.InnerException != null ? ex.InnerException.ToString() : string.Empty)}");
                     //eat it
                 }
             }

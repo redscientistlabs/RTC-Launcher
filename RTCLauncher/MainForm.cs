@@ -169,7 +169,7 @@ namespace RTCV.Launcher
                 Action a = () =>
                 {
                     var motdFile = GetFileViaHttp(new Uri($"{webResourceDomain}/rtc/releases/MOTD.txt"));
-                    var motd = "";
+                    var motd = string.Empty;
                     if (motdFile == null)
                     {
                         motd = "Couldn't load the RTC MOTD from Redscientist.com";
@@ -209,10 +209,10 @@ namespace RTCV.Launcher
                 allControls.AddRange(form.Controls.getControlsWithTag());
             }
 
-            List<Control> lightColorControls = allControls.FindAll(it => (it.Tag as string ?? "").Contains("color:light"));
-            List<Control> normalColorControls = allControls.FindAll(it => (it.Tag as string ?? "").Contains("color:normal"));
-            List<Control> darkColorControls = allControls.FindAll(it => (it.Tag as string ?? "").Contains("color:dark"));
-            List<Control> darkerColorControls = allControls.FindAll(it => (it.Tag as string ?? "").Contains("color:darker"));
+            List<Control> lightColorControls = allControls.FindAll(it => (it.Tag as string ?? string.Empty).Contains("color:light"));
+            List<Control> normalColorControls = allControls.FindAll(it => (it.Tag as string ?? string.Empty).Contains("color:normal"));
+            List<Control> darkColorControls = allControls.FindAll(it => (it.Tag as string ?? string.Empty).Contains("color:dark"));
+            List<Control> darkerColorControls = allControls.FindAll(it => (it.Tag as string ?? string.Empty).Contains("color:darker"));
 
             foreach (Control c in lightColorControls)
             {

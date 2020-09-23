@@ -68,7 +68,7 @@ namespace RTCV.Launcher
                 newButton.TabIndex = 134;
                 newButton.TabStop = false;
                 newButton.Tag = lcji;
-                newButton.Text = "";
+                newButton.Text = string.Empty;
                 newButton.UseVisualStyleBackColor = false;
 
                 if (lcji.ImageName == "Add.png")
@@ -323,9 +323,9 @@ namespace RTCV.Launcher
 
                 currentButton.FlatAppearance.BorderSize = 0;
 
-                MainForm.sideinfoForm.lbName.Text = (lcji.ItemName ?? "");
-                MainForm.sideinfoForm.lbSubtitle.Text = (lcji.ItemSubtitle ?? "");
-                MainForm.sideinfoForm.lbDescription.Text = (lcji.ItemDescription ?? "");
+                MainForm.sideinfoForm.lbName.Text = (lcji.ItemName ?? string.Empty);
+                MainForm.sideinfoForm.lbSubtitle.Text = (lcji.ItemSubtitle ?? string.Empty);
+                MainForm.sideinfoForm.lbDescription.Text = (lcji.ItemDescription ?? string.Empty);
             }
         }
 
@@ -341,9 +341,9 @@ namespace RTCV.Launcher
                 currentButton.FlatAppearance.BorderColor = Color.Gray;
                 currentButton.FlatAppearance.BorderSize = 1;
 
-                MainForm.sideinfoForm.lbName.Text = (lcji.ItemName ?? "");
-                MainForm.sideinfoForm.lbSubtitle.Text = (lcji.ItemSubtitle ?? "");
-                MainForm.sideinfoForm.lbDescription.Text = (lcji.ItemDescription ?? "");
+                MainForm.sideinfoForm.lbName.Text = (lcji.ItemName ?? string.Empty);
+                MainForm.sideinfoForm.lbSubtitle.Text = (lcji.ItemSubtitle ?? string.Empty);
+                MainForm.sideinfoForm.lbDescription.Text = (lcji.ItemDescription ?? string.Empty);
 
                 MainForm.sideinfoForm.Show();
                 MainForm.sideversionForm.Hide();

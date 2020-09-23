@@ -269,9 +269,6 @@ dotnet_diagnostic.SA1004.severity = none
 # Single line comment should begin with a space
 dotnet_diagnostic.SA1005.severity = none
 
-# Code should not contain multiple whitespace characters in a row
-dotnet_diagnostic.SA1025.severity = none
-
 # Prefix local calls with this
 dotnet_diagnostic.SA1101.severity = none
 
@@ -295,9 +292,6 @@ dotnet_diagnostic.SA1118.severity = none
 
 # Statement should not use unnecessary parenthesis
 dotnet_diagnostic.SA1119.severity = none
-
-# Use string.Empty for empty strings
-dotnet_diagnostic.SA1122.severity = none
 
 # Do not use regions
 dotnet_diagnostic.SA1124.severity = none

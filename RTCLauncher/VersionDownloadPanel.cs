@@ -45,7 +45,7 @@ namespace RTCV.Launcher
                 var str = Encoding.UTF8.GetString(versionFile);
                 var onlineVersions = new List<string>(str.Split('|').Where(it => !it.Contains("Launcher")).ToArray());
 
-                var returnValue = onlineVersions.OrderByNaturalDescending(x => x).Select(it => it.Replace(".zip", "")).ToArray()[0];
+                var returnValue = onlineVersions.OrderByNaturalDescending(x => x).Select(it => it.Replace(".zip", string.Empty)).ToArray()[0];
 
                 return returnValue;
             }
@@ -69,7 +69,7 @@ namespace RTCV.Launcher
                 var str = Encoding.UTF8.GetString(versionFile);
 
                 //Ignores any build containing the word Launcher in it
-                var onlineVersions = str.Split('|').Where(it => !it.Contains("Launcher")).OrderByNaturalDescending(x => x).Select(it => it.Replace(".zip", "")).ToArray();
+                var onlineVersions = str.Split('|').Where(it => !it.Contains("Launcher")).OrderByNaturalDescending(x => x).Select(it => it.Replace(".zip", string.Empty)).ToArray();
                 Invoke(new MethodInvoker(() =>
                 {
                     onlineVersionsObjects = new List<dynamic>();
@@ -121,7 +121,7 @@ namespace RTCV.Launcher
             dynamic itemData = lbOnlineVersions.SelectedItem;
 
             string version = itemData.value;
-            version = version.Replace(latestVersionString, "");
+            version = version.Replace(latestVersionString, string.Empty);
 
             if (Directory.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version))
             {
