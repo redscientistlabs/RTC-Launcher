@@ -1,4 +1,4 @@
-﻿namespace RTCV.Launcher
+namespace RTCV.Launcher
 {
     using System;
     using System.Drawing;
@@ -9,7 +9,7 @@
     #pragma warning disable CA2213 //Component designer classes generate their own Dispose method
     public partial class DownloadForm : Form
     {
-        WebClient webClient;
+        readonly WebClient webClient;
 
         public DownloadForm(Uri downloadURL, string downloadedFile, string extractDirectory)
         {
@@ -23,9 +23,13 @@
             {
                 MainForm.dForm.progressBar.Value = ev.ProgressPercentage;
                 if (ev.BytesReceived == ev.TotalBytesToReceive)
+                {
                     lbDownloadProgress.Text = "Extracting files...";
+                }
                 else
+                {
                     lbDownloadProgress.Text = $"{string.Format("{0:0.##}", (Convert.ToDouble(ev.BytesReceived) / (1024d * 1024d)))}/{string.Format("{0:0.##}", (Convert.ToDouble(ev.TotalBytesToReceive) / (1024d * 1024d)))}MB";
+                }
             };
 
             webClient.DownloadFileCompleted += (ov, ev) =>
@@ -37,7 +41,9 @@
             };
 
             if (File.Exists(downloadedFile))
+            {
                 File.Delete(downloadedFile);
+            }
 
             webClient.DownloadFileAsync(downloadURL, downloadedFile);
         }

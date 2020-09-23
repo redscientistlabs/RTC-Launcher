@@ -1,4 +1,4 @@
-﻿namespace RTCV.Launcher
+namespace RTCV.Launcher
 {
     using System;
     using System.Diagnostics;
@@ -16,7 +16,7 @@
         [STAThread]
         static void Main()
         {
-            using (Mutex mutex = new Mutex(true, "RTC_Launcher", out bool createdNew))
+            using (var mutex = new Mutex(true, "RTC_Launcher", out var createdNew))
             {
                 if (createdNew)
                 {
@@ -26,7 +26,7 @@
                 }
                 else
                 {
-                    Process current = Process.GetCurrentProcess();
+                    var current = Process.GetCurrentProcess();
                     foreach (Process process in Process.GetProcessesByName(current.ProcessName))
                     {
                         if (process.Id != current.Id)

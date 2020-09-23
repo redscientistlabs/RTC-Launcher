@@ -41,7 +41,7 @@ namespace RTCV.Launcher
                 var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y + pnTopPanel.Height);
 
                 var columnsMenu = new Components.BuildContextMenu();
-                columnsMenu.Items.Add("Install from Zip file", null, new EventHandler((ob, ev) => { InstallFromZip(); }));
+                columnsMenu.Items.Add("Install from Zip file", null, new EventHandler((ob, ev) => InstallFromZip()));
                 columnsMenu.Show(this, locate);
             }
         }
@@ -73,9 +73,11 @@ namespace RTCV.Launcher
 
             var preAnchorLeftPanelSize = new Size(pnLeftSide.Width, pnLeftSide.Height - btnVersionDownloader.Height);
 
-            sideversionForm = new SidebarVersionsPanel();
-            sideversionForm.BackColor = pnLeftSide.BackColor;
-            sideversionForm.TopLevel = false;
+            sideversionForm = new SidebarVersionsPanel
+            {
+                BackColor = pnLeftSide.BackColor,
+                TopLevel = false
+            };
             pnLeftSide.Controls.Add(sideversionForm);
             sideversionForm.Location = new Point(0, 0);
             sideversionForm.Size = preAnchorLeftPanelSize;
@@ -83,9 +85,11 @@ namespace RTCV.Launcher
 
             sideversionForm.Show();
 
-            sideinfoForm = new SidebarInfoPanel();
-            sideinfoForm.BackColor = pnLeftSide.BackColor;
-            sideinfoForm.TopLevel = false;
+            sideinfoForm = new SidebarInfoPanel
+            {
+                BackColor = pnLeftSide.BackColor,
+                TopLevel = false
+            };
             pnLeftSide.Controls.Add(sideinfoForm);
             sideinfoForm.Location = new Point(0, 0);
             sideinfoForm.Size = preAnchorLeftPanelSize;
@@ -95,20 +99,28 @@ namespace RTCV.Launcher
 
             //creating default folders
             if (!Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar))
+            {
                 Directory.CreateDirectory(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar);
+            }
 
             if (!Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar))
+            {
                 Directory.CreateDirectory(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar);
+            }
 
             if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
+            {
                 webResourceDomain = "http://cc.r5x.cc";
+            }
 
             //Will trigger after an update from the original launcher
             if (Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher"))
             {
                 Directory.Delete(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher", true);
                 if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + "Update_Launcher.zip"))
+                {
                     File.Delete(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + "Update_Launcher.zip");
+                }
             }
         }
 
@@ -148,20 +160,26 @@ namespace RTCV.Launcher
             RefreshInstalledVersions();
 
             if (sideversionForm.lbVersions.Items.Count > 0)
+            {
                 sideversionForm.lbVersions.SelectedIndex = 0;
+            }
 
             try
             {
                 Action a = () =>
                 {
-                    byte[] motdFile = GetFileViaHttp(new Uri($"{webResourceDomain}/rtc/releases/MOTD.txt"));
+                    var motdFile = GetFileViaHttp(new Uri($"{webResourceDomain}/rtc/releases/MOTD.txt"));
                     var motd = "";
                     if (motdFile == null)
+                    {
                         motd = "Couldn't load the RTC MOTD from Redscientist.com";
+                    }
                     else
+                    {
                         motd = Encoding.UTF8.GetString(motdFile);
+                    }
 
-                    Invoke(new MethodInvoker(() => { lbMOTD.Text = motd; }));
+                    Invoke(new MethodInvoker(() => lbMOTD.Text = motd));
                 };
                 Task.Run(a);
             }
@@ -187,7 +205,9 @@ namespace RTCV.Launcher
                 allControls.Add(this);
             }
             else
+            {
                 allControls.AddRange(form.Controls.getControlsWithTag());
+            }
 
             List<Control> lightColorControls = allControls.FindAll(it => (it.Tag as string ?? "").Contains("color:light"));
             List<Control> normalColorControls = allControls.FindAll(it => (it.Tag as string ?? "").Contains("color:normal"));
@@ -195,19 +215,27 @@ namespace RTCV.Launcher
             List<Control> darkerColorControls = allControls.FindAll(it => (it.Tag as string ?? "").Contains("color:darker"));
 
             foreach (Control c in lightColorControls)
+            {
                 c.BackColor = color.ChangeColorBrightness(0.30f);
+            }
 
             foreach (Control c in normalColorControls)
+            {
                 c.BackColor = color;
+            }
 
             //spForm.dgvStockpile.BackgroundColor = color;
             //ghForm.dgvStockpile.BackgroundColor = color;
 
             foreach (Control c in darkColorControls)
+            {
                 c.BackColor = color.ChangeColorBrightness(-0.30f);
+            }
 
             foreach (Control c in darkerColorControls)
+            {
                 c.BackColor = color.ChangeColorBrightness(-0.75f);
+            }
         }
 
         public void RefreshInstalledVersions()
@@ -225,10 +253,7 @@ namespace RTCV.Launcher
             Action a = () =>
             {
                 var latestVersion = VersionDownloadPanel.getLatestVersion();
-                Invoke(new MethodInvoker(() =>
-                {
-                    pbNewVersionNotification.Visible = !versions.Select(it => it.Substring(it.LastIndexOf('\\') + 1)).Contains(latestVersion);
-                }));
+                Invoke(new MethodInvoker(() => pbNewVersionNotification.Visible = !versions.Select(it => it.Substring(it.LastIndexOf('\\') + 1)).Contains(latestVersion)));
             };
             Task.Run(a);
         }
@@ -298,17 +323,26 @@ namespace RTCV.Launcher
             }
 
             if (File.Exists(Path.Combine(launcherDir, "VERSIONS", SelectedVersion, "Launcher", "launcher.json")))
+            {
                 lpForm = new LaunchPanelV3();
+            }
             else if (File.Exists(Path.Combine(launcherDir, "VERSIONS", SelectedVersion, "Launcher", "launcher.ini")))
+            {
                 lpForm = new LaunchPanelV2();
+            }
             else
+            {
                 lpForm = new LaunchPanelV1();
+            }
 
             lpForm.Size = pnAnchorRight.Size;
             lpForm.TopLevel = false;
             pnAnchorRight.Controls.Add(lpForm);
             foreach (Control c in lpForm.Controls)
+            {
                 c.MouseMove += MainForm_MouseMove;
+            }
+
             lpForm.MouseMove += MainForm_MouseMove;
 
             lpForm.Dock = DockStyle.Fill;
@@ -323,10 +357,12 @@ namespace RTCV.Launcher
         private static void UpdateLauncher(string extractDirectory)
         {
             var batchLocation = extractDirectory + Path.DirectorySeparatorChar + "Launcher\\update.bat";
-            var psi = new ProcessStartInfo();
-            psi.FileName = Path.GetFileName(batchLocation);
-            psi.WorkingDirectory = Path.GetDirectoryName(batchLocation);
-            psi.Arguments = Path.GetFileName(Application.ExecutablePath);
+            var psi = new ProcessStartInfo
+            {
+                FileName = Path.GetFileName(batchLocation),
+                WorkingDirectory = Path.GetDirectoryName(batchLocation),
+                Arguments = Path.GetFileName(Application.ExecutablePath)
+            };
             Process.Start(psi);
             Environment.Exit(0);
         }
@@ -336,7 +372,9 @@ namespace RTCV.Launcher
             try
             {
                 if (!Directory.Exists(extractDirectory))
+                {
                     Directory.CreateDirectory(extractDirectory);
+                }
 
                 try
                 {
@@ -347,7 +385,10 @@ namespace RTCV.Launcher
                     MessageBox.Show($"An error occurred during extraction, rolling back changes.\n\n{ex}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     if (Directory.Exists(extractDirectory))
+                    {
                         RTC_Extensions.RecursiveDeleteNukeReadOnly(extractDirectory);
+                    }
+
                     return;
                 }
 
@@ -379,7 +420,9 @@ namespace RTCV.Launcher
                                         {
                                             if (MessageBox.Show($"Another file has been found locked/inaccessible.\nThere might be many more messages like this coming up.\n\nWould you like skip any remaining lock messages?", "Error",
                                                 MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+                                            {
                                                 skipLock = true;
+                                            }
                                         }
                                     }
 
@@ -399,7 +442,9 @@ namespace RTCV.Launcher
                                 MessageBoxIcon.Error);
 
                             if (Directory.Exists(extractDirectory))
+                            {
                                 RTC_Extensions.RecursiveDeleteNukeReadOnly(extractDirectory);
+                            }
                         }
                     }
                 }
@@ -407,14 +452,18 @@ namespace RTCV.Launcher
                 //check if files are all present here
 
                 if (File.Exists(downloadedFile))
+                {
                     File.Delete(downloadedFile);
+                }
 
                 var preReqChecker = Path.Combine(extractDirectory, "Launcher", "PrereqChecker.exe");
                 if (File.Exists(preReqChecker))
                 {
-                    var psi = new ProcessStartInfo();
-                    psi.FileName = Path.GetFileName(preReqChecker);
-                    psi.WorkingDirectory = Path.GetDirectoryName(preReqChecker);
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = Path.GetFileName(preReqChecker),
+                        WorkingDirectory = Path.GetDirectoryName(preReqChecker)
+                    };
                     Process.Start(psi)?.WaitForExit();
                 }
 
@@ -478,7 +527,7 @@ namespace RTCV.Launcher
                 var index = -1;
                 for (var i = 0; i < sideversionForm.lbVersions.Items.Count; i++)
                 {
-                    object item = sideversionForm.lbVersions.Items[i];
+                    var item = sideversionForm.lbVersions.Items[i];
                     if (item.ToString() == lastSelectedVersion)
                     {
                         index = i;
@@ -493,7 +542,7 @@ namespace RTCV.Launcher
 
         internal void InstallFromZip(string[] files = null)
         {
-            string versionLocation = Path.Combine(MainForm.launcherDir, "VERSIONS");
+            var versionLocation = Path.Combine(MainForm.launcherDir, "VERSIONS");
 
             if (files != null && files.Length > 0)
             {
@@ -507,7 +556,7 @@ namespace RTCV.Launcher
 
             if (files == null || files.Length == 0)
             {
-                OpenFileDialog ofd = new OpenFileDialog
+                var ofd = new OpenFileDialog
                 {
                     DefaultExt = "zip",
                     Title = "Open Zip Package files",
@@ -525,23 +574,31 @@ namespace RTCV.Launcher
                 }
             }
             else if (files.Length == 1 && MessageBox.Show("You are about to install a zip package in your RTC Launcher. If an install with the same name already exists, it will be deleted.\n\nDo you wish to continue?", "Zip packge install", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+            {
                 return;
+            }
             else if (files.Length > 1 && MessageBox.Show("You are about to install multiple zip packages in your RTC Launcher. If an install with the same name already exists, it will be deleted.\n\nDo you wish to continue?", "Zip packge install", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+            {
                 return;
+            }
 
             foreach (var file in files)
             {
                 try
                 {
-                    string versionFolderName = Path.GetFileNameWithoutExtension(file);
+                    var versionFolderName = Path.GetFileNameWithoutExtension(file);
 
-                    string versionFolderPath = Path.Combine(versionLocation, versionFolderName);
+                    var versionFolderPath = Path.Combine(versionLocation, versionFolderName);
 
                     if (Directory.Exists(versionFolderPath))
+                    {
                         DeleteSelected(versionFolderName);
+                    }
 
                     if (!Directory.Exists(versionFolderPath))
+                    {
                         Directory.CreateDirectory(versionFolderPath);
+                    }
 
                     using (ZipArchive archive = ZipFile.OpenRead(file))
                     {
@@ -552,7 +609,9 @@ namespace RTCV.Launcher
                             if (entryPath.EndsWith("\\"))
                             {
                                 if (!Directory.Exists(entryPath))
+                                {
                                     Directory.CreateDirectory(entryPath);
+                                }
                             }
                             else
                             {
@@ -580,10 +639,14 @@ namespace RTCV.Launcher
             //    return;
 
             if (version == null && sideversionForm.lbVersions.SelectedIndex != -1)
+            {
                 version = sideversionForm.lbVersions.SelectedItem.ToString();
+            }
 
             if (version == null)
+            {
                 return;
+            }
 
             DialogResult result = MessageBox.Show($"Are you sure you want to delete version {version}?", "Build Deletion", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
             if (result == DialogResult.Cancel)
@@ -594,7 +657,9 @@ namespace RTCV.Launcher
             Directory.SetCurrentDirectory(launcherDir); //Move our working dir back
 
             if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + version + ".zip"))
+            {
                 File.Delete(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + version + ".zip");
+            }
 
             if (Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version))
             {
@@ -607,7 +672,7 @@ namespace RTCV.Launcher
                         sb.AppendLine(Path.GetFileName(l));
                     }
 
-                    MessageBox.Show($"Failed to delete some files!\nSomething may be locking them (is the RTC still running?)\n\nList of failed files:\n{sb.ToString()}");
+                    MessageBox.Show($"Failed to delete some files!\nSomething may be locking them (is the RTC still running?)\n\nList of failed files:\n{sb}");
                 }
             }
 
@@ -623,12 +688,16 @@ namespace RTCV.Launcher
         public static void OpenFolder()
         {
             if (sideversionForm.lbVersions.SelectedIndex == -1)
+            {
                 return;
+            }
 
             var version = sideversionForm.lbVersions.SelectedItem.ToString();
 
             if (Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version))
+            {
                 Process.Start(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version);
+            }
         }
 
         internal void lbVersions_MouseDown(object sender, MouseEventArgs e)
@@ -640,7 +709,7 @@ namespace RTCV.Launcher
                 if (e.Button == MouseButtons.Right)
                 {
                     var columnsMenu = new Components.BuildContextMenu();
-                    columnsMenu.Items.Add("Install from Zip file", null, new EventHandler((ob, ev) => { InstallFromZip(); }));
+                    columnsMenu.Items.Add("Install from Zip file", null, new EventHandler((ob, ev) => InstallFromZip()));
                     columnsMenu.Show(this, locate);
                 }
             }
@@ -648,16 +717,18 @@ namespace RTCV.Launcher
             {
                 var version = sideversionForm.lbVersions.SelectedItem.ToString();
                 if (!Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version))
+                {
                     return;
+                }
 
                 if (e.Button == MouseButtons.Right)
                 {
                     var columnsMenu = new Components.BuildContextMenu();
-                    columnsMenu.Items.Add("Open Folder", null, new EventHandler((ob, ev) => { OpenFolder(); }));
+                    columnsMenu.Items.Add("Open Folder", null, new EventHandler((ob, ev) => OpenFolder()));
                     columnsMenu.Items.Add(new ToolStripSeparator());
-                    columnsMenu.Items.Add("Delete", null, new EventHandler((ob, ev) => { DeleteSelected(); }));
+                    columnsMenu.Items.Add("Delete", null, new EventHandler((ob, ev) => DeleteSelected()));
                     columnsMenu.Items.Add(new ToolStripSeparator());
-                    columnsMenu.Items.Add("Install from Zip file", null, new EventHandler((ob, ev) => { InstallFromZip(); }));
+                    columnsMenu.Items.Add("Install from Zip file", null, new EventHandler((ob, ev) => InstallFromZip()));
                     columnsMenu.Show(this, locate);
                 }
             }
@@ -671,11 +742,13 @@ namespace RTCV.Launcher
         public void clearAnchorRight()
         {
             foreach (Control c in pnAnchorRight.Controls)
+            {
                 if (c is Form)
                 {
                     pnAnchorRight.Controls.Remove(c);
                     (c as Form).Close();
                 }
+            }
         }
 
         private void btnVersionDownloader_Click(object sender, EventArgs e)
@@ -686,8 +759,10 @@ namespace RTCV.Launcher
 
             clearAnchorRight();
 
-            vdppForm = new VersionDownloadPanel();
-            vdppForm.TopLevel = false;
+            vdppForm = new VersionDownloadPanel
+            {
+                TopLevel = false
+            };
             pnAnchorRight.Controls.Add(vdppForm);
             vdppForm.Dock = DockStyle.Fill;
             vdppForm.Show();

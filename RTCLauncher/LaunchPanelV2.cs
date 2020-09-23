@@ -11,7 +11,7 @@ namespace RTCV.Launcher
 
     public partial class LaunchPanelV2 : Form
     {
-        LauncherConf lc;
+        readonly LauncherConf lc;
 
         public LaunchPanelV2()
         {
@@ -25,14 +25,18 @@ namespace RTCV.Launcher
         {
             Size? btnSize = null;
 
-            string folderPath = Path.Combine(MainForm.launcherDir, "VERSIONS", MainForm.SelectedVersion);
+            var folderPath = Path.Combine(MainForm.launcherDir, "VERSIONS", MainForm.SelectedVersion);
             if (!Directory.Exists(folderPath))
+            {
                 return;
+            }
 
             foreach (LauncherConfItem lci in lc.items)
             {
-                Button newButton = new Button();
-                newButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+                var newButton = new Button
+                {
+                    BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))))
+                };
                 newButton.FlatAppearance.BorderSize = 0;
                 newButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
                 newButton.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
@@ -59,8 +63,8 @@ namespace RTCV.Launcher
                 newButton.UseVisualStyleBackColor = false;
                 newButton.Click += new System.EventHandler(this.btnBatchfile_Click);
 
-                bool isAddon = !string.IsNullOrWhiteSpace(lci.downloadVersion);
-                bool AddonInstalled = false;
+                var isAddon = !string.IsNullOrWhiteSpace(lci.downloadVersion);
+                var AddonInstalled = false;
 
                 if (isAddon)
                 {
@@ -69,10 +73,10 @@ namespace RTCV.Launcher
                     {
                         if (e.Button == MouseButtons.Right)
                         {
-                            Point locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y);
+                            var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y);
 
                             var columnsMenu = new BuildContextMenu();
-                            columnsMenu.Items.Add("Delete", null, new EventHandler((ob, ev) => { DeleteAddon(lci.folderName); })).Enabled = AddonInstalled;
+                            columnsMenu.Items.Add("Delete", null, new EventHandler((ob, ev) => DeleteAddon(lci.folderName))).Enabled = AddonInstalled;
                             columnsMenu.Show(this, locate);
                         }
 
@@ -82,12 +86,12 @@ namespace RTCV.Launcher
 
                 if (isAddon)
                 {
-                    Pen p = new Pen((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red), 2);
+                    var p = new Pen((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red), 2);
 
-                    int x1 = 8;
-                    int y1 = btnImage.Height - 8;
-                    int x2 = 24;
-                    int y2 = btnImage.Height - 8;
+                    var x1 = 8;
+                    var y1 = btnImage.Height - 8;
+                    var x2 = 24;
+                    var y2 = btnImage.Height - 8;
                     // Draw line to screen.
                     using (var graphics = Graphics.FromImage(btnImage))
                     {
@@ -108,14 +112,16 @@ namespace RTCV.Launcher
         {
             try
             {
-                string targetFolder = Path.Combine(MainForm.launcherDir, "VERSIONS", lc.version, AddonFolderName);
+                var targetFolder = Path.Combine(MainForm.launcherDir, "VERSIONS", lc.version, AddonFolderName);
 
                 if (Directory.Exists(targetFolder))
+                {
                     Directory.Delete(targetFolder, true);
+                }
             }
             catch (Exception ex)
             {
-                var result = MessageBox.Show($"Could not delete addon {AddonFolderName} because of the following error:\n{ex.ToString()}", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                var result = MessageBox.Show($"Could not delete addon {AddonFolderName} because of the following error:\n{ex}", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
                 if (result == DialogResult.Retry)
                 {
                     DeleteAddon(AddonFolderName);
@@ -134,10 +140,10 @@ namespace RTCV.Launcher
 
         private void btnBatchfile_Click(object sender, EventArgs e)
         {
-            Button currentButton = (Button)sender;
+            var currentButton = (Button)sender;
 
-            string line = (string)currentButton.Tag;
-            LauncherConfItem lci = new LauncherConfItem(lc, line);
+            var line = (string)currentButton.Tag;
+            var lci = new LauncherConfItem(lc, line);
 
             if (!Directory.Exists(lci.folderLocation))
             {
@@ -181,9 +187,9 @@ namespace RTCV.Launcher
 
                 if (result == DialogResult.Yes)
                 {
-                    string downloadUrl = $"{MainForm.webResourceDomain}/rtc/addons/" + lci.downloadVersion + ".zip";
-                    string downloadedFile = Path.Combine(MainForm.launcherDir, "PACKAGES", lci.downloadVersion + ".zip");
-                    string extractDirectory = lci.folderLocation;
+                    var downloadUrl = $"{MainForm.webResourceDomain}/rtc/addons/" + lci.downloadVersion + ".zip";
+                    var downloadedFile = Path.Combine(MainForm.launcherDir, "PACKAGES", lci.downloadVersion + ".zip");
+                    var extractDirectory = lci.folderLocation;
 
                     MainForm.DownloadFile(new Uri(downloadUrl), downloadedFile, extractDirectory);
                 }
@@ -197,18 +203,22 @@ namespace RTCV.Launcher
                 return;
             }
 
-            ProcessStartInfo psi = new ProcessStartInfo();
-            psi.FileName = Path.GetFileName(lci.batchLocation);
-            psi.WorkingDirectory = Path.GetDirectoryName(lci.batchLocation);
+            var psi = new ProcessStartInfo
+            {
+                FileName = Path.GetFileName(lci.batchLocation),
+                WorkingDirectory = Path.GetDirectoryName(lci.batchLocation)
+            };
             Process.Start(psi);
         }
 
         private static LauncherConf getFolderFromPreviousVersion(string downloadVersion)
         {
-            foreach (string ver in MainForm.sideversionForm.lbVersions.Items.Cast<string>())
+            foreach (var ver in MainForm.sideversionForm.lbVersions.Items.Cast<string>())
             {
                 if (downloadVersion == ver)
+                {
                     continue;
+                }
 
                 var lc = new LauncherConf(ver);
 
@@ -216,7 +226,9 @@ namespace RTCV.Launcher
                 if (lci != null)
                 {
                     if (Directory.Exists(lci.folderLocation))
+                    {
                         return lc;
+                    }
                 }
             }
 
