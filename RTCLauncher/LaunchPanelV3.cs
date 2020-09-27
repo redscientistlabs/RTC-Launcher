@@ -12,7 +12,7 @@ namespace RTCV.Launcher
     using RTCV.Launcher.Components;
 
     #pragma warning disable CA2213 //Component designer classes generate their own Dispose method
-    public partial class LaunchPanelV3 : Form
+    public partial class LaunchPanelV3 : Form, ILauncherJsonConfPanel
     {
         private readonly LauncherConfJson lc;
         private readonly Timer sidebarCloseTimer;
@@ -502,6 +502,11 @@ namespace RTCV.Launcher
             }
 
             return null;
+        }
+
+        public LauncherConfJson GetLauncherJsonConf()
+        {
+            return lc;
         }
     }
 }

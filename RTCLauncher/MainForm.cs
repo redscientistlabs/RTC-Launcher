@@ -586,22 +586,55 @@ namespace RTCV.Launcher
             {
                 try
                 {
-                    var versionFolderName = Path.GetFileNameWithoutExtension(file);
-
-                    var versionFolderPath = Path.Combine(versionLocation, versionFolderName);
-
-                    if (Directory.Exists(versionFolderPath))
-                    {
-                        DeleteSelected(versionFolderName);
-                    }
-
-                    if (!Directory.Exists(versionFolderPath))
-                    {
-                        Directory.CreateDirectory(versionFolderPath);
-                    }
-
                     using (ZipArchive archive = ZipFile.OpenRead(file))
                     {
+                        bool rtcvFolderExists = archive.Entries.FirstOrDefault(it => it.FullName.Contains("RTCV")) != null;
+                        bool launcherFolderExists = archive.Entries.FirstOrDefault(it => it.FullName.Contains("Launcher")) != null;
+                        string versionFolderName = Path.GetFileNameWithoutExtension(file);
+
+                        string versionFolderPath;
+
+                        if (rtcvFolderExists && launcherFolderExists)
+                        {
+                            //this is a main RTCV Install
+                            versionFolderPath = Path.Combine(versionLocation, versionFolderName);
+                        }
+                        else
+                        {
+                            if (sideversionForm.lbVersions.SelectedIndex == -1)
+                            {
+                                MessageBox.Show("Error: You cannot install an addon zip package without having a base install selected.");
+                                return;
+                            }
+
+                            //this is most likely an emulator package
+                            //in that case, use selected RTCV install path then fetch the requested emu path
+                            if (!(lpForm is ILauncherJsonConfPanel))
+                            {
+                                MessageBox.Show("Error: Could not load Json config from base install");
+                                return;
+                            }
+
+                            //fetching path segments
+                            string rtcvBuildName = sideversionForm.lbVersions.SelectedItem.ToString();
+                            var jsonConf = (lpForm as ILauncherJsonConfPanel).GetLauncherJsonConf();
+                            string addonFolderName = jsonConf.Items.FirstOrDefault(it => it.DownloadVersion == versionFolderName)?.FolderName;
+
+                            if (string.IsNullOrWhiteSpace(addonFolderName))
+                            {
+                                MessageBox.Show("Error: This addon is not meant for the selected base install");
+                                return;
+                            }
+
+                            versionFolderPath = Path.Combine(versionLocation, rtcvBuildName, addonFolderName);
+                        }
+
+                        if (Directory.Exists(versionFolderPath))
+                            DeleteSelected(versionFolderName);
+
+                        if (!Directory.Exists(versionFolderPath))
+                            Directory.CreateDirectory(versionFolderPath);
+
                         foreach (var entry in archive.Entries)
                         {
                             var entryPath = Path.Combine(versionFolderPath, entry.FullName).Replace("/", "\\");
@@ -620,7 +653,6 @@ namespace RTCV.Launcher
                         }
                     }
 
-                    //System.IO.Compression.ZipFile.ExtractToDirectory(file, versionFolder,);
                 }
                 catch (Exception ex)
                 {
@@ -635,8 +667,6 @@ namespace RTCV.Launcher
 
         public void DeleteSelected(string version = null)
         {
-            //if (sideversionForm.lbVersions.SelectedIndex == -1)
-            //    return;
 
             if (version == null && sideversionForm.lbVersions.SelectedIndex != -1)
             {

@@ -275,4 +275,9 @@ namespace RTCV.Launcher
             return e?.Execute(runPreExecute, runPostExecute) ?? false;
         }
     }
+
+    public interface ILauncherJsonConfPanel
+    {
+        LauncherConfJson GetLauncherJsonConf();
+    }
 }
