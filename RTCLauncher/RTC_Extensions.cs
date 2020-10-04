@@ -11,7 +11,7 @@ namespace RTCV.Launcher
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
 
-    public static class RTC_Extensions
+    internal static class RTC_Extensions
     {
         public static IEnumerable<T> OrderByNatural<T>(this IEnumerable<T> items, Func<T, string> selector, StringComparer stringComparer = null)
         {

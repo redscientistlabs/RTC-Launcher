@@ -11,7 +11,7 @@ namespace RTCV.Launcher
     using System.Windows.Forms;
     using RTCV.Launcher.Components;
 
-    public partial class VersionDownloadPanel : Form
+    internal partial class VersionDownloadPanel : Form
     {
         internal string latestVersionString = " (Latest version)";
         private List<dynamic> onlineVersionsObjects = null;

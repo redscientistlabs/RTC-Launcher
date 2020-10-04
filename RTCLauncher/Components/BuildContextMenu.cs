@@ -17,7 +17,7 @@ namespace RTCV.Launcher.Components
         }
     }
 
-    public class BuildContextMenu : ContextMenuStrip
+    internal class BuildContextMenu : ContextMenuStrip
     {
         public BuildContextMenu() : base()
         {

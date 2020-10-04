@@ -9,7 +9,7 @@ namespace RTCV.Launcher
     using System.Windows.Forms;
     using RTCV.Launcher.Components;
 
-    public partial class LaunchPanelV2 : Form
+    internal partial class LaunchPanelV2 : Form
     {
         readonly LauncherConf lc;
 

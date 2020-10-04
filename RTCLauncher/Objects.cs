@@ -4,13 +4,14 @@ namespace RTCV.Launcher
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Windows.Forms;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
-    public class LauncherConf
+    internal class LauncherConf
     {
         internal string launcherAssetLocation;
         private readonly string launcherConfLocation;
@@ -61,7 +62,8 @@ namespace RTCV.Launcher
         }
     }
 
-    public class ExecutableCommand
+    [SuppressMessage("Microsoft.Design", "CA1812: Avoid uninstantiated internal classes", Justification = "Passed as a type parameter")]
+    internal class ExecutableCommand
     {
         internal string DisplayName;
         internal string FileName;
@@ -142,7 +144,7 @@ namespace RTCV.Launcher
         }
     }
 
-    public class LauncherConfJson
+    internal class LauncherConfJson
     {
         internal string LauncherAssetLocation;
         internal string LauncherConfLocation;
@@ -216,7 +218,8 @@ namespace RTCV.Launcher
         }
     }
 
-    public class LauncherConfJsonItem
+    [SuppressMessage("Microsoft.Design", "CA1812: Avoid uninstantiated internal classes", Justification = "Passed as a type parameter")]
+    internal class LauncherConfJsonItem
     {
         [JsonProperty]
         internal readonly string FolderName;
@@ -276,7 +279,7 @@ namespace RTCV.Launcher
         }
     }
 
-    public interface ILauncherJsonConfPanel
+    internal interface ILauncherJsonConfPanel
     {
         LauncherConfJson GetLauncherJsonConf();
     }

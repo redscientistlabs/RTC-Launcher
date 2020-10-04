@@ -380,9 +380,6 @@ dotnet_diagnostic.SA1401.severity = none
 # File may only contain a single type
 dotnet_diagnostic.SA1402.severity = none
 
-# Code analysis suppression should have justification
-dotnet_diagnostic.SA1404.severity = none
-
 # Debug.Assert should provide message text
 dotnet_diagnostic.SA1405.severity = none
 
@@ -446,9 +443,6 @@ dotnet_diagnostic.SA1601.severity = none
 # Enumeration items should be documented
 dotnet_diagnostic.SA1602.severity = none
 
-# Element documentation should have summary
-dotnet_diagnostic.SA1604.severity = none
-
 # The documentation text within the param tag must not be empty
 dotnet_diagnostic.SA1614.severity = none
 
@@ -467,23 +461,5 @@ dotnet_diagnostic.SA1642.severity = none
 # The property's documentation summary text should begin with: 'Gets or sets a value indicating whether'
 dotnet_diagnostic.SA1623.severity = none
 
-# Single-line comments should not use documentation style slashes
-dotnet_diagnostic.SA1626.severity = none
-
-# Document text should end with a period
-dotnet_diagnostic.SA1629.severity = none
-
-# Element return value should be documented
-dotnet_diagnostic.SA1615.severity = none
-
-# Element return value documentation should have text
-dotnet_diagnostic.SA1616.severity = none
-
-# Documentation for parameter is missing
-dotnet_diagnostic.SA1611.severity = none
-
 # Tuple element name should use correct casing
 dotnet_diagnostic.SA1316.severity = none
-
-# The property's documentation summary text should begin with: 'Gets or sets a value indicating whether
-dotnet_diagnostic.1623.severity = none
