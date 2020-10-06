@@ -4,7 +4,7 @@ namespace RTCV.Launcher
     using System.Drawing;
     using System.Windows.Forms;
 
-    public partial class SidebarVersionsPanel : Form
+    internal partial class SidebarVersionsPanel : Form
     {
         public SidebarVersionsPanel()
         {

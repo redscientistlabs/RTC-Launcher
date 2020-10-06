@@ -15,7 +15,7 @@ namespace RTCV.Launcher
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
 
-    public partial class MainForm : Form
+    internal partial class MainForm : Form
     {
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HT_CAPTION = 0x2;
@@ -57,7 +57,7 @@ namespace RTCV.Launcher
         internal static DownloadForm dForm = null;
         internal static Form lpForm = null;
 
-        public static readonly int launcherVer = 27;
+        public const int launcherVer = 27;
 
         internal static int devCounter = 0;
         internal static string SelectedVersion = null;
@@ -520,7 +520,7 @@ namespace RTCV.Launcher
             }
         }
 
-        public static void RefreshKeepSelectedVersion()
+        internal static void RefreshKeepSelectedVersion()
         {
             if (lastSelectedVersion != null)
             {
@@ -652,7 +652,6 @@ namespace RTCV.Launcher
                             }
                         }
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -667,7 +666,6 @@ namespace RTCV.Launcher
 
         public void DeleteSelected(string version = null)
         {
-
             if (version == null && sideversionForm.lbVersions.SelectedIndex != -1)
             {
                 version = sideversionForm.lbVersions.SelectedItem.ToString();

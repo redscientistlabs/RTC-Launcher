@@ -8,7 +8,7 @@ namespace RTCV.Launcher
     using System.Linq;
     using System.Windows.Forms;
 
-    public partial class LaunchPanelV1 : Form
+    internal partial class LaunchPanelV1 : Form
     {
         private readonly Button[] buttons;
 

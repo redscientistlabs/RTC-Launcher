@@ -10,7 +10,7 @@ namespace Package_Downloader
     {
         private readonly string RtcVer = "TEST";
         private readonly DirectoryInfo RtcDir = null;
-        public PackageDownloader()
+        internal PackageDownloader()
         {
             InitializeComponent();
 

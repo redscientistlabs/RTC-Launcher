@@ -1,9 +1,9 @@
-﻿namespace Package_Downloader
+namespace Package_Downloader
 {
     using System;
     using System.Windows.Forms;
 
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// The main entry point for the application.

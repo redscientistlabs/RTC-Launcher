@@ -6,8 +6,8 @@ namespace RTCV.Launcher
     using System.Net;
     using System.Windows.Forms;
 
-    #pragma warning disable CA2213 //Component designer classes generate their own Dispose method
-    public partial class DownloadForm : Form
+#pragma warning disable CA2213 //Component designer classes generate their own Dispose method
+    internal partial class DownloadForm : Form
     {
         readonly WebClient webClient;
 
