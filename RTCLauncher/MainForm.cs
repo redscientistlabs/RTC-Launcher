@@ -14,6 +14,7 @@ namespace RTCV.Launcher
     using System.Windows.Forms;
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
+    using RTCV.Launcher.Exceptions;
 
     internal partial class MainForm : Form
     {
@@ -367,7 +368,67 @@ namespace RTCV.Launcher
             Environment.Exit(0);
         }
 
-        public void DownloadComplete(string downloadedFile, string extractDirectory)
+        private static void ValidateExtractedFiles(string downloadedFile, string extractDirectory)
+        {
+            //This checks every extracted files against the contents of the zip file
+            using (ZipArchive za = ZipFile.OpenRead(downloadedFile))
+            {
+                var foundLockBefore = false; //this flag prompts a message to skip all
+                var skipLock = false; //file locked messages and sents the flag below
+
+                foreach (ZipArchiveEntry entry in za.Entries.Where(it => !it.FullName.EndsWith("/")))
+                {
+                    var targetFile = Path.Combine(extractDirectory, entry.FullName.Replace("/", "\\"));
+                    if (File.Exists(targetFile))
+                    {
+                        var ext = entry.FullName.ToUpper().Substring(entry.FullName.Length - 3);
+                        if (ext == "EXE" || ext == "DLL")
+                        {
+                            FileStream readCheck = null;
+                            try
+                            {
+                                readCheck = File.OpenRead(targetFile); //test if file can be read
+                                foundLockBefore = true;
+                            }
+                            catch
+                            {
+                                if (!skipLock)
+                                {
+                                    if (foundLockBefore)
+                                    {
+                                        if (MessageBox.Show($"Another file has been found locked/inaccessible.\nThere might be many more messages like this coming up.\n\nWould you like skip any remaining lock messages?", "Error",
+                                            MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+                                        {
+                                            skipLock = true;
+                                        }
+                                    }
+                                }
+
+                                if (!skipLock)
+                                {
+                                    MessageBox.Show($"An error occurred during extraction,\n\nThe file \"targetFile\" seems to have been locked/made inaccessible by an external program. It might be caused by your antivirus.", "Error",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+
+                            readCheck?.Close(); //close file immediately
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show($"An error occurred during extraction, rolling back changes.\n\nThe file \"{targetFile}\" could not be found. It might have been deleted by your antivirus.", "Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+
+                        if (Directory.Exists(extractDirectory))
+                        {
+                            RTC_Extensions.RecursiveDeleteNukeReadOnly(extractDirectory);
+                        }
+                    }
+                }
+            }
+        }
+
+        internal void DownloadComplete(string downloadedFile, string extractDirectory)
         {
             try
             {
@@ -392,111 +453,22 @@ namespace RTCV.Launcher
                     return;
                 }
 
-                //This checks every extracted files against the contents of the zip file
-                using (ZipArchive za = ZipFile.OpenRead(downloadedFile))
-                {
-                    var foundLockBefore = false; //this flag prompts a message to skip all
-                    var skipLock = false; //file locked messages and sents the flag below
-
-                    foreach (ZipArchiveEntry entry in za.Entries.Where(it => !it.FullName.EndsWith("/")))
-                    {
-                        var targetFile = Path.Combine(extractDirectory, entry.FullName.Replace("/", "\\"));
-                        if (File.Exists(targetFile))
-                        {
-                            var ext = entry.FullName.ToUpper().Substring(entry.FullName.Length - 3);
-                            if (ext == "EXE" || ext == "DLL")
-                            {
-                                FileStream readCheck = null;
-                                try
-                                {
-                                    readCheck = File.OpenRead(targetFile); //test if file can be read
-                                    foundLockBefore = true;
-                                }
-                                catch
-                                {
-                                    if (!skipLock)
-                                    {
-                                        if (foundLockBefore)
-                                        {
-                                            if (MessageBox.Show($"Another file has been found locked/inaccessible.\nThere might be many more messages like this coming up.\n\nWould you like skip any remaining lock messages?", "Error",
-                                                MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
-                                            {
-                                                skipLock = true;
-                                            }
-                                        }
-                                    }
-
-                                    if (!skipLock)
-                                    {
-                                        MessageBox.Show($"An error occurred during extraction,\n\nThe file \"targetFile\" seems to have been locked/made inaccessible by an external program. It might be caused by your antivirus.", "Error",
-                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    }
-                                }
-
-                                readCheck?.Close(); //close file immediately
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show($"An error occurred during extraction, rolling back changes.\n\nThe file \"{targetFile}\" could not be found. It might have been deleted by your antivirus.", "Error", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-
-                            if (Directory.Exists(extractDirectory))
-                            {
-                                RTC_Extensions.RecursiveDeleteNukeReadOnly(extractDirectory);
-                            }
-                        }
-                    }
-                }
-
-                //check if files are all present here
+                ValidateExtractedFiles(downloadedFile, extractDirectory);
 
                 if (File.Exists(downloadedFile))
                 {
                     File.Delete(downloadedFile);
                 }
 
-                var preReqChecker = Path.Combine(extractDirectory, "Launcher", "PrereqChecker.exe");
-                if (File.Exists(preReqChecker))
+                LaunchPrereqCheckerIfPresent(extractDirectory);
+
+                try
                 {
-                    var psi = new ProcessStartInfo
-                    {
-                        FileName = Path.GetFileName(preReqChecker),
-                        WorkingDirectory = Path.GetDirectoryName(preReqChecker)
-                    };
-                    Process.Start(psi)?.WaitForExit();
+                    CheckForNeededLauncherUpdate(extractDirectory);
                 }
-
-                if (File.Exists(Path.Combine(extractDirectory, "Launcher", "ver.ini")))
+                catch (LauncherUpdateRequiredException)
                 {
-                    var newVer = Convert.ToInt32(File.ReadAllText(Path.Combine(extractDirectory, "Launcher", "ver.ini")));
-                    if (newVer > launcherVer)
-                    {
-                        if (File.Exists(Path.Combine(extractDirectory, "Launcher", "minver.ini")) && //Do we have minver
-                            Convert.ToInt32(File.ReadAllText(Path.Combine(extractDirectory, "Launcher", "minver.ini"))) > launcherVer) //Is minver > launcherVer
-                        {
-                            if (MessageBox.Show("A mandatory launcher update is required to use this version. Click \"OK\" to update the launcher.",
-                                "Launcher update required",
-                                MessageBoxButtons.OKCancel,
-                                MessageBoxIcon.Exclamation,
-                                MessageBoxDefaultButton.Button1,
-                                MessageBoxOptions.DefaultDesktopOnly) == DialogResult.OK)
-                            {
-                                UpdateLauncher(extractDirectory);
-                            }
-                            else
-                            {
-                                MessageBox.Show("Launcher update is required. Cancelling.");
-                                RTC_Extensions.RecursiveDeleteNukeReadOnly(extractDirectory);
-                                return;
-                            }
-                        }
-
-                        if (MessageBox.Show("The downloaded package contains a new launcher update.\n\nDo you want to update the Launcher?", "Launcher update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                        {
-                            UpdateLauncher(extractDirectory);
-                        }
-                    }
+                    return;
                 }
             }
             finally
@@ -517,6 +489,55 @@ namespace RTCV.Launcher
                 dForm = null;
 
                 RefreshKeepSelectedVersion();
+            }
+        }
+
+        private static void LaunchPrereqCheckerIfPresent(string extractDirectory)
+        {
+            var preReqChecker = Path.Combine(extractDirectory, "Launcher", "PrereqChecker.exe");
+            if (File.Exists(preReqChecker))
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = Path.GetFileName(preReqChecker),
+                    WorkingDirectory = Path.GetDirectoryName(preReqChecker)
+                };
+                Process.Start(psi)?.WaitForExit();
+            }
+        }
+
+        private static void CheckForNeededLauncherUpdate(string extractDirectory)
+        {
+            if (File.Exists(Path.Combine(extractDirectory, "Launcher", "ver.ini")))
+            {
+                var newVer = Convert.ToInt32(File.ReadAllText(Path.Combine(extractDirectory, "Launcher", "ver.ini")));
+                if (newVer > launcherVer)
+                {
+                    if (File.Exists(Path.Combine(extractDirectory, "Launcher", "minver.ini")) && //Do we have minver
+                        Convert.ToInt32(File.ReadAllText(Path.Combine(extractDirectory, "Launcher", "minver.ini"))) > launcherVer) //Is minver > launcherVer
+                    {
+                        if (MessageBox.Show("A mandatory launcher update is required to use this version. Click \"OK\" to update the launcher.",
+                            "Launcher update required",
+                            MessageBoxButtons.OKCancel,
+                            MessageBoxIcon.Exclamation,
+                            MessageBoxDefaultButton.Button1,
+                            MessageBoxOptions.DefaultDesktopOnly) == DialogResult.OK)
+                        {
+                            UpdateLauncher(extractDirectory);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Launcher update is required. Cancelling.");
+                            RTC_Extensions.RecursiveDeleteNukeReadOnly(extractDirectory);
+                            throw new LauncherUpdateRequiredException();
+                        }
+                    }
+
+                    if (MessageBox.Show("The downloaded package contains a new launcher update.\n\nDo you want to update the Launcher?", "Launcher update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        UpdateLauncher(extractDirectory);
+                    }
+                }
             }
         }
 
