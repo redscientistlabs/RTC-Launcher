@@ -5,9 +5,7 @@ namespace RTCV.Launcher.Components
 
     internal class BuildContextMenuColors : ProfessionalColorTable
     {
-        public override Color MenuItemSelected {
-            get { return Color.DodgerBlue; }
-        }
+        public override Color MenuItemSelected => Color.DodgerBlue;
     }
 
     internal class BuildContextMenuRenderer : ToolStripProfessionalRenderer

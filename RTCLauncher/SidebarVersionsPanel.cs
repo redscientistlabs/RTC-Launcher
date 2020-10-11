@@ -22,7 +22,6 @@ namespace RTCV.Launcher
 
         private void lbVersions_DragDrop(object sender, DragEventArgs e)
         {
-                var formats = e.Data.GetFormats();
                 e.Effect = DragDropEffects.Move;
 
                 var fd = (string[])e.Data.GetData(DataFormats.FileDrop); //file drop
