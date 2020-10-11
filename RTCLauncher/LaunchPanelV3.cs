@@ -151,8 +151,6 @@ namespace RTCV.Launcher
 
         public void InstallCustomPackages()
         {
-            string[] fileNames = null;
-
             var ofd = new OpenFileDialog
             {
                 DefaultExt = "pkg",
@@ -161,6 +159,8 @@ namespace RTCV.Launcher
                 RestoreDirectory = true,
                 Multiselect = true
             };
+
+            string[] fileNames;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 fileNames = ofd.FileNames;
@@ -241,7 +241,6 @@ namespace RTCV.Launcher
 
         private void AddButton_DragDrop(object sender, DragEventArgs e)
         {
-            var formats = e.Data.GetFormats();
             e.Effect = DragDropEffects.Move;
 
             var fd = (string[])e.Data.GetData(DataFormats.FileDrop); //file drop

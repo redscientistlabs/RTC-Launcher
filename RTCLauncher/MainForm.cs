@@ -609,9 +609,9 @@ namespace RTCV.Launcher
                 {
                     using (ZipArchive archive = ZipFile.OpenRead(file))
                     {
-                        bool rtcvFolderExists = archive.Entries.FirstOrDefault(it => it.FullName.Contains("RTCV")) != null;
-                        bool launcherFolderExists = archive.Entries.FirstOrDefault(it => it.FullName.Contains("Launcher")) != null;
-                        string versionFolderName = Path.GetFileNameWithoutExtension(file);
+                        var rtcvFolderExists = archive.Entries.FirstOrDefault(it => it.FullName.Contains("RTCV")) != null;
+                        var launcherFolderExists = archive.Entries.FirstOrDefault(it => it.FullName.Contains("Launcher")) != null;
+                        var versionFolderName = Path.GetFileNameWithoutExtension(file);
 
                         string versionFolderPath;
 
@@ -637,9 +637,9 @@ namespace RTCV.Launcher
                             }
 
                             //fetching path segments
-                            string rtcvBuildName = sideversionForm.lbVersions.SelectedItem.ToString();
+                            var rtcvBuildName = sideversionForm.lbVersions.SelectedItem.ToString();
                             var jsonConf = (lpForm as ILauncherJsonConfPanel).GetLauncherJsonConf();
-                            string addonFolderName = jsonConf.Items.FirstOrDefault(it => it.DownloadVersion == versionFolderName)?.FolderName;
+                            var addonFolderName = jsonConf.Items.FirstOrDefault(it => it.DownloadVersion == versionFolderName)?.FolderName;
 
                             if (string.IsNullOrWhiteSpace(addonFolderName))
                             {
@@ -651,10 +651,14 @@ namespace RTCV.Launcher
                         }
 
                         if (Directory.Exists(versionFolderPath))
+                        {
                             DeleteSelected(versionFolderName);
+                        }
 
                         if (!Directory.Exists(versionFolderPath))
+                        {
                             Directory.CreateDirectory(versionFolderPath);
+                        }
 
                         foreach (var entry in archive.Entries)
                         {
