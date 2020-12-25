@@ -117,16 +117,17 @@ namespace RTCV.Launcher
 
                 if (isAddon)
                 {
-                    var p = new Pen((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red), 2);
+                    var p = new Pen((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red), 1);
+                    var b = new System.Drawing.SolidBrush((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red));
 
-                    var x1 = 8;
-                    var y1 = btnImage.Height - 8;
-                    var x2 = 24;
-                    var y2 = btnImage.Height - 8;
+                    var x1 = 2;
+                    var y1 = btnImage.Height - 6;
+                    var x2 = 4;
+                    var y2 = 4;
                     // Draw line to screen.
                     using (var graphics = Graphics.FromImage(btnImage))
                     {
-                        graphics.DrawLine(p, x1, y1, x2, y2);
+                        graphics.FillRectangle(b, x1, y1, x2, y2);
                     }
                 }
 
