@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
     <OutputType>WinExe</OutputType>
@@ -24,6 +24,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Use Build\ instead of Build\net471\ for output -->
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- Suppress XML comment warnings: https://stackoverflow.com/a/54371962/1222411 -->
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\rtcpastel.ico</ApplicationIcon>
