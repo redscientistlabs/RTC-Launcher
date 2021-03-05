@@ -78,7 +78,7 @@
   <ItemGroup>
     <Reference Include="System.Net.Http" />
     <PackageReference Include="Costura.Fody">
-      <Version>4.1.0</Version>
+      <Version>5.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json">
