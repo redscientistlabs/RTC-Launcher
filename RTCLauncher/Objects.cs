@@ -11,14 +11,14 @@ namespace RTCV.Launcher
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
-    internal class LauncherConf
+    public class LauncherConf
     {
-        internal string launcherAssetLocation;
-        private readonly string launcherConfLocation;
-        internal string batchFilesLocation;
-        internal string version;
+        public string launcherAssetLocation;
+        public readonly string launcherConfLocation;
+        public string batchFilesLocation;
+        public string version;
 
-        internal LauncherConfItem[] items = { };
+        public LauncherConfItem[] items = { };
 
         public LauncherConf(string _version)
         {
@@ -38,18 +38,18 @@ namespace RTCV.Launcher
         }
     }
 
-    internal class LauncherConfItem
+    public class LauncherConfItem
     {
-        internal string[] lineItems;
-        internal string imageLocation;
-        internal string batchName;
-        internal string batchLocation;
-        internal string folderName;
-        internal string folderLocation;
-        internal string downloadVersion;
-        internal string line;
+        public string[] lineItems;
+        public string imageLocation;
+        public string batchName;
+        public string batchLocation;
+        public string folderName;
+        public string folderLocation;
+        public string downloadVersion;
+        public string line;
 
-        internal LauncherConfItem(LauncherConf lc, string _line)
+        public LauncherConfItem(LauncherConf lc, string _line)
         {
             line = _line;
             lineItems = _line.Split('|');
@@ -62,18 +62,18 @@ namespace RTCV.Launcher
         }
     }
 
-    [SuppressMessage("Microsoft.Design", "CA1812: Avoid uninstantiated internal classes", Justification = "Passed as a type parameter")]
-    internal class ExecutableCommand
+    [SuppressMessage("Microsoft.Design", "CA1812: Avoid uninstantiated public classes", Justification = "Passed as a type parameter")]
+    public class ExecutableCommand
     {
-        internal string DisplayName;
-        internal string FileName;
-        internal string Arguments;
-        internal bool WaitForExit;
-        internal int WaitForExitTimeout = int.MaxValue;
+        public string DisplayName;
+        public string FileName;
+        public string Arguments;
+        public bool WaitForExit;
+        public int WaitForExitTimeout = int.MaxValue;
         [JsonConverter(typeof(StringEnumConverter))]
-        internal ProcessWindowStyle WindowStyle = ProcessWindowStyle.Normal;
-        internal List<ExecutableCommand> PreExecuteCommands = new List<ExecutableCommand>();
-        internal List<ExecutableCommand> PostExecuteCommands = new List<ExecutableCommand>();
+        public ProcessWindowStyle WindowStyle = ProcessWindowStyle.Normal;
+        public List<ExecutableCommand> PreExecuteCommands = new List<ExecutableCommand>();
+        public List<ExecutableCommand> PostExecuteCommands = new List<ExecutableCommand>();
 
         public ExecutableCommand(string displayName, string fileName, string arguments, bool waitForExit)
         {
@@ -144,15 +144,15 @@ namespace RTCV.Launcher
         }
     }
 
-    internal class LauncherConfJson
+    public class LauncherConfJson
     {
-        internal string LauncherAssetLocation;
-        internal string LauncherConfLocation;
-        internal string[] LauncherAddonConfLocations;
-        internal string VersionLocation;
-        internal string Version;
+        public string LauncherAssetLocation;
+        public string LauncherConfLocation;
+        public string[] LauncherAddonConfLocations;
+        public string VersionLocation;
+        public string Version;
 
-        internal LauncherConfJsonItem[] Items = { };
+        public LauncherConfJsonItem[] Items = { };
 
         public LauncherConfJson(string _version)
         {
@@ -218,32 +218,32 @@ namespace RTCV.Launcher
         }
     }
 
-    [SuppressMessage("Microsoft.Design", "CA1812: Avoid uninstantiated internal classes", Justification = "Passed as a type parameter")]
-    internal class LauncherConfJsonItem
+    [SuppressMessage("Microsoft.Design", "CA1812: Avoid uninstantiated public classes", Justification = "Passed as a type parameter")]
+    public class LauncherConfJsonItem
     {
         [JsonProperty]
-        internal readonly string FolderName;
+        public readonly string FolderName;
         [JsonProperty]
-        internal readonly string ImageName;
+        public readonly string ImageName;
         [JsonProperty]
-        internal readonly string DownloadVersion;
+        public readonly string DownloadVersion;
         [JsonProperty]
-        internal readonly ReadOnlyDictionary<string, ExecutableCommand> ExecutableCommands;
+        public readonly ReadOnlyDictionary<string, ExecutableCommand> ExecutableCommands;
 
         //Used for the sidepanel and ordering of cards
         [JsonProperty]
-        internal readonly string ItemName;
+        public readonly string ItemName;
         [JsonProperty]
-        internal readonly string ItemSubtitle;
+        public readonly string ItemSubtitle;
         [JsonProperty]
-        internal readonly string ItemDescription;
+        public readonly string ItemDescription;
 
         [JsonProperty]
-        internal readonly bool HideItem; //makes the card hide
+        public readonly bool HideItem; //makes the card hide
 
         //Addon vars that are automatically set when the json is loaded
-        internal bool IsAddon;
-        internal string ConfigFilename;
+        public bool IsAddon;
+        public string ConfigFilename;
 
         public LauncherConfJsonItem(string imageName, string downloadVersion, string folderName, ReadOnlyDictionary<string, ExecutableCommand> executableCommands, string itemName, string itemSubtitle, string itemDescription, bool hideItem, bool isAddon, string configFilename)
         {
@@ -279,7 +279,7 @@ namespace RTCV.Launcher
         }
     }
 
-    internal interface ILauncherJsonConfPanel
+    public interface ILauncherJsonConfPanel
     {
         LauncherConfJson GetLauncherJsonConf();
     }
