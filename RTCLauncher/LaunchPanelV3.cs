@@ -100,8 +100,8 @@ namespace RTCV.Launcher
                             var locate = new Point(((Control)sender).Location.X + e.Location.X, ((Control)sender).Location.Y + e.Location.Y);
 
                             var columnsMenu = new Components.BuildContextMenu();
-                            columnsMenu.Items.Add("Delete Addon", null, (ob, ev) => DeleteAddon(lcji)).Enabled = (lcji.IsAddon || AddonInstalled);
-                            columnsMenu.Items.Add("Open Folder in Explorer", null, (ob, ev) =>
+                            
+                            columnsMenu.Items.Add("Open Folder", null, (ob, ev) =>
                             {
                                 var addonFolderPath = Path.Combine(MainForm.launcherDir, "VERSIONS", lc.Version, lcji.FolderName);
 
@@ -110,6 +110,9 @@ namespace RTCV.Launcher
                                     Process.Start(addonFolderPath);
                                 }
                             }).Enabled = AddonInstalled;
+                            columnsMenu.Items.Add(new ToolStripSeparator());
+                            columnsMenu.Items.Add("Delete Addon", null, (ob, ev) => DeleteAddon(lcji)).Enabled = (lcji.IsAddon || AddonInstalled);
+
                             columnsMenu.Show(this, locate);
                         }
                     };
