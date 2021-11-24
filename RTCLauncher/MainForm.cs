@@ -72,6 +72,13 @@ namespace RTCV.Launcher
 
             versionLabel.Text = "v" + launcherVer;
 
+
+            if (new DirectoryInfo(launcherDir).Name == "Launcher")
+            {
+                MessageBox.Show("This is the wrong file. Please run the Launcher.exe located in the same root directory where your VERSIONS and PACKAGES folder reside. If that exe is missing, you can copy this one to that location and run it from there.");
+                Environment.Exit(-1);
+            }
+
             var preAnchorLeftPanelSize = new Size(pnLeftSide.Width, pnLeftSide.Height - btnVersionDownloader.Height);
 
             sideversionForm = new SidebarVersionsPanel
