@@ -168,9 +168,9 @@ namespace RTCV.Launcher
             this.versionLabel.ForeColor = System.Drawing.Color.Gray;
             this.versionLabel.Location = new System.Drawing.Point(186, 9);
             this.versionLabel.Name = "versionLabel";
-            this.versionLabel.Size = new System.Drawing.Size(208, 23);
+            this.versionLabel.Size = new System.Drawing.Size(25, 23);
             this.versionLabel.TabIndex = 133;
-            this.versionLabel.Text = "(launcher version)";
+            this.versionLabel.Text = "VER";
             this.versionLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // btnTutorials

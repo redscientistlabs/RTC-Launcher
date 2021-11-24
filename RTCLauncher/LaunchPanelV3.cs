@@ -326,9 +326,18 @@ namespace RTCV.Launcher
 
                 currentButton.FlatAppearance.BorderSize = 0;
 
-                MainForm.sideinfoForm.lbName.Text = (lcji.ItemName ?? string.Empty);
-                MainForm.sideinfoForm.lbSubtitle.Text = (lcji.ItemSubtitle ?? string.Empty);
-                MainForm.sideinfoForm.lbDescription.Text = (lcji.ItemDescription ?? string.Empty);
+                string name = (lcji.ItemName ?? string.Empty);
+                string subtitle = (lcji.ItemSubtitle ?? string.Empty);
+
+                if (name.Contains(subtitle))
+                    name = name.Replace(subtitle, string.Empty);
+
+                string description = (lcji.ItemDescription ?? string.Empty);
+
+
+                MainForm.sideinfoForm.lbName.Text = name;
+                MainForm.sideinfoForm.lbSubtitle.Text = subtitle;
+                MainForm.sideinfoForm.lbDescription.Text = description;
             }
         }
 
@@ -344,9 +353,18 @@ namespace RTCV.Launcher
                 currentButton.FlatAppearance.BorderColor = Color.Gray;
                 currentButton.FlatAppearance.BorderSize = 1;
 
-                MainForm.sideinfoForm.lbName.Text = (lcji.ItemName ?? string.Empty);
-                MainForm.sideinfoForm.lbSubtitle.Text = (lcji.ItemSubtitle ?? string.Empty);
-                MainForm.sideinfoForm.lbDescription.Text = (lcji.ItemDescription ?? string.Empty);
+                string name = (lcji.ItemName ?? string.Empty);
+                string subtitle = (lcji.ItemSubtitle ?? string.Empty);
+
+                if (name.Contains(subtitle))
+                    name = name.Replace(subtitle, string.Empty);
+
+                string description = (lcji.ItemDescription ?? string.Empty);
+
+
+                MainForm.sideinfoForm.lbName.Text = name;
+                MainForm.sideinfoForm.lbSubtitle.Text = subtitle;
+                MainForm.sideinfoForm.lbDescription.Text = description;
 
                 MainForm.sideinfoForm.Show();
                 MainForm.sideversionForm.Hide();
