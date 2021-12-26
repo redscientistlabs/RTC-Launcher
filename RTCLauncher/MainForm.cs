@@ -53,6 +53,7 @@ namespace RTCV.Launcher
         internal static string devServer = "http://cc.r5x.cc";
         internal static string historicalServer = "http://historical.optional.fun";
 
+        internal static string buildFolder = null;
 
         internal static string webResourceDomain = releaseServer;
 
@@ -136,8 +137,11 @@ namespace RTCV.Launcher
                 webResourceDomain = releaseServer;
             }
 
+            if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\build.txt"))
+                buildFolder = File.ReadAllText(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\build.txt");
+
                 //Will trigger after an update from the original launcher
-            if (Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher"))
+                if (Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher"))
             {
                 Directory.Delete(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher", true);
                 if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + "Update_Launcher.zip"))
@@ -786,6 +790,35 @@ namespace RTCV.Launcher
             }
         }
 
+        public static void UpdateCore()
+        {
+            if (sideversionForm.lbVersions.SelectedIndex == -1)
+            {
+                return;
+            }
+
+            var version = sideversionForm.lbVersions.SelectedItem.ToString();
+
+            string rtcvFolder = Path.Combine(launcherDir, "VERSIONS", version, "RTCV");
+            if (Directory.Exists(buildFolder) && Directory.Exists(rtcvFolder))
+            {
+
+                var rootFiles = new DirectoryInfo(buildFolder).GetFiles();
+                int count = 0;
+                string files = "";
+
+                foreach (var file in rootFiles)
+                {
+                    file.CopyTo(Path.Combine(rtcvFolder, file.Name),true);
+                    count++;
+                    files = $"{files} {file.Name}";
+                }
+
+                MessageBox.Show($"Updated {count} files \n {files}");
+            }
+        }
+
+
         internal void lbVersions_MouseDown(object sender, MouseEventArgs e)
         {
             var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y + pnTopPanel.Height);
@@ -810,6 +843,13 @@ namespace RTCV.Launcher
                 if (e.Button == MouseButtons.Right)
                 {
                     var columnsMenu = new Components.BuildContextMenu();
+
+                    if (buildFolder != null)
+                    {
+                        columnsMenu.Items.Add("Update RTCV Core from Build Folder", null, new EventHandler((ob, ev) => UpdateCore()));
+                        columnsMenu.Items.Add(new ToolStripSeparator());
+                    }
+
                     columnsMenu.Items.Add("Open Folder", null, new EventHandler((ob, ev) => OpenFolder()));
                     columnsMenu.Items.Add(new ToolStripSeparator());
                     columnsMenu.Items.Add("Delete", null, new EventHandler((ob, ev) => DeleteSelected()));
