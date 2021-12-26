@@ -31,8 +31,9 @@ namespace RTCV.Launcher
             this.lbOnlineVersions = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btnDownloadVersion = new System.Windows.Forms.Button();
-            this.cbDevBuids = new System.Windows.Forms.CheckBox();
             this.btnOfflineInstall = new System.Windows.Forms.Button();
+            this.cbSelectedServer = new System.Windows.Forms.ComboBox();
+            this.versionLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lbOnlineVersions
@@ -42,7 +43,7 @@ namespace RTCV.Launcher
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbOnlineVersions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
             this.lbOnlineVersions.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lbOnlineVersions.DisplayMember = "key";
+            this.lbOnlineVersions.DisplayMember = "Text";
             this.lbOnlineVersions.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbOnlineVersions.ForeColor = System.Drawing.Color.White;
             this.lbOnlineVersions.FormattingEnabled = true;
@@ -53,7 +54,7 @@ namespace RTCV.Launcher
             this.lbOnlineVersions.Size = new System.Drawing.Size(463, 185);
             this.lbOnlineVersions.TabIndex = 129;
             this.lbOnlineVersions.Tag = "color:normal";
-            this.lbOnlineVersions.ValueMember = "value";
+            this.lbOnlineVersions.ValueMember = "Value";
             this.lbOnlineVersions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbOnlineVersions_MouseDoubleClick_1);
             this.lbOnlineVersions.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbOnlineVersions_MouseDown);
             // 
@@ -88,20 +89,6 @@ namespace RTCV.Launcher
             this.btnDownloadVersion.UseVisualStyleBackColor = false;
             this.btnDownloadVersion.Click += new System.EventHandler(this.btnDownloadVersion_Click);
             // 
-            // cbDevBuids
-            // 
-            this.cbDevBuids.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbDevBuids.AutoSize = true;
-            this.cbDevBuids.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
-            this.cbDevBuids.ForeColor = System.Drawing.Color.White;
-            this.cbDevBuids.Location = new System.Drawing.Point(398, 14);
-            this.cbDevBuids.Name = "cbDevBuids";
-            this.cbDevBuids.Size = new System.Drawing.Size(80, 17);
-            this.cbDevBuids.TabIndex = 132;
-            this.cbDevBuids.Text = "Dev builds";
-            this.cbDevBuids.UseVisualStyleBackColor = true;
-            this.cbDevBuids.CheckedChanged += new System.EventHandler(this.cbDevBuids_CheckedChanged);
-            // 
             // btnOfflineInstall
             // 
             this.btnOfflineInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -111,7 +98,7 @@ namespace RTCV.Launcher
             this.btnOfflineInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOfflineInstall.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
             this.btnOfflineInstall.ForeColor = System.Drawing.Color.White;
-            this.btnOfflineInstall.Location = new System.Drawing.Point(299, 10);
+            this.btnOfflineInstall.Location = new System.Drawing.Point(173, 10);
             this.btnOfflineInstall.Margin = new System.Windows.Forms.Padding(0);
             this.btnOfflineInstall.Name = "btnOfflineInstall";
             this.btnOfflineInstall.Size = new System.Drawing.Size(85, 20);
@@ -122,21 +109,54 @@ namespace RTCV.Launcher
             this.btnOfflineInstall.UseVisualStyleBackColor = false;
             this.btnOfflineInstall.Click += new System.EventHandler(this.btnOfflineInstall_Click);
             // 
+            // cbSelectedServer
+            // 
+            this.cbSelectedServer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSelectedServer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.cbSelectedServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSelectedServer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbSelectedServer.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.cbSelectedServer.ForeColor = System.Drawing.Color.White;
+            this.cbSelectedServer.FormattingEnabled = true;
+            this.cbSelectedServer.Items.AddRange(new object[] {
+            "Stable Releases",
+            "Development",
+            "Historical"});
+            this.cbSelectedServer.Location = new System.Drawing.Point(363, 10);
+            this.cbSelectedServer.Name = "cbSelectedServer";
+            this.cbSelectedServer.Size = new System.Drawing.Size(112, 21);
+            this.cbSelectedServer.TabIndex = 134;
+            this.cbSelectedServer.Tag = "color:normal";
+            this.cbSelectedServer.SelectedIndexChanged += new System.EventHandler(this.cbSelectedServer_SelectedIndexChanged);
+            // 
+            // versionLabel
+            // 
+            this.versionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.versionLabel.BackColor = System.Drawing.Color.Transparent;
+            this.versionLabel.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.versionLabel.ForeColor = System.Drawing.Color.White;
+            this.versionLabel.Location = new System.Drawing.Point(275, 8);
+            this.versionLabel.Name = "versionLabel";
+            this.versionLabel.Size = new System.Drawing.Size(87, 19);
+            this.versionLabel.TabIndex = 135;
+            this.versionLabel.Text = "Selected Server:";
+            this.versionLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
             // VersionDownloadPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.ClientSize = new System.Drawing.Size(490, 268);
+            this.Controls.Add(this.versionLabel);
+            this.Controls.Add(this.cbSelectedServer);
             this.Controls.Add(this.btnOfflineInstall);
             this.Controls.Add(this.btnDownloadVersion);
-            this.Controls.Add(this.cbDevBuids);
             this.Controls.Add(this.lbOnlineVersions);
             this.Controls.Add(this.label3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "VersionDownloadPanel";
             this.Text = "VersionDownloadPanel";
-            this.Load += new System.EventHandler(this.VersionDownloadPanel_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -148,7 +168,8 @@ namespace RTCV.Launcher
         public System.Windows.Forms.ListBox lbOnlineVersions;
         private System.Windows.Forms.Label label3;
         public System.Windows.Forms.Button btnDownloadVersion;
-        private System.Windows.Forms.CheckBox cbDevBuids;
         public System.Windows.Forms.Button btnOfflineInstall;
+        public System.Windows.Forms.ComboBox cbSelectedServer;
+        private System.Windows.Forms.Label versionLabel;
     }
 }

@@ -55,7 +55,7 @@ namespace RTCV.Launcher
             this.pnBottomPanel.Controls.Add(this.lbMOTD);
             this.pnBottomPanel.Controls.Add(this.label5);
             this.pnBottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnBottomPanel.Location = new System.Drawing.Point(170, 505);
+            this.pnBottomPanel.Location = new System.Drawing.Point(170, 520);
             this.pnBottomPanel.Name = "pnBottomPanel";
             this.pnBottomPanel.Size = new System.Drawing.Size(765, 45);
             this.pnBottomPanel.TabIndex = 0;
@@ -99,7 +99,7 @@ namespace RTCV.Launcher
             this.pnLeftSide.Location = new System.Drawing.Point(0, 41);
             this.pnLeftSide.MinimumSize = new System.Drawing.Size(170, 509);
             this.pnLeftSide.Name = "pnLeftSide";
-            this.pnLeftSide.Size = new System.Drawing.Size(170, 509);
+            this.pnLeftSide.Size = new System.Drawing.Size(170, 524);
             this.pnLeftSide.TabIndex = 134;
             // 
             // pbNewVersionNotification
@@ -107,7 +107,7 @@ namespace RTCV.Launcher
             this.pbNewVersionNotification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.pbNewVersionNotification.Image = global::RTCV.Launcher.Properties.Resources.notificationBadge;
             this.pbNewVersionNotification.InitialImage = global::RTCV.Launcher.Properties.Resources.notificationBadge;
-            this.pbNewVersionNotification.Location = new System.Drawing.Point(142, 469);
+            this.pbNewVersionNotification.Location = new System.Drawing.Point(142, 484);
             this.pbNewVersionNotification.Name = "pbNewVersionNotification";
             this.pbNewVersionNotification.Size = new System.Drawing.Size(14, 14);
             this.pbNewVersionNotification.TabIndex = 131;
@@ -123,7 +123,7 @@ namespace RTCV.Launcher
             this.btnVersionDownloader.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnVersionDownloader.Font = new System.Drawing.Font("Segoe UI Light", 12.25F);
             this.btnVersionDownloader.ForeColor = System.Drawing.Color.White;
-            this.btnVersionDownloader.Location = new System.Drawing.Point(0, 464);
+            this.btnVersionDownloader.Location = new System.Drawing.Point(0, 479);
             this.btnVersionDownloader.Name = "btnVersionDownloader";
             this.btnVersionDownloader.Size = new System.Drawing.Size(170, 45);
             this.btnVersionDownloader.TabIndex = 132;
@@ -142,7 +142,7 @@ namespace RTCV.Launcher
             this.pnAnchorRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnAnchorRight.Location = new System.Drawing.Point(170, 41);
             this.pnAnchorRight.Name = "pnAnchorRight";
-            this.pnAnchorRight.Size = new System.Drawing.Size(765, 464);
+            this.pnAnchorRight.Size = new System.Drawing.Size(765, 479);
             this.pnAnchorRight.TabIndex = 133;
             // 
             // pnTopPanel
@@ -282,7 +282,7 @@ namespace RTCV.Launcher
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-            this.ClientSize = new System.Drawing.Size(935, 550);
+            this.ClientSize = new System.Drawing.Size(935, 565);
             this.Controls.Add(this.pnAnchorRight);
             this.Controls.Add(this.pnBottomPanel);
             this.Controls.Add(this.pnLeftSide);
@@ -290,7 +290,7 @@ namespace RTCV.Launcher
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(935, 550);
+            this.MinimumSize = new System.Drawing.Size(935, 565);
             this.Name = "MainForm";
             this.Tag = "";
             this.Text = "RTC Launcher";

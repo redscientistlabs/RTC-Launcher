@@ -48,7 +48,13 @@ namespace RTCV.Launcher
         }
 
         internal static string launcherDir = Path.GetDirectoryName(Application.ExecutablePath);
-        internal static string webResourceDomain = "http://redscientist.com/software";
+
+        internal static string releaseServer = "http://redscientist.com/software";
+        internal static string devServer = "http://cc.r5x.cc";
+        internal static string historicalServer = "http://historical.optional.fun";
+
+
+        internal static string webResourceDomain = releaseServer;
 
         internal static MainForm mf = null;
         internal static VersionDownloadPanel vdppForm = null;
@@ -58,7 +64,7 @@ namespace RTCV.Launcher
         internal static DownloadForm dForm = null;
         internal static Form lpForm = null;
 
-        public const int launcherVer = 30;
+        public const int launcherVer = 32;
 
         internal static int devCounter = 0;
         internal static string SelectedVersion = null;
@@ -69,6 +75,7 @@ namespace RTCV.Launcher
             InitializeComponent();
 
             mf = this;
+            FormSync.SyncObject = this;
 
             versionLabel.Text = "v" + launcherVer;
 
@@ -118,10 +125,18 @@ namespace RTCV.Launcher
 
             if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
             {
-                webResourceDomain = "http://cc.r5x.cc";
+                webResourceDomain = devServer;
+            }
+            else if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt"))
+            {
+                webResourceDomain = historicalServer;
+            }
+            else
+            {
+                webResourceDomain = releaseServer;
             }
 
-            //Will trigger after an update from the original launcher
+                //Will trigger after an update from the original launcher
             if (Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher"))
             {
                 Directory.Delete(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher", true);
@@ -172,6 +187,15 @@ namespace RTCV.Launcher
                 sideversionForm.lbVersions.SelectedIndex = 0;
             }
 
+
+            RefreshMotd();
+
+
+            SetRTCColor(Color.FromArgb(120, 180, 155));
+        }
+
+        public void RefreshMotd()
+        {
             try
             {
                 Action a = () =>
@@ -187,7 +211,10 @@ namespace RTCV.Launcher
                         motd = Encoding.UTF8.GetString(motdFile);
                     }
 
-                    Invoke(new MethodInvoker(() => lbMOTD.Text = motd));
+                    FormSync.FormExecute(() => {
+                        lbMOTD.Text = motd;
+
+                    });
                 };
                 Task.Run(a);
             }
@@ -198,7 +225,6 @@ namespace RTCV.Launcher
             }
 
             lbMOTD.Visible = true;
-            SetRTCColor(Color.FromArgb(120, 180, 155));
         }
 
         public void SetRTCColor(Color color, Form form = null)

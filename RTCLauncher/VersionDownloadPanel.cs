@@ -16,20 +16,56 @@ namespace RTCV.Launcher
         internal string latestVersionString = " (Latest version)";
         private List<dynamic> onlineVersionsObjects = null;
 
+        public static Color backgroundColor = Color.FromArgb(16, 16, 16);
+
         public VersionDownloadPanel()
         {
             InitializeComponent();
-            cbDevBuids.Checked = File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt");
 
-            if (cbDevBuids.Checked)
-            {
-                lbOnlineVersions.BackColor = Color.FromArgb(32, 16, 16);
-            }
+            ReloadPanel(true);
         }
 
-        private void VersionDownloadPanel_Load(object sender, EventArgs e)
+        public bool ignoreServerChange = false;
+
+        public void ReloadPanel(bool Init = false)
         {
+            if (Init)
+                ignoreServerChange = true;
+
+
+            if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
+            {
+                backgroundColor = Color.FromArgb(32, 16, 16);
+                MainForm.webResourceDomain = MainForm.devServer;
+
+                if (Init)
+                cbSelectedServer.SelectedIndex = 1;
+                
+            }
+            else if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt"))
+            {
+                backgroundColor = Color.FromArgb(16, 16, 32);
+                MainForm.webResourceDomain = MainForm.historicalServer;
+
+                if (Init)
+                    cbSelectedServer.SelectedIndex = 2;
+            }
+            else
+            {
+                backgroundColor = Color.FromArgb(16, 16, 16);
+                MainForm.webResourceDomain = MainForm.releaseServer;
+
+                if (Init)
+                    cbSelectedServer.SelectedIndex = 0;
+            }
+
+            lbOnlineVersions.BackColor = backgroundColor;
+
             refreshVersions();
+            MainForm.mf.RefreshMotd();
+
+            if (Init)
+                ignoreServerChange = false;
         }
 
         public static string getLatestVersion()
@@ -70,9 +106,14 @@ namespace RTCV.Launcher
 
                 //Ignores any build containing the word Launcher in it
                 var onlineVersions = str.Split('|').Where(it => !it.Contains("Launcher")).OrderByNaturalDescending(x => x).Select(it => it.Replace(".zip", string.Empty)).ToArray();
-                Invoke(new MethodInvoker(() =>
+
+                FormSync.FormExecute(() =>
                 {
                     onlineVersionsObjects = new List<dynamic>();
+
+                    lbOnlineVersions.DataSource = null;
+                    lbOnlineVersions.DisplayMember = "Text";
+                    lbOnlineVersions.ValueMember = "Value";
 
                     lbOnlineVersions.Items.Clear();
                     if (onlineVersions.Length > 0)
@@ -88,7 +129,7 @@ namespace RTCV.Launcher
 
                             var key = onlineVersions[i];
 
-                            onlineVersionsObjects.Add(new { key, value });
+                            onlineVersionsObjects.Add(new { Text = key, Value = value });
                         }
                     }
 
@@ -96,7 +137,7 @@ namespace RTCV.Launcher
                     lbOnlineVersions.DataSource = onlineVersionsObjects;
 
                     //lbOnlineVersions.Items.AddRange(onlineVersionsTuples);
-                }));
+                });
             };
             Task.Run(a);
         }
@@ -120,7 +161,7 @@ namespace RTCV.Launcher
 
             dynamic itemData = lbOnlineVersions.SelectedItem;
 
-            string version = itemData.value;
+            string version = itemData.Value;
             version = version.Replace(latestVersionString, string.Empty);
 
             if (Directory.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version))
@@ -147,61 +188,6 @@ namespace RTCV.Launcher
 
         private int devCounter = 0;
 
-        private void cbDevBuids_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!Visible)
-            {
-                return;
-            }
-
-            var devOn = File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt");
-
-            if (!devOn && devCounter % 2 == 0)
-            {
-                Console.Beep(220 + 20 * devCounter, 100);
-            }
-
-            devCounter++;
-
-            if (devCounter >= 20 || devOn)
-            {
-                if (!devOn)
-                {
-                    Console.Beep(220, 100);
-                    Console.Beep(300, 100);
-                    Console.Beep(400, 100);
-                    Console.Beep(520, 108);
-                }
-
-                if (!devOn && MessageBox.Show(File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt") ? "Do you want to stay connected to the Dev Server?" : "Do you want to connect to the Dev Server?",
-                    "Dev mode activation", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                {
-                    File.WriteAllText(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt", "DEV MODE ACTIVATED");
-                    Application.Restart();
-                }
-                else
-                {
-                    if (devOn)
-                    {
-                        if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
-                        {
-                            File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt");
-                        }
-
-                        Application.Restart();
-                    }
-                    else
-                    {
-                        devCounter = 0;
-                        cbDevBuids.Checked = devOn;
-                    }
-                }
-            }
-            else
-            {
-                cbDevBuids.Checked = devOn;
-            }
-        }
 
         private void lbOnlineVersions_MouseDoubleClick_1(object sender, MouseEventArgs e)
         {
@@ -221,5 +207,33 @@ namespace RTCV.Launcher
         }
 
         private void btnOfflineInstall_Click(object sender, EventArgs e) => MainForm.mf.InstallFromZip();
+
+        private void cbSelectedServer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ignoreServerChange)
+                return;
+
+            if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
+                File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt");
+            if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt"))
+                File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt");
+
+            switch (cbSelectedServer.SelectedIndex)
+            {
+                case 0: //release
+                        break;
+                case 1: //dev
+                    File.WriteAllText(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt", "DEV");
+                    break;
+                case 2: //historical
+                    File.WriteAllText(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt", "HISTORICAL");
+                    break;
+                default:
+                    return;
+            }
+
+
+            ReloadPanel();
+        }
     }
 }
