@@ -18,6 +18,22 @@ namespace RTCV.Launcher
 
     internal partial class MainForm : Form
     {
+        const int WS_MINIMIZEBOX = 0x20000;
+        const int CS_DBLCLKS = 0x8;
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.Style |= WS_MINIMIZEBOX;
+                cp.ClassStyle |= CS_DBLCLKS;
+                return cp;
+            }
+        }
+
+
+
+
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HT_CAPTION = 0x2;
         private const int HT_LEFT = 0xA;
@@ -819,6 +835,42 @@ namespace RTCV.Launcher
         }
 
 
+        public static void UpdatePlugins()
+        {
+            if (sideversionForm.lbVersions.SelectedIndex == -1)
+            {
+                return;
+            }
+
+            var version = sideversionForm.lbVersions.SelectedItem.ToString();
+
+            string rtcvPluginsFolder = Path.Combine(launcherDir, "VERSIONS", version, "RTCV", "RTC", "Plugins");
+            string buildPluginsFolder = Path.Combine(buildFolder, "RTC", "Plugins");
+
+
+            if (Directory.Exists(buildPluginsFolder) && Directory.Exists(rtcvPluginsFolder))
+            {
+
+                var localPluginFiles = Directory.GetFiles(rtcvPluginsFolder);
+                foreach (var local in localPluginFiles)
+                    File.Delete(local);
+
+
+                var rootFiles = new DirectoryInfo(buildPluginsFolder).GetFiles();
+                int count = 0;
+                string files = "";
+
+                foreach (var file in rootFiles)
+                {
+                    file.CopyTo(Path.Combine(rtcvPluginsFolder, file.Name), true);
+                    count++;
+                    files = $"{files} {file.Name}";
+                }
+
+                MessageBox.Show($"Updated {count} files \n {files}");
+            }
+        }
+
         internal void lbVersions_MouseDown(object sender, MouseEventArgs e)
         {
             var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y + pnTopPanel.Height);
@@ -847,6 +899,8 @@ namespace RTCV.Launcher
                     if (buildFolder != null)
                     {
                         columnsMenu.Items.Add("Update RTCV Core from Build Folder", null, new EventHandler((ob, ev) => UpdateCore()));
+                        columnsMenu.Items.Add(new ToolStripSeparator());
+                        columnsMenu.Items.Add("Pull RTCV Plugins from Build Folder", null, new EventHandler((ob, ev) => UpdatePlugins()));
                         columnsMenu.Items.Add(new ToolStripSeparator());
                     }
 
@@ -1036,5 +1090,6 @@ THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMP
         }
 
         private void btnVersionDownloader_MouseDown(object sender, MouseEventArgs e) => SuggestInstallZip(sender, e);
+
     }
 }
