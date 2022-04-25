@@ -67,7 +67,6 @@ namespace RTCV.Launcher
             }
         }
 
-
         //https://stackoverflow.com/a/56931457
         private static object InvokeCorrectly(this Control control, Delegate method, params object[] args)
         {
@@ -91,5 +90,4 @@ namespace RTCV.Launcher
             return result;
         }
     }
-
 }

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net471</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Package_Downloader</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

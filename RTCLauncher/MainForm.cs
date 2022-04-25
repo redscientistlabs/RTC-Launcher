@@ -31,9 +31,6 @@ namespace RTCV.Launcher
             }
         }
 
-
-
-
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HT_CAPTION = 0x2;
         private const int HT_LEFT = 0xA;
@@ -96,7 +93,6 @@ namespace RTCV.Launcher
 
             versionLabel.Text = "v" + launcherVer;
 
-
             if (new DirectoryInfo(launcherDir).Name == "Launcher")
             {
                 MessageBox.Show("This is the wrong file. Please run the Launcher.exe located in the same root directory where your VERSIONS and PACKAGES folder reside. If that exe is missing, you can copy this one to that location and run it from there.");
@@ -156,8 +152,8 @@ namespace RTCV.Launcher
             if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\build.txt"))
                 buildFolder = File.ReadAllText(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\build.txt");
 
-                //Will trigger after an update from the original launcher
-                if (Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher"))
+            //Will trigger after an update from the original launcher
+            if (Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher"))
             {
                 Directory.Delete(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher", true);
                 if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + "Update_Launcher.zip"))
@@ -207,9 +203,7 @@ namespace RTCV.Launcher
                 sideversionForm.lbVersions.SelectedIndex = 0;
             }
 
-
             RefreshMotd();
-
 
             SetRTCColor(Color.FromArgb(120, 180, 155));
         }
@@ -233,7 +227,6 @@ namespace RTCV.Launcher
 
                     FormSync.FormExecute(() => {
                         lbMOTD.Text = motd;
-
                     });
                 };
                 Task.Run(a);
@@ -818,10 +811,9 @@ namespace RTCV.Launcher
             string rtcvFolder = Path.Combine(launcherDir, "VERSIONS", version, "RTCV");
             if (Directory.Exists(buildFolder) && Directory.Exists(rtcvFolder))
             {
-
                 var rootFiles = new DirectoryInfo(buildFolder).GetFiles();
                 int count = 0;
-                string files = "";
+                string files = string.Empty;
 
                 foreach (var file in rootFiles)
                 {
@@ -833,7 +825,6 @@ namespace RTCV.Launcher
                 MessageBox.Show($"Updated {count} files \n {files}");
             }
         }
-
 
         public static void UpdatePlugins()
         {
@@ -847,18 +838,15 @@ namespace RTCV.Launcher
             string rtcvPluginsFolder = Path.Combine(launcherDir, "VERSIONS", version, "RTCV", "RTC", "Plugins");
             string buildPluginsFolder = Path.Combine(buildFolder, "RTC", "Plugins");
 
-
             if (Directory.Exists(buildPluginsFolder) && Directory.Exists(rtcvPluginsFolder))
             {
-
                 var localPluginFiles = Directory.GetFiles(rtcvPluginsFolder);
                 foreach (var local in localPluginFiles)
                     File.Delete(local);
 
-
                 var rootFiles = new DirectoryInfo(buildPluginsFolder).GetFiles();
                 int count = 0;
-                string files = "";
+                string files = string.Empty;
 
                 foreach (var file in rootFiles)
                 {
@@ -1090,6 +1078,5 @@ THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMP
         }
 
         private void btnVersionDownloader_MouseDown(object sender, MouseEventArgs e) => SuggestInstallZip(sender, e);
-
     }
 }

@@ -100,7 +100,7 @@ namespace RTCV.Launcher
                             var locate = new Point(((Control)sender).Location.X + e.Location.X, ((Control)sender).Location.Y + e.Location.Y);
 
                             var columnsMenu = new Components.BuildContextMenu();
-                            
+
                             columnsMenu.Items.Add("Open Folder", null, (ob, ev) =>
                             {
                                 var addonFolderPath = Path.Combine(MainForm.launcherDir, "VERSIONS", lc.Version, lcji.FolderName);
@@ -334,7 +334,6 @@ namespace RTCV.Launcher
 
                 string description = (lcji.ItemDescription ?? string.Empty);
 
-
                 MainForm.sideinfoForm.lbName.Text = name;
                 MainForm.sideinfoForm.lbSubtitle.Text = subtitle;
                 MainForm.sideinfoForm.lbDescription.Text = description;
@@ -360,7 +359,6 @@ namespace RTCV.Launcher
                     name = name.Replace(subtitle, string.Empty);
 
                 string description = (lcji.ItemDescription ?? string.Empty);
-
 
                 MainForm.sideinfoForm.lbName.Text = name;
                 MainForm.sideinfoForm.lbSubtitle.Text = subtitle;

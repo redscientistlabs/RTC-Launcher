@@ -32,15 +32,13 @@ namespace RTCV.Launcher
             if (Init)
                 ignoreServerChange = true;
 
-
             if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
             {
                 backgroundColor = Color.FromArgb(32, 16, 16);
                 MainForm.webResourceDomain = MainForm.devServer;
 
                 if (Init)
-                cbSelectedServer.SelectedIndex = 1;
-                
+                    cbSelectedServer.SelectedIndex = 1;
             }
             else if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt"))
             {
@@ -186,9 +184,6 @@ namespace RTCV.Launcher
             MainForm.DownloadFile(new Uri(downloadUrl), downloadedFile, extractDirectory);
         }
 
-        private int devCounter = 0;
-
-
         private void lbOnlineVersions_MouseDoubleClick_1(object sender, MouseEventArgs e)
         {
             btnDownloadVersion_Click(sender, e);
@@ -221,7 +216,7 @@ namespace RTCV.Launcher
             switch (cbSelectedServer.SelectedIndex)
             {
                 case 0: //release
-                        break;
+                    break;
                 case 1: //dev
                     File.WriteAllText(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt", "DEV");
                     break;
@@ -231,7 +226,6 @@ namespace RTCV.Launcher
                 default:
                     return;
             }
-
 
             ReloadPanel();
         }
