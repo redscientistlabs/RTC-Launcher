@@ -6,6 +6,7 @@ namespace RTCV.Launcher
     using System.Drawing;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Text;
     using System.Threading.Tasks;
     using System.Windows.Forms;
@@ -228,6 +229,36 @@ namespace RTCV.Launcher
             }
 
             ReloadPanel();
+        }
+
+        private void btnDevUnstable_Click(object sender, EventArgs e)
+        {
+            string unstablePath = MainForm.launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "UNSTABLE";
+            if (Directory.Exists(unstablePath) && MessageBox.Show("The UNSTABLE version is currently installed, this will delete the whole UNSTABLE install and reinstall it.\n\nDo you wish to continue?", "Unstable Reinstall", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                return;
+
+            if (Directory.Exists(unstablePath))
+            {
+                MainForm.mf.DeleteSelected("UNSTABLE");
+            }
+
+            string zipPath = MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\UNSTABLE.zip";
+            string updatePath = "http://cc.r5x.cc/rtc/unstable/update.zip";
+
+            if (File.Exists(zipPath))
+                File.Delete(zipPath);
+
+            using(WebClient wc = new WebClient())
+            {
+                wc.DownloadFile(updatePath, zipPath);
+            }
+
+            MainForm.mf.InstallFromZip(new string[] { zipPath });
+
+            MessageBox.Show("UNSTABLE Build installed");
+
+            cbSelectedServer.SelectedIndex = 1;
+
         }
     }
 }

@@ -46,7 +46,7 @@ namespace RTCV.Launcher
             foreach (var lcji in lc.Items) //.Where(it => !it.HideItem))
             {
                 Bitmap btnImage;
-                using (var bmpTemp = new Bitmap(Path.Combine(lc.LauncherAssetLocation, lcji.ImageName)))
+                using (var bmpTemp = new Bitmap(new MemoryStream(File.ReadAllBytes(Path.Combine(lc.LauncherAssetLocation, lcji.ImageName)))))
                 {
                     btnImage = new Bitmap(bmpTemp);
                     if (btnSize == null)

@@ -649,8 +649,11 @@ namespace RTCV.Launcher
                 return;
             }
 
+            string versionFolderPath;
+
             foreach (var file in files)
-            {
+            { 
+
                 try
                 {
                     using (ZipArchive archive = ZipFile.OpenRead(file))
@@ -659,7 +662,7 @@ namespace RTCV.Launcher
                         var launcherFolderExists = archive.Entries.FirstOrDefault(it => it.FullName.Contains("Launcher")) != null;
                         var versionFolderName = Path.GetFileNameWithoutExtension(file);
 
-                        string versionFolderPath;
+
 
                         if (rtcvFolderExists && launcherFolderExists)
                         {
@@ -719,7 +722,16 @@ namespace RTCV.Launcher
                             }
                             else
                             {
-                                entry.ExtractToFile(entryPath, true);
+                                EnsureTreeExists(entryPath);
+
+                                try
+                                {
+                                    entry.ExtractToFile(entryPath, true);
+                                }
+                                catch(Exception ex)
+                                {
+                                    new object();
+                                }
                             }
                         }
                     }
@@ -731,7 +743,31 @@ namespace RTCV.Launcher
                     return;
                 }
 
+                CheckForNeededLauncherUpdate(versionFolderPath);
+
                 MainForm.mf.RefreshPanel();
+            }
+        }
+
+        private void EnsureTreeExists(string entryPath)
+        {
+            var dir = Path.GetDirectoryName(entryPath);
+            var dirParts = dir.Split(Path.DirectorySeparatorChar);
+
+            string build = null;
+            foreach (var dirPart in dirParts)
+            {
+                if (build == null)
+                    build = dirPart + @"\";
+                else
+                {
+                    build = Path.Combine(build, dirPart);
+                }
+
+                if(!Directory.Exists(build))
+                {
+                    Directory.CreateDirectory(build);
+                }
             }
         }
 
@@ -755,8 +791,9 @@ namespace RTCV.Launcher
 
             Directory.SetCurrentDirectory(launcherDir); //Move our working dir back
 
-            if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + version + ".zip"))
+            if (version != "UNSTABLE" && File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + version + ".zip"))
             {
+
                 File.Delete(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + version + ".zip");
             }
 
@@ -887,7 +924,6 @@ namespace RTCV.Launcher
                     if (buildFolder != null)
                     {
                         columnsMenu.Items.Add("Update RTCV Core from Build Folder", null, new EventHandler((ob, ev) => UpdateCore()));
-                        columnsMenu.Items.Add(new ToolStripSeparator());
                         columnsMenu.Items.Add("Pull RTCV Plugins from Build Folder", null, new EventHandler((ob, ev) => UpdatePlugins()));
                         columnsMenu.Items.Add(new ToolStripSeparator());
                     }

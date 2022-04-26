@@ -3,14 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30105.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RTCLauncher", "RTCLauncher\RTCLauncher.csproj", "{AF5FFA87-1BEC-4083-8C81-07D1B52FDF3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RTCLauncher", "RTCLauncher\RTCLauncher.csproj", "{AF5FFA87-1BEC-4083-8C81-07D1B52FDF3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageDownloader", "PackageDownloader\PackageDownloader.csproj", "{0078E10D-9661-441D-8CE0-761C972CAD0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackageDownloader", "PackageDownloader\PackageDownloader.csproj", "{0078E10D-9661-441D-8CE0-761C972CAD0C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1C1B6732-2ADA-490C-94C4-3321AC0C4C75}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pull", "Pull\Pull.csproj", "{E6FF0025-6124-4FE9-AB9F-798E06BE7B97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Push", "Push\Push.csproj", "{44159139-ABA9-48FB-92D4-F64138A18597}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +30,14 @@ Global
 		{0078E10D-9661-441D-8CE0-761C972CAD0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0078E10D-9661-441D-8CE0-761C972CAD0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0078E10D-9661-441D-8CE0-761C972CAD0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6FF0025-6124-4FE9-AB9F-798E06BE7B97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6FF0025-6124-4FE9-AB9F-798E06BE7B97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6FF0025-6124-4FE9-AB9F-798E06BE7B97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6FF0025-6124-4FE9-AB9F-798E06BE7B97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44159139-ABA9-48FB-92D4-F64138A18597}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44159139-ABA9-48FB-92D4-F64138A18597}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44159139-ABA9-48FB-92D4-F64138A18597}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44159139-ABA9-48FB-92D4-F64138A18597}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
