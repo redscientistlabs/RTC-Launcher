@@ -248,7 +248,7 @@ namespace RTCV.Launcher
             if (File.Exists(zipPath))
                 File.Delete(zipPath);
 
-            using(WebClient wc = new WebClient())
+            using (WebClient wc = new WebClient())
             {
                 wc.DownloadFile(updatePath, zipPath);
             }
@@ -258,7 +258,6 @@ namespace RTCV.Launcher
             MessageBox.Show("UNSTABLE Build installed");
 
             cbSelectedServer.SelectedIndex = 1;
-
         }
     }
 }

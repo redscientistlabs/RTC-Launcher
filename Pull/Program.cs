@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Pull
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.IO.Compression;
+    using System.Linq;
+    using System.Net;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     class Program
     {
         static void Main(string[] args)
@@ -37,9 +37,6 @@ namespace Pull
             //Directory.CreateDirectory(pullWorkDirString);
             //var pullWorkDir = new DirectoryInfo(pullWorkDirString);
 
-
-
-
             string unstableUrl = "http://cc.r5x.cc/rtc/unstable/";
             string updateUrl = unstableUrl + "update.zip";
 
@@ -47,7 +44,6 @@ namespace Pull
 
             using (WebClient wc = new WebClient())
             {
-
                 Console.WriteLine("Downloading Update ");
 
                 bool done = false;
@@ -108,6 +104,8 @@ namespace Pull
                     }
                     catch (Exception ex)
                     {
+                        _ = ex;
+
                         if (!entry.FullName.Contains("Pull.exe"))
                             errors.Add($"File could not be updated: {entry.FullName}");
                     }
@@ -131,6 +129,5 @@ namespace Pull
             Console.WriteLine($"Update installed{errorHeader}press any key to quit.");
             Console.ReadKey();
         }
-
     }
 }

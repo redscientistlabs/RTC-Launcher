@@ -1,15 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Push
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.IO.Compression;
+    using System.Linq;
+    using System.Net;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     class Program
     {
         static void Main(string[] args)
@@ -17,7 +16,6 @@ namespace Push
             Console.WriteLine("RTCV Unstable Branch Push Tool");
             Console.WriteLine("===============================");
             Console.WriteLine();
-
 
             var pushDir = new DirectoryInfo(Directory.GetCurrentDirectory());
             var unstableDir = pushDir.Parent;
@@ -27,7 +25,6 @@ namespace Push
 
             Console.WriteLine("Clearing Push Cache");
             Console.WriteLine();
-
 
             var pushWorkDirString = Path.Combine(pushDir.FullName, "Work");
 
@@ -41,7 +38,6 @@ namespace Push
             var pushLauncherDirString = Path.Combine(pushWorkDirString, "Launcher");
             Directory.CreateDirectory(pushLauncherDirString);
 
-
             Console.WriteLine("Copying Launcher Files ");
             foreach (var filepath in Directory.GetFiles(launcherDir.FullName))
             {
@@ -50,7 +46,7 @@ namespace Push
                     var file = new FileInfo(filepath);
                     file.CopyTo(Path.Combine(pushLauncherDirString, file.Name));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     if (!filepath.Contains("Push.exe"))
                     {
@@ -63,7 +59,6 @@ namespace Push
                         Console.ReadKey();
                         return;
                     }
-
                 }
                 Console.Write('#');
             }
@@ -92,7 +87,6 @@ namespace Push
             if (File.Exists(tmpPath))
                 File.Delete(tmpPath);
 
-
             ZipFile.CreateFromDirectory(pushWorkDirString, tmpPath);
 
             Console.WriteLine();
@@ -108,7 +102,6 @@ namespace Push
 
             Console.WriteLine($"Update deployed, press any key to quit.");
             Console.ReadKey();
-
         }
     }
 }

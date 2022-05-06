@@ -652,8 +652,7 @@ namespace RTCV.Launcher
             string versionFolderPath;
 
             foreach (var file in files)
-            { 
-
+            {
                 try
                 {
                     using (ZipArchive archive = ZipFile.OpenRead(file))
@@ -661,8 +660,6 @@ namespace RTCV.Launcher
                         var rtcvFolderExists = archive.Entries.FirstOrDefault(it => it.FullName.Contains("RTCV")) != null;
                         var launcherFolderExists = archive.Entries.FirstOrDefault(it => it.FullName.Contains("Launcher")) != null;
                         var versionFolderName = Path.GetFileNameWithoutExtension(file);
-
-
 
                         if (rtcvFolderExists && launcherFolderExists)
                         {
@@ -728,9 +725,9 @@ namespace RTCV.Launcher
                                 {
                                     entry.ExtractToFile(entryPath, true);
                                 }
-                                catch(Exception ex)
+                                catch (Exception ex)
                                 {
-                                    new object();
+                                    MessageBox.Show("ERROR DURING EXTRACTION: " + ex.Message);
                                 }
                             }
                         }
@@ -764,7 +761,7 @@ namespace RTCV.Launcher
                     build = Path.Combine(build, dirPart);
                 }
 
-                if(!Directory.Exists(build))
+                if (!Directory.Exists(build))
                 {
                     Directory.CreateDirectory(build);
                 }
@@ -793,7 +790,6 @@ namespace RTCV.Launcher
 
             if (version != "UNSTABLE" && File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + version + ".zip"))
             {
-
                 File.Delete(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + version + ".zip");
             }
 
@@ -854,7 +850,7 @@ namespace RTCV.Launcher
 
                 foreach (var file in rootFiles)
                 {
-                    file.CopyTo(Path.Combine(rtcvFolder, file.Name),true);
+                    file.CopyTo(Path.Combine(rtcvFolder, file.Name), true);
                     count++;
                     files = $"{files} {file.Name}";
                 }

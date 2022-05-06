@@ -87,6 +87,7 @@
     <Reference Include="System.Net.Http" />
     <PackageReference Include="Costura.Fody">
       <Version>5.7.0</Version>
+	  <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json">
