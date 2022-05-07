@@ -152,15 +152,16 @@ namespace RTCV.Launcher
             this.btnDevUnstable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDevUnstable.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
             this.btnDevUnstable.ForeColor = System.Drawing.Color.White;
-            this.btnDevUnstable.Location = new System.Drawing.Point(229, 8);
+            this.btnDevUnstable.Location = new System.Drawing.Point(187, 8);
             this.btnDevUnstable.Margin = new System.Windows.Forms.Padding(0);
             this.btnDevUnstable.Name = "btnDevUnstable";
-            this.btnDevUnstable.Size = new System.Drawing.Size(88, 20);
+            this.btnDevUnstable.Size = new System.Drawing.Size(130, 20);
             this.btnDevUnstable.TabIndex = 136;
             this.btnDevUnstable.TabStop = false;
             this.btnDevUnstable.Tag = "color:light";
-            this.btnDevUnstable.Text = "Dev Unstable";
+            this.btnDevUnstable.Text = "Install Dev Unstable";
             this.btnDevUnstable.UseVisualStyleBackColor = false;
+            this.btnDevUnstable.Visible = false;
             this.btnDevUnstable.Click += new System.EventHandler(this.btnDevUnstable_Click);
             // 
             // VersionDownloadPanel

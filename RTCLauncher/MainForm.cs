@@ -607,7 +607,7 @@ namespace RTCV.Launcher
             }
         }
 
-        internal void InstallFromZip(string[] files = null)
+        internal void InstallFromZip(string[] files = null, bool ask = true)
         {
             var versionLocation = Path.Combine(MainForm.launcherDir, "VERSIONS");
 
@@ -621,32 +621,36 @@ namespace RTCV.Launcher
                 }
             }
 
-            if (files == null || files.Length == 0)
+
+            if (ask)
             {
-                var ofd = new OpenFileDialog
+                if (files == null || files.Length == 0)
                 {
-                    DefaultExt = "zip",
-                    Title = "Open Zip Package files",
-                    Filter = "ZIP files|*.zip",
-                    RestoreDirectory = true,
-                    Multiselect = true
-                };
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    files = ofd.FileNames;
+                    var ofd = new OpenFileDialog
+                    {
+                        DefaultExt = "zip",
+                        Title = "Open Zip Package files",
+                        Filter = "ZIP files|*.zip",
+                        RestoreDirectory = true,
+                        Multiselect = true
+                    };
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        files = ofd.FileNames;
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
-                else
+                else if (files.Length == 1 && MessageBox.Show("You are about to install a zip package in your RTC Launcher. If an install with the same name already exists, it will be deleted.\n\nDo you wish to continue?", "Zip packge install", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 {
                     return;
                 }
-            }
-            else if (files.Length == 1 && MessageBox.Show("You are about to install a zip package in your RTC Launcher. If an install with the same name already exists, it will be deleted.\n\nDo you wish to continue?", "Zip packge install", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-            {
-                return;
-            }
-            else if (files.Length > 1 && MessageBox.Show("You are about to install multiple zip packages in your RTC Launcher. If an install with the same name already exists, it will be deleted.\n\nDo you wish to continue?", "Zip packge install", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-            {
-                return;
+                else if (files.Length > 1 && MessageBox.Show("You are about to install multiple zip packages in your RTC Launcher. If an install with the same name already exists, it will be deleted.\n\nDo you wish to continue?", "Zip packge install", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                {
+                    return;
+                }
             }
 
             string versionFolderPath;
@@ -768,7 +772,7 @@ namespace RTCV.Launcher
             }
         }
 
-        public void DeleteSelected(string version = null)
+        public void DeleteSelected(string version = null, bool ask = true)
         {
             if (version == null && sideversionForm.lbVersions.SelectedIndex != -1)
             {
@@ -780,10 +784,13 @@ namespace RTCV.Launcher
                 return;
             }
 
-            DialogResult result = MessageBox.Show($"Are you sure you want to delete version {version}?", "Build Deletion", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
-            if (result == DialogResult.Cancel)
+            if (ask)
             {
-                return;
+                DialogResult result = MessageBox.Show($"Are you sure you want to delete version {version}?", "Build Deletion", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                if (result == DialogResult.Cancel)
+                {
+                    return;
+                }
             }
 
             Directory.SetCurrentDirectory(launcherDir); //Move our working dir back

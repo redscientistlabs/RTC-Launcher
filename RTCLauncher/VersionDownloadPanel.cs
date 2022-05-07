@@ -60,6 +60,20 @@ namespace RTCV.Launcher
 
             lbOnlineVersions.BackColor = backgroundColor;
 
+            //checking unstable
+            string versionsDir = Path.Combine(MainForm.launcherDir, "VERSIONS");
+            var versions = Directory.GetDirectories(versionsDir);
+            string unstableDir = Path.Combine(MainForm.launcherDir, "VERSIONS", "UNSTABLE");
+
+            if (!Directory.Exists(unstableDir) && versions.Length > 0)
+            {
+                btnDevUnstable.Visible = true;
+            }
+            else
+            {
+                btnDevUnstable.Visible = false;
+            }
+
             refreshVersions();
             MainForm.mf.RefreshMotd();
 
@@ -92,6 +106,7 @@ namespace RTCV.Launcher
 
         public void refreshVersions()
         {
+            //fetching versions
             Action a = () =>
             {
                 var versionFile = MainForm.GetFileViaHttp(new Uri($"{MainForm.webResourceDomain}/rtc/releases/version.php"));
@@ -233,14 +248,33 @@ namespace RTCV.Launcher
 
         private void btnDevUnstable_Click(object sender, EventArgs e)
         {
-            string unstablePath = MainForm.launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "UNSTABLE";
-            if (Directory.Exists(unstablePath) && MessageBox.Show("The UNSTABLE version is currently installed, this will delete the whole UNSTABLE install and reinstall it.\n\nDo you wish to continue?", "Unstable Reinstall", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+            string versionsDir = Path.Combine(MainForm.launcherDir, "VERSIONS");
+            string unstableRtcDir = Path.Combine(MainForm.launcherDir, "VERSIONS", "UNSTABLE","RTCV", "RTC");
+            var versions = Directory.GetDirectories(versionsDir);
+            var newestVersion = versions.LastOrDefault();
+
+            if (newestVersion == null)
+            {
+                MessageBox.Show("Could not find an RTC install to pull from");
                 return;
+            }
+
+            string rtcDir = Path.Combine(newestVersion, "RTCV", "RTC");
+            if (!Directory.Exists(rtcDir))
+            {
+                MessageBox.Show($"Could not find the inner RTC folder in {newestVersion}");
+                return;
+            }
+
+            string unstablePath = MainForm.launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "UNSTABLE";
+            MessageBox.Show("The following operation will freeze the launcher during install. Please be patient.");
 
             if (Directory.Exists(unstablePath))
             {
-                MainForm.mf.DeleteSelected("UNSTABLE");
+                MainForm.mf.DeleteSelected("UNSTABLE", false);
             }
+
+            //Download and install zip
 
             string zipPath = MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\UNSTABLE.zip";
             string updatePath = "http://cc.r5x.cc/rtc/unstable/update.zip";
@@ -253,9 +287,23 @@ namespace RTCV.Launcher
                 wc.DownloadFile(updatePath, zipPath);
             }
 
-            MainForm.mf.InstallFromZip(new string[] { zipPath });
+            MainForm.mf.InstallFromZip(new string[] { zipPath }, false);
 
-            MessageBox.Show("UNSTABLE Build installed");
+            //Copy RTC folder from newer version
+
+            if (!Directory.Exists(unstableRtcDir))
+                Directory.CreateDirectory(unstableRtcDir);
+
+            void CopyFilesRecursively(string sourcePath, string targetPath)
+            { //https://stackoverflow.com/questions/58744/copy-the-entire-contents-of-a-directory-in-c-sharp
+                foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+                    Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
+
+                foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+                    File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
+            }
+
+            CopyFilesRecursively(rtcDir, unstableRtcDir);
 
             cbSelectedServer.SelectedIndex = 1;
         }
