@@ -621,7 +621,6 @@ namespace RTCV.Launcher
                 }
             }
 
-
             if (ask)
             {
                 if (files == null || files.Length == 0)

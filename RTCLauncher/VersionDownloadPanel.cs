@@ -249,7 +249,7 @@ namespace RTCV.Launcher
         private void btnDevUnstable_Click(object sender, EventArgs e)
         {
             string versionsDir = Path.Combine(MainForm.launcherDir, "VERSIONS");
-            string unstableRtcDir = Path.Combine(MainForm.launcherDir, "VERSIONS", "UNSTABLE","RTCV", "RTC");
+            string unstableRtcDir = Path.Combine(MainForm.launcherDir, "VERSIONS", "UNSTABLE", "RTCV", "RTC");
             var versions = Directory.GetDirectories(versionsDir);
             var newestVersion = versions.LastOrDefault();
 
