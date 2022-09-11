@@ -1,4 +1,4 @@
-﻿namespace Package_Downloader
+namespace Package_Downloader
 {
     partial class PackageDownloader
     {
