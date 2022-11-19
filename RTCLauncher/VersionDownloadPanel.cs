@@ -252,7 +252,6 @@ namespace RTCV.Launcher
             string unstableRtcDir = Path.Combine(MainForm.launcherDir, "VERSIONS", "UNSTABLE", "RTCV", "RTC");
             var versions = Directory.GetDirectories(versionsDir);
             var newestVersion = versions.LastOrDefault();
-
             if (newestVersion == null)
             {
                 MessageBox.Show("Could not find an RTC install to pull from");
@@ -284,9 +283,31 @@ namespace RTCV.Launcher
 
             using (WebClient wc = new WebClient())
             {
-                wc.DownloadFile(updatePath, zipPath);
+                try
+                {
+                    wc.DownloadFile(updatePath, zipPath);
+                }
+                catch (WebException we) //to only catch web exceptions
+                {
+                    if (we.Status == WebExceptionStatus.NameResolutionFailure) //dns error. not found or not connected
+                    {
+                        MessageBox.Show("Server was not found. check your internet", "DNS Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else if (we.Status == WebExceptionStatus.ProtocolError) //http 404 or 401
+                    {
+                        MessageBox.Show("Access Denied", "HTTP Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else if (we.Status == WebExceptionStatus.Timeout) //time out error
+                    {
+                        MessageBox.Show("Connection Timed out", "Timeout", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else //anything else + message
+                    {
+                        MessageBox.Show("Unknown error\nStatus: " + we.Status.ToString() + "\nMessage: " + we.Message,"ERROR",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    }
+                    return;
+                }
             }
-
             MainForm.mf.InstallFromZip(new string[] { zipPath }, false);
 
             //Copy RTC folder from newer version
