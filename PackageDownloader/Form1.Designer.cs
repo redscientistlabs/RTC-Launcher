@@ -38,7 +38,7 @@ namespace Package_Downloader
             this.webBrowser.Location = new System.Drawing.Point(0, 0);
             this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(919, 511);
+            this.webBrowser.Size = new System.Drawing.Size(784, 561);
             this.webBrowser.TabIndex = 0;
             this.webBrowser.Url = new System.Uri("http://cc.r5x.cc/rtc/packages", System.UriKind.Absolute);
             this.webBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser_DocumentCompleted);
@@ -49,10 +49,10 @@ namespace Package_Downloader
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(919, 511);
+            this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.webBrowser);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "PackageDownloader";
             this.Text = "RTC Package Downloader";
             this.Load += new System.EventHandler(this.Form1_Load);
