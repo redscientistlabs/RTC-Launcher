@@ -60,15 +60,23 @@ namespace RTCV.Launcher
             }
         }
 
-        internal static string launcherDir = Path.GetDirectoryName(Application.ExecutablePath);
+        internal static string launcherDir => Path.GetDirectoryName(Application.ExecutablePath);
+        internal static string versionsDir => Path.Combine(launcherDir, "VERSIONS");
+        internal static string packagesDir => Path.Combine(launcherDir, "PACKAGES");
+        internal static string musicDir => Path.Combine(launcherDir, "MUSIC");
+        internal static string gamesDir => Path.Combine(launcherDir, "GAMES");
+
+        internal static string rsdbDir => Path.Combine(launcherDir, "RS_DB");
+
+
+
 
         internal static string releaseServer = "http://redscientist.com/software";
         internal static string devServer = "http://cc.r5x.cc";
         internal static string historicalServer = "http://historical.optional.fun";
-
         internal static string buildFolder = null;
-
         internal static string webResourceDomain = releaseServer;
+
 
         internal static MainForm mf = null;
         internal static VersionDownloadPanel vdppForm = null;
@@ -78,9 +86,8 @@ namespace RTCV.Launcher
         internal static DownloadForm dForm = null;
         internal static Form lpForm = null;
 
-        public const int launcherVer = 32;
+        public const int launcherVer = 33;
 
-        internal static int devCounter = 0;
         internal static string SelectedVersion = null;
         internal static string lastSelectedVersion = null;
 
@@ -126,41 +133,27 @@ namespace RTCV.Launcher
             RewireMouseMove();
 
             //creating default folders
-            if (!Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar))
-            {
-                Directory.CreateDirectory(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar);
-            }
+            if (!Directory.Exists(versionsDir))
+                Directory.CreateDirectory(versionsDir);
+            if (!Directory.Exists(packagesDir))
+                Directory.CreateDirectory(packagesDir);
+            if (!Directory.Exists(musicDir))
+                Directory.CreateDirectory(musicDir);
+            if (!Directory.Exists(gamesDir))
+                Directory.CreateDirectory(gamesDir);
+            if (!Directory.Exists(rsdbDir))
+                Directory.CreateDirectory(rsdbDir);
 
-            if (!Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar))
-            {
-                Directory.CreateDirectory(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar);
-            }
-
-            if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
-            {
+            if (File.Exists(Path.Combine(packagesDir, "dev.txt")))
                 webResourceDomain = devServer;
-            }
-            else if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt"))
-            {
+            else if (File.Exists(Path.Combine(packagesDir, "historical.txt")))
                 webResourceDomain = historicalServer;
-            }
             else
-            {
                 webResourceDomain = releaseServer;
-            }
 
-            if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\build.txt"))
-                buildFolder = File.ReadAllText(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\build.txt");
+            if (File.Exists(Path.Combine(packagesDir, "build.txt")))
+                buildFolder = File.ReadAllText(Path.Combine(packagesDir, "build.txt"));
 
-            //Will trigger after an update from the original launcher
-            if (Directory.Exists(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher"))
-            {
-                Directory.Delete(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + "Update_Launcher", true);
-                if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + "Update_Launcher.zip"))
-                {
-                    File.Delete(launcherDir + Path.DirectorySeparatorChar + "PACKAGES" + Path.DirectorySeparatorChar + "Update_Launcher.zip");
-                }
-            }
         }
 
         private void RewireMouseMove()
@@ -355,12 +348,30 @@ namespace RTCV.Launcher
             return filename.Substring(0, filename.LastIndexOf('.'));
         }
 
-        public void lbVersions_SelectedIndexChanged(object sender, EventArgs e)
+        public void AnchorPanel(Form form)
         {
             clearAnchorRight();
+
+            form.Size = pnAnchorRight.Size;
+            form.TopLevel = false;
+            pnAnchorRight.Controls.Add(form);
+            foreach (Control c in form.Controls)
+            {
+                c.MouseMove += MainForm_MouseMove;
+            }
+
+            form.MouseMove += MainForm_MouseMove;
+
+            form.Dock = DockStyle.Fill;
+            form.Show();
+        }
+
+        public void lbVersions_SelectedIndexChanged(object sender, EventArgs e)
+        {
             if (sideversionForm.lbVersions.SelectedIndex == -1)
             {
                 SelectedVersion = null;
+                clearAnchorRight();
                 return;
             }
             else
@@ -371,7 +382,19 @@ namespace RTCV.Launcher
 
             if (File.Exists(Path.Combine(launcherDir, "VERSIONS", SelectedVersion, "Launcher", "launcher.json")))
             {
-                lpForm = new LaunchPanelV3();
+                var panelIniPath = Path.Combine(launcherDir, "VERSIONS", SelectedVersion, "Launcher", "panel.ini");
+                if (!File.Exists(panelIniPath))
+                    lpForm = new LaunchPanelV3();
+                else
+                {
+                    var panelVer = File.ReadAllText(panelIniPath).Trim();
+                    switch (panelVer)
+                    {
+                        case "4":
+                            lpForm = new LaunchPanelV4();
+                            break;
+                    }
+                }
             }
             else if (File.Exists(Path.Combine(launcherDir, "VERSIONS", SelectedVersion, "Launcher", "launcher.ini")))
             {
@@ -382,18 +405,7 @@ namespace RTCV.Launcher
                 lpForm = new LaunchPanelV1();
             }
 
-            lpForm.Size = pnAnchorRight.Size;
-            lpForm.TopLevel = false;
-            pnAnchorRight.Controls.Add(lpForm);
-            foreach (Control c in lpForm.Controls)
-            {
-                c.MouseMove += MainForm_MouseMove;
-            }
-
-            lpForm.MouseMove += MainForm_MouseMove;
-
-            lpForm.Dock = DockStyle.Fill;
-            lpForm.Show();
+            AnchorPanel(lpForm);
         }
 
         public void InvokeUI(Action a)
@@ -679,7 +691,7 @@ namespace RTCV.Launcher
 
                             //this is most likely an emulator package
                             //in that case, use selected RTCV install path then fetch the requested emu path
-                            if (!(lpForm is ILauncherJsonConfPanel))
+                            if (!(lpForm is ILauncherJsonConfPanelV3))
                             {
                                 MessageBox.Show("Error: Could not load Json config from base install");
                                 return;
@@ -687,8 +699,7 @@ namespace RTCV.Launcher
 
                             //fetching path segments
                             var rtcvBuildName = sideversionForm.lbVersions.SelectedItem.ToString();
-                            var jsonConf = (lpForm as ILauncherJsonConfPanel).GetLauncherJsonConf();
-                            var addonFolderName = jsonConf.Items.FirstOrDefault(it => it.DownloadVersion == versionFolderName)?.FolderName;
+                            var addonFolderName = (lpForm as ILauncherJsonConfPanel).GetFolderByVersion(versionFolderName);
 
                             if (string.IsNullOrWhiteSpace(addonFolderName))
                             {
@@ -940,11 +951,6 @@ namespace RTCV.Launcher
             }
         }
 
-        private void btnOnlineGuide_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://corrupt.wiki/");
-        }
-
         public void clearAnchorRight()
         {
             foreach (Control c in pnAnchorRight.Controls)
@@ -952,7 +958,17 @@ namespace RTCV.Launcher
                 if (c is Form)
                 {
                     pnAnchorRight.Controls.Remove(c);
-                    (c as Form).Close();
+
+                    if (c is MusicPanel)
+                    {
+                        //don't close it.
+                    }
+                    else if (c is GamesPanel)
+                    {
+                        //don't close it.
+                    }
+                    else
+                        (c as Form).Close();
                 }
             }
         }
@@ -1003,12 +1019,8 @@ namespace RTCV.Launcher
             btnQuit.BackColor = Color.FromArgb(64, 64, 64);
         }
 
-        private void btnDiscord_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://discord.corrupt.wiki/");
-        }
 
-        private const int grabBorderSize = 10; // size of the area where you can grab the borderless window
+        private const int grabBorderSize = 16; // size of the area where you can grab the borderless window
 
         private Rectangle RectTop => new Rectangle(0, 0, ClientSize.Width, grabBorderSize);
         private Rectangle RectLeft => new Rectangle(0, 0, grabBorderSize, ClientSize.Height);
@@ -1031,16 +1043,12 @@ THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMP
                 "About");
         }
 
-        private void btnTutorials_Click(object sender, EventArgs e)
-        {
-            Process.Start("http://rtctutorialvideo.r5x.cc/");
-        }
 
         private Rectangle RectRight => new Rectangle(ClientSize.Width - grabBorderSize, 0, grabBorderSize, ClientSize.Height);
         private static Rectangle RectTopLeft => new Rectangle(0, 0, grabBorderSize, grabBorderSize);
         private Rectangle RectTopRight => new Rectangle(ClientSize.Width - grabBorderSize, 0, grabBorderSize, grabBorderSize);
         private Rectangle RectBottomLeft => new Rectangle(0, ClientSize.Height - grabBorderSize, grabBorderSize, grabBorderSize);
-        private Rectangle RectBottomRight => new Rectangle(ClientSize.Width - grabBorderSize, ClientSize.Height - grabBorderSize, grabBorderSize, grabBorderSize);
+        private Rectangle RectBottomRight => new Rectangle(ClientSize.Width - (grabBorderSize * 3), ClientSize.Height - (grabBorderSize * 3), (grabBorderSize * 3), (grabBorderSize * 3));
 
         private void ResizeWindow(MouseEventArgs e, int wParam)
         {
@@ -1065,7 +1073,12 @@ THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMP
         {
             Cursor.Current = Cursors.Default;
             Point cursor = PointToClient(Cursor.Position);
-            if (RectTopLeft.Contains(cursor))
+            if (RectBottomRight.Contains(cursor))
+            {
+                Cursor.Current = Cursors.SizeNWSE;
+                ResizeWindow(e, HT_BOTTOMRIGHT);
+            }
+            else if (RectTopLeft.Contains(cursor))
             {
                 Cursor.Current = Cursors.SizeNWSE;
                 ResizeWindow(e, HT_TOPLEFT);
@@ -1079,11 +1092,6 @@ THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMP
             {
                 Cursor.Current = Cursors.SizeNESW;
                 ResizeWindow(e, HT_BOTTOMLEFT);
-            }
-            else if (RectBottomRight.Contains(cursor))
-            {
-                Cursor.Current = Cursors.SizeNWSE;
-                ResizeWindow(e, HT_BOTTOMRIGHT);
             }
             else if (RectTop.Contains(cursor))
             {
@@ -1116,5 +1124,28 @@ THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMP
         }
 
         private void btnVersionDownloader_MouseDown(object sender, MouseEventArgs e) => SuggestInstallZip(sender, e);
+
+        private void btnMaximize_Click(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Maximized)
+                WindowState = FormWindowState.Normal;
+            else if (WindowState == FormWindowState.Normal)
+                WindowState = FormWindowState.Maximized;
+        }
+
+        private void btnMaximize_MouseEnter(object sender, EventArgs e)
+        {
+            btnMaximize.BackColor = Color.FromArgb(230, 46, 76);
+        }
+
+        private void btnMaximize_MouseLeave(object sender, EventArgs e)
+        {
+            btnMaximize.BackColor = Color.FromArgb(230, 46, 76);
+        }
+
+        private void pnTopPanel_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            btnMaximize_Click(sender, e);
+        }
     }
 }

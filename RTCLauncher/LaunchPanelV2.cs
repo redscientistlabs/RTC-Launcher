@@ -25,7 +25,7 @@ namespace RTCV.Launcher
         {
             Size? btnSize = null;
 
-            var folderPath = Path.Combine(MainForm.launcherDir, "VERSIONS", MainForm.SelectedVersion);
+            var folderPath = Path.Combine(MainForm.versionsDir, MainForm.SelectedVersion);
             if (!Directory.Exists(folderPath))
             {
                 return;
@@ -112,7 +112,7 @@ namespace RTCV.Launcher
         {
             try
             {
-                var targetFolder = Path.Combine(MainForm.launcherDir, "VERSIONS", lc.version, AddonFolderName);
+                var targetFolder = Path.Combine(MainForm.versionsDir, lc.version, AddonFolderName);
 
                 if (Directory.Exists(targetFolder))
                 {
@@ -233,6 +233,11 @@ namespace RTCV.Launcher
             }
 
             return null;
+        }
+
+        private void flowLayoutPanel1_MouseEnter(object sender, EventArgs e)
+        {
+            flowLayoutPanel1.Focus();
         }
     }
 }

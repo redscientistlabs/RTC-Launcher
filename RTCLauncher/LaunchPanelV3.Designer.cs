@@ -56,6 +56,8 @@
             this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel1.Size = new System.Drawing.Size(986, 500);
             this.flowLayoutPanel1.TabIndex = 134;
+            this.flowLayoutPanel1.MouseEnter += new System.EventHandler(this.flowLayoutPanel1_MouseEnter);
+            this.flowLayoutPanel1.MouseHover += new System.EventHandler(this.flowLayoutPanel1_MouseEnter);
             // 
             // LaunchPanelV3
             // 
@@ -68,7 +70,7 @@
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "LaunchPanelV3";
-            this.Text = "LaunchPanelV2";
+            this.Text = "LaunchPanelV3";
             this.Load += new System.EventHandler(this.NewLaunchPanel_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

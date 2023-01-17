@@ -12,18 +12,18 @@ namespace RTCV.Launcher
     using RTCV.Launcher.Components;
 
 #pragma warning disable CA2213 //Component designer classes generate their own Dispose method
-    internal partial class LaunchPanelV3 : Form, ILauncherJsonConfPanelV3
+    internal partial class LaunchPanelV4 : Form, ILauncherJsonConfPanelV4
     {
-        private readonly LauncherConfJsonV3 lc;
+        private readonly LauncherConfJsonV4 lc;
         private readonly Timer sidebarCloseTimer;
         private readonly List<Button> HiddenButtons = new List<Button>();
 
-        public LaunchPanelV3()
+        public LaunchPanelV4()
         {
             InitializeComponent();
             lbSelectedVersion.Visible = false;
 
-            lc = new LauncherConfJsonV3(MainForm.SelectedVersion);
+            lc = new LauncherConfJsonV4(MainForm.SelectedVersion);
 
             sidebarCloseTimer = new Timer
             {
@@ -32,7 +32,9 @@ namespace RTCV.Launcher
             sidebarCloseTimer.Tick += SidebarCloseTimer_Tick;
         }
 
-        public void DisplayVersion()
+
+
+        public void DrawPanel()
         {
             var folderPath = Path.Combine(MainForm.versionsDir, MainForm.SelectedVersion);
             if (!Directory.Exists(folderPath))
@@ -40,10 +42,12 @@ namespace RTCV.Launcher
                 return;
             }
 
+            flowVisiblePanel.Controls.Clear();
+
             Size? btnSize = null;
             HiddenButtons.Clear();
 
-            foreach (var lcji in lc.Items) //.Where(it => !it.HideItem))
+            void InitializeItem(LauncherConfJsonV4 lc, LauncherConfJsonItemV4 lcji, FlowLayoutPanel panel) //.Where(it => !it.HideItem))
             {
                 Bitmap btnImage;
                 using (var bmpTemp = new Bitmap(new MemoryStream(File.ReadAllBytes(Path.Combine(lc.LauncherAssetLocation, lcji.ImageName)))))
@@ -55,102 +59,233 @@ namespace RTCV.Launcher
                     }
                 }
 
-                var newButton = new Button
-                {
-                    BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))))
-                };
-                newButton.FlatAppearance.BorderSize = 0;
-                newButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-                newButton.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
-                newButton.ForeColor = System.Drawing.Color.Black;
-                newButton.Name = lcji.FolderName;
-                newButton.Size = (Size)btnSize;
-                newButton.TabIndex = 134;
-                newButton.TabStop = false;
-                newButton.Tag = lcji;
-                newButton.Text = string.Empty;
-                newButton.UseVisualStyleBackColor = false;
-
-                if (lcji.ImageName == "Add.png")
-                {
-                    newButton.AllowDrop = true;
-                    newButton.MouseDown += AddButton_MouseDown;
-                    newButton.DragEnter += AddButton_DragEnter;
-                    newButton.DragDrop += AddButton_DragDrop;
-                }
-                else
-                {
-                    newButton.Click += this.btnBatchfile_Click;
-                }
-
-                newButton.MouseEnter += NewButton_MouseEnter;
-                newButton.MouseLeave += NewButton_MouseLeave;
+                var newButton = new Button();
+                newButton.Size = btnSize.Value;
+                PrepareButton(lcji, newButton);
+                newButton.Image = btnImage;
 
                 var isAddon = !string.IsNullOrWhiteSpace(lcji.DownloadVersion);
                 var AddonInstalled = false;
 
-                if (isAddon)
-                {
-                    AddonInstalled = Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName));
-
-                    newButton.MouseDown += (sender, e) =>
-                    {
-                        if (e.Button == MouseButtons.Right)
-                        {
-                            var locate = new Point(((Control)sender).Location.X + e.Location.X, ((Control)sender).Location.Y + e.Location.Y);
-
-                            var columnsMenu = new Components.BuildContextMenu();
-
-                            columnsMenu.Items.Add("Open Folder", null, (ob, ev) =>
-                            {
-                                var addonFolderPath = Path.Combine(MainForm.versionsDir, lc.Version, lcji.FolderName);
-
-                                if (Directory.Exists(addonFolderPath))
-                                {
-                                    Process.Start(addonFolderPath);
-                                }
-                            }).Enabled = AddonInstalled;
-                            columnsMenu.Items.Add(new ToolStripSeparator());
-                            columnsMenu.Items.Add("Delete Addon", null, (ob, ev) => DeleteAddon(lcji)).Enabled = (lcji.IsAddon || AddonInstalled);
-
-                            columnsMenu.Show(this, locate);
-                        }
-                    };
-                }
 
                 if (isAddon)
-                {
-                    var p = new Pen((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red), 1);
-                    var b = new System.Drawing.SolidBrush((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red));
+                    AddonInstalled = PrepareButtonAsAddon(lcji, newButton);
 
-                    var x1 = 2;
-                    var y1 = btnImage.Height - 6;
-                    var x2 = 4;
-                    var y2 = 4;
-                    // Draw line to screen.
-                    using (var graphics = Graphics.FromImage(btnImage))
-                    {
-                        graphics.FillRectangle(b, x1, y1, x2, y2);
-                    }
-                }
+                bool showUnstable = false;
 
-                newButton.Image = btnImage;
-
-                if (!AddonInstalled && lcji.HideItem)
+                if (!AddonInstalled && (lcji.HideItem || (!showUnstable && lcji.ItemClass == "UNSTABLE"))) //Hidden non-installed addons that requests it
                 {
                     newButton.Size = new Size(0, 0);
                     newButton.Location = new Point(0, 0);
-
                     HiddenButtons.Add(newButton);
-                    continue;
+                    return;
                 }
 
                 newButton.Visible = true;
-                flowLayoutPanel1.Controls.Add(newButton);
+                panel.Controls.Add(newButton);
             }
+
+            var installedItems = lc.Items.Where(it => isInstalled(lc, it)).ToList();
+            var notInstalledItems = lc.Items.Where(it => !isInstalled(lc, it)).ToList();
+
+            var add = installedItems.FirstOrDefault(it => it.ItemName == "Add");
+            if (add != null)
+            {
+                installedItems.Remove(add);
+            }
+
+            var InstalledItemsTier3 = installedItems.Where(it => it.ItemClass == "TIER3");
+            var InstalledItemsTools = installedItems.Where(it => it.ItemClass == "TOOL");
+            var InstalledItemsTier2 = installedItems.Where(it => it.ItemClass == "TIER2");
+            var InstalledItemsTier1 = installedItems.Where(it => it.ItemClass == "TIER1");
+            var InstalledItemsCompat = installedItems.Where(it => it.ItemClass == "COMPATIBILITY");
+            var InstalledItemsUnstable = installedItems.Where(it => it.ItemClass == "UNSTABLE");
+
+            var NotInstalledItemsTier3 = notInstalledItems.Where(it => it.ItemClass == "TIER3");
+            var NotInstalledItemsTools = notInstalledItems.Where(it => it.ItemClass == "TOOL");
+            var NotInstalledItemsTier2 = notInstalledItems.Where(it => it.ItemClass == "TIER2");
+            var NotInstalledItemsTier1 = notInstalledItems.Where(it => it.ItemClass == "TIER1");
+            var NotInstalledItemsCompat = notInstalledItems.Where(it => it.ItemClass == "COMPATIBILITY");
+            var NotInstalledItemsUnstable = notInstalledItems.Where(it => it.ItemClass == "UNSTABLE");
+
+
+
+
+            FlowLayoutPanel flpInstalled = new FlowLayoutPanel()
+            {
+                AutoSize = true,
+                Anchor = AnchorStyles.Left | AnchorStyles.Right,
+            };
+
+            foreach (var item in InstalledItemsTier3)
+                InitializeItem(lc, item, flpInstalled);
+            foreach (var item in InstalledItemsTier2)
+                InitializeItem(lc, item, flpInstalled);
+            foreach (var item in InstalledItemsTier1)
+                InitializeItem(lc, item, flpInstalled);
+            foreach (var item in InstalledItemsCompat)
+                InitializeItem(lc, item, flpInstalled);
+            foreach (var item in InstalledItemsTools)
+                InitializeItem(lc, item, flpInstalled);
+            foreach (var item in InstalledItemsUnstable)
+                InitializeItem(lc, item, flpInstalled);
+
+            FlowLayoutPanel flpNotInstalledItemsMain = new FlowLayoutPanel()
+            {
+                AutoSize = true,
+                Anchor = AnchorStyles.Left | AnchorStyles.Right,
+            };
+
+            foreach (var item in NotInstalledItemsTier3)
+                InitializeItem(lc, item, flpNotInstalledItemsMain);
+            foreach (var item in NotInstalledItemsTools)
+                InitializeItem(lc, item, flpNotInstalledItemsMain);
+            foreach (var item in NotInstalledItemsUnstable)
+                InitializeItem(lc, item, flpNotInstalledItemsMain);
+
+
+            if (add != null)
+            {
+                InitializeItem(lc, add, flpNotInstalledItemsMain);
+            }
+
+            FlowLayoutPanel flpNotInstalledItemsExtras = new FlowLayoutPanel()
+            {
+                AutoSize = true,
+                Anchor = AnchorStyles.Left | AnchorStyles.Right,
+            };
+            foreach (var item in NotInstalledItemsCompat)
+                InitializeItem(lc, item, flpNotInstalledItemsExtras);
+
+            foreach (var item in NotInstalledItemsTier2)
+                InitializeItem(lc, item, flpNotInstalledItemsExtras);
+
+            foreach (var item in NotInstalledItemsTier1)
+                InitializeItem(lc, item, flpNotInstalledItemsExtras);
+
+            flowVisiblePanel.FlowDirection = FlowDirection.TopDown;
+
+            if (flpInstalled.Controls.Count > 0)
+            {
+                flowVisiblePanel.Controls.Add(new Label()
+                {
+                    Text = "Installed Applications",
+                    AutoSize = true,
+                    ForeColor = Color.White,
+                });
+                flowVisiblePanel.Controls.Add(flpInstalled);
+            }
+
+            if (flpNotInstalledItemsMain.Controls.Count > 0)
+            {
+                flowVisiblePanel.Controls.Add(new Label() { Text = string.Empty });
+                flowVisiblePanel.Controls.Add(new Label()
+                {
+                    Text = "Available Add-ons",
+                    AutoSize = true,
+                    ForeColor = Color.White,
+                });
+                flowVisiblePanel.Controls.Add(flpNotInstalledItemsMain);
+            }
+
+            if (flpNotInstalledItemsExtras.Controls.Count > 0 )
+            {
+                flowVisiblePanel.Controls.Add(new Label() { Text = string.Empty });
+                flowVisiblePanel.Controls.Add(new Label()
+                {
+                    AutoSize = true,
+                    Text = "Extra Betas, Prototypes and Compatibility Add-ons",
+                    ForeColor = Color.White,
+                });
+                flowVisiblePanel.Controls.Add(flpNotInstalledItemsExtras);
+
+            }
+
 
             lbSelectedVersion.Text = lc.Version;
             lbSelectedVersion.Visible = true;
+        }
+
+        private bool isInstalled(LauncherConfJsonV4 lc, LauncherConfJsonItemV4 lcji)
+        {
+            return Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName));
+        }
+
+        private bool PrepareButtonAsAddon(LauncherConfJsonItemV4 lcji, Button newButton)
+        {
+
+            var AddonInstalled = Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName));
+
+            newButton.MouseDown += (sender, e) =>
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    var locate = new Point(((Control)sender).Location.X + e.Location.X, ((Control)sender).Location.Y + e.Location.Y);
+
+                    var columnsMenu = new Components.BuildContextMenu();
+
+                    columnsMenu.Items.Add("Open Folder", null, (ob, ev) =>
+                    {
+                        var addonFolderPath = Path.Combine(MainForm.versionsDir, lc.Version, lcji.FolderName);
+
+                        if (Directory.Exists(addonFolderPath))
+                        {
+                            Process.Start(addonFolderPath);
+                        }
+                    }).Enabled = AddonInstalled;
+                    columnsMenu.Items.Add(new ToolStripSeparator());
+                    columnsMenu.Items.Add("Delete Addon", null, (ob, ev) => DeleteAddon(lcji)).Enabled = (lcji.IsAddon || AddonInstalled);
+
+                    columnsMenu.Show(this, locate);
+                }
+            };
+
+
+            var p = new Pen((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red), 1);
+            var b = new System.Drawing.SolidBrush((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red));
+
+            var x1 = 2;
+            var y1 = newButton.Image.Height - 6;
+            var x2 = 4;
+            var y2 = 4;
+            // Draw line to screen.
+            using (var graphics = Graphics.FromImage(newButton.Image))
+            {
+                graphics.FillRectangle(b, x1, y1, x2, y2);
+            }
+
+            return AddonInstalled;
+        }
+
+        private void PrepareButton(LauncherConfJsonItemV4 lcji, Button newButton)
+        {
+
+            newButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            newButton.FlatAppearance.BorderSize = 0;
+            newButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            newButton.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
+            newButton.ForeColor = System.Drawing.Color.Black;
+            newButton.Name = lcji.FolderName;
+            newButton.TabIndex = 134;
+            newButton.TabStop = false;
+            newButton.Tag = lcji;
+            newButton.Text = string.Empty;
+            newButton.UseVisualStyleBackColor = false;
+
+            if (lcji.ImageName == "Add.png")
+            {
+                newButton.AllowDrop = true;
+                newButton.MouseDown += AddButton_MouseDown;
+                newButton.DragEnter += AddButton_DragEnter;
+                newButton.DragDrop += AddButton_DragDrop;
+            }
+            else
+            {
+                newButton.Click += this.btnBatchfile_Click;
+            }
+
+            newButton.MouseEnter += NewButton_MouseEnter;
+            newButton.MouseLeave += NewButton_MouseLeave;
         }
 
         public void InstallCustomPackages()
@@ -262,14 +397,14 @@ namespace RTCV.Launcher
 
             var allControls = new List<Control>();
 
-            allControls.AddRange(flowLayoutPanel1.Controls.Cast<Control>());
+            allControls.AddRange(flowVisiblePanel.Controls.Cast<Control>());
             allControls.AddRange(HiddenButtons);
 
             foreach (var ctrl in allControls)
             {
                 if (ctrl is Button btn)
                 {
-                    if (btn.Tag is LauncherConfJsonItemV3 lcji && lcji.FolderName != null)
+                    if (btn.Tag is LauncherConfJsonItemV4 lcji && lcji.FolderName != null)
                     {
                         var AddonInstalled = Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName));
 
@@ -283,14 +418,10 @@ namespace RTCV.Launcher
 
             if (columnsMenu.Items.Count == 0)
             {
-                //columnsMenu.Items.Add("No available addons", null, new EventHandler((ob, ev) => { })).Enabled = false;
-            }
-            else
-            {
-
-                columnsMenu.Items.Add(new ToolStripSeparator());
+                columnsMenu.Items.Add("No available addons", null, new EventHandler((ob, ev) => { })).Enabled = false;
             }
 
+            columnsMenu.Items.Add(new ToolStripSeparator());
             columnsMenu.Items.Add("Load Custom Package..", null, new EventHandler((ob, ev) => InstallCustomPackages()));
 
             var title = new ToolStripMenuItem("Extra addons for this RTC version")
@@ -321,7 +452,7 @@ namespace RTCV.Launcher
         private void NewButton_MouseLeave(object sender, EventArgs e)
         {
             var currentButton = (Button)sender;
-            var lcji = (LauncherConfJsonItemV3)currentButton.Tag;
+            var lcji = (LauncherConfJsonItemV4)currentButton.Tag;
 
             if (!string.IsNullOrWhiteSpace(lcji.ItemName))
             {
@@ -333,7 +464,7 @@ namespace RTCV.Launcher
                 string name = (lcji.ItemName ?? string.Empty);
                 string subtitle = (lcji.ItemSubtitle ?? string.Empty);
 
-                if (name.Contains(subtitle))
+                if (!string.IsNullOrWhiteSpace(subtitle) && name.Contains(subtitle))
                     name = name.Replace(subtitle, string.Empty);
 
                 string description = (lcji.ItemDescription ?? string.Empty);
@@ -347,7 +478,7 @@ namespace RTCV.Launcher
         private void NewButton_MouseEnter(object sender, EventArgs e)
         {
             var currentButton = (Button)sender;
-            var lcji = (LauncherConfJsonItemV3)currentButton.Tag;
+            var lcji = (LauncherConfJsonItemV4)currentButton.Tag;
 
             if (!string.IsNullOrWhiteSpace(lcji.ItemName))
             {
@@ -356,16 +487,43 @@ namespace RTCV.Launcher
                 currentButton.FlatAppearance.BorderColor = Color.Gray;
                 currentButton.FlatAppearance.BorderSize = 1;
 
-                string name = (lcji.ItemName ?? string.Empty);
-                string subtitle = (lcji.ItemSubtitle ?? string.Empty);
+                string itemClass = $"{(lcji.ItemClass ?? string.Empty)}";
+                string name = $"{(lcji.ItemName ?? string.Empty)}";
+                string subtitle = $"{(lcji.ItemSubtitle ?? string.Empty)}";
 
-                if (name.Contains(subtitle))
+                bool isVanguard = subtitle.ToUpper().Contains("VANGUARD");
+
+                string describer;
+                switch (itemClass)
+                {
+                    case "TIER2":
+                        describer = "(Beta)";
+                        break;
+                    case "TIER1":
+                        describer = "(Prototype)";
+                        break;
+                    case "Compatibility":
+                        describer = "(Compatibility)";
+                        break;
+                    default:
+                        describer = string.Empty;
+                        break;
+                }
+
+                if (!string.IsNullOrWhiteSpace(subtitle) && name.Contains(subtitle))
                     name = name.Replace(subtitle, string.Empty);
 
                 string description = (lcji.ItemDescription ?? string.Empty);
 
                 MainForm.sideinfoForm.lbName.Text = name;
+
+                if (isVanguard)
+                    MainForm.sideinfoForm.lbName.Text += " Vanguard";
+
                 MainForm.sideinfoForm.lbSubtitle.Text = subtitle;
+
+
+
                 MainForm.sideinfoForm.lbDescription.Text = description;
 
                 MainForm.sideinfoForm.Show();
@@ -373,7 +531,7 @@ namespace RTCV.Launcher
             }
         }
 
-        internal void DeleteAddon(LauncherConfJsonItemV3 lcji)
+        internal void DeleteAddon(LauncherConfJsonItemV4 lcji)
         {
             var AddonFolderName = lcji.FolderName;
             var targetFolder = Path.Combine(MainForm.versionsDir, lc.Version, AddonFolderName);
@@ -429,26 +587,23 @@ namespace RTCV.Launcher
             //MainForm.mf.RefreshInterface();
         }
 
-        private void NewLaunchPanel_Load(object sender, EventArgs e)
-        {
-            DisplayVersion();
-        }
+        private void LaunchPanelV4_Load(object sender, EventArgs e) => DrawPanel();
 
         private void btnBatchfile_Click(object sender, EventArgs e)
         {
             var currentButton = (Button)sender;
 
-            var lcji = (LauncherConfJsonItemV3)currentButton.Tag;
+            var lcji = (LauncherConfJsonItemV4)currentButton.Tag;
 
             if (!string.IsNullOrEmpty(lcji.FolderName) && !Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName)))
             {
-                LauncherConfJsonV3 lcCandidateForPull = getFolderFromPreviousVersion(lcji.DownloadVersion);
+                LauncherConfJsonV4 lcCandidateForPull = getFolderFromPreviousVersion(lcji.DownloadVersion);
                 if (lcCandidateForPull != null)
                 {
                     var resultAskPull = MessageBox.Show($"The component {lcji.FolderName} could be imported from {lcCandidateForPull.Version}\nDo you wish import it?", "Import candidate found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (resultAskPull == DialogResult.Yes)
                     {
-                        LauncherConfJsonItemV3 candidate = lcCandidateForPull.Items.FirstOrDefault(it => it.DownloadVersion == lcji.DownloadVersion);
+                        LauncherConfJsonItemV4 candidate = lcCandidateForPull.Items.FirstOrDefault(it => it.DownloadVersion == lcji.DownloadVersion);
                         //handle it here
                         try
                         {
@@ -504,7 +659,7 @@ namespace RTCV.Launcher
             lcji.Execute();
         }
 
-        private static LauncherConfJsonV3 getFolderFromPreviousVersion(string downloadVersion)
+        private static LauncherConfJsonV4 getFolderFromPreviousVersion(string downloadVersion)
         {
             foreach (var ver in MainForm.sideversionForm.lbVersions.Items.Cast<string>())
             {
@@ -513,8 +668,8 @@ namespace RTCV.Launcher
                     continue;
                 }
 
-                var _lc = new LauncherConfJsonV3(ver);
-                LauncherConfJsonItemV3 lcji = _lc.Items.FirstOrDefault(it => it.DownloadVersion == downloadVersion);
+                var _lc = new LauncherConfJsonV4(ver);
+                LauncherConfJsonItemV4 lcji = _lc.Items.FirstOrDefault(it => it.DownloadVersion == downloadVersion);
                 if (lcji != null)
                 {
                     if (Directory.Exists(Path.Combine(_lc.VersionLocation, lcji.FolderName)))
@@ -527,7 +682,7 @@ namespace RTCV.Launcher
             return null;
         }
 
-        public LauncherConfJsonV3 GetLauncherJsonConf()
+        public LauncherConfJsonV4 GetLauncherJsonConf()
         {
             return lc;
         }
@@ -539,9 +694,36 @@ namespace RTCV.Launcher
             return addonFolderName;
         }
 
-        private void flowLayoutPanel1_MouseEnter(object sender, EventArgs e)
+        private void LaunchPanelV4_Resize(object sender, EventArgs e)
         {
-            flowLayoutPanel1.Focus();
+            //flowVisiblePanel.MaximumSize = new Size(980, int.MaxValue);
+        }
+
+        private void flowVisiblePanel_SizeChanged(object sender, EventArgs e)
+        {
+            //foreach (var control in flowVisiblePanel.Controls)
+            //    if(control is FlowLayoutPanel flp)
+            //        flp.Size = new P
+        }
+
+        private void btnOnlineGuide_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://corrupt.wiki/");
+        }
+
+        private void btnTutorials_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://rtctutorialvideo.r5x.cc/");
+        }
+
+        private void btnDiscord_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://discord.corrupt.wiki/");
+        }
+
+        private void flowVisiblePanel_MouseEnter(object sender, EventArgs e)
+        {
+            flowVisiblePanel.Focus();
         }
     }
 }

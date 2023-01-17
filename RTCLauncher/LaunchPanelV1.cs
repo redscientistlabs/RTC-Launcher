@@ -38,7 +38,7 @@ namespace RTCV.Launcher
 
         public void DisplayVersion()
         {
-            var folderPath = Path.Combine(MainForm.launcherDir, "VERSIONS", MainForm.SelectedVersion);
+            var folderPath = Path.Combine(MainForm.versionsDir, MainForm.SelectedVersion);
             if (!Directory.Exists(folderPath))
             {
                 return;
@@ -113,7 +113,8 @@ namespace RTCV.Launcher
 
             if (currentButton.Text == "START")
             {
-                fullPath = MainForm.launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version + Path.DirectorySeparatorChar + "START.bat";
+                //fullPath = MainForm.launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar + version + Path.DirectorySeparatorChar + "START.bat";
+                fullPath = Path.Combine(MainForm.versionsDir, version, "START.bat");
             }
             else
             {
