@@ -500,7 +500,7 @@ namespace RTCV.Launcher
         {
             var filename = $"{dbName}.json";
             var cachePath = Path.Combine(MainForm.rsdbDir, filename);
-            var onlinePath = $"https://redscientist.com/Content/DB/{filename}";
+            var onlinePath = $"https://redscientist.com/Content/data/{filename}";
 
             try
             {
