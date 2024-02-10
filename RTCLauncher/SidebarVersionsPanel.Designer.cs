@@ -34,6 +34,7 @@ namespace RTCV.Launcher
             this.btnRTCV = new System.Windows.Forms.Button();
             this.btnMusic = new System.Windows.Forms.Button();
             this.btnGames = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lbVersions
@@ -99,7 +100,7 @@ namespace RTCV.Launcher
             this.btnRTCV.ForeColor = System.Drawing.Color.White;
             this.btnRTCV.Image = global::RTCV.Launcher.Properties.Resources.RTCV_16x16;
             this.btnRTCV.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRTCV.Location = new System.Drawing.Point(9, 91);
+            this.btnRTCV.Location = new System.Drawing.Point(9, 36);
             this.btnRTCV.Name = "btnRTCV";
             this.btnRTCV.Padding = new System.Windows.Forms.Padding(24, 0, 0, 0);
             this.btnRTCV.Size = new System.Drawing.Size(136, 31);
@@ -117,50 +118,60 @@ namespace RTCV.Launcher
             this.btnMusic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnMusic.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnMusic.Enabled = false;
             this.btnMusic.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.btnMusic.FlatAppearance.BorderSize = 0;
             this.btnMusic.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMusic.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F);
             this.btnMusic.ForeColor = System.Drawing.Color.White;
-            this.btnMusic.Image = global::RTCV.Launcher.Properties.Resources.Redscientist_16x16;
             this.btnMusic.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMusic.Location = new System.Drawing.Point(9, 51);
+            this.btnMusic.Location = new System.Drawing.Point(9, 85);
             this.btnMusic.Name = "btnMusic";
             this.btnMusic.Padding = new System.Windows.Forms.Padding(24, 0, 0, 0);
-            this.btnMusic.Size = new System.Drawing.Size(136, 34);
+            this.btnMusic.Size = new System.Drawing.Size(136, 8);
             this.btnMusic.TabIndex = 139;
             this.btnMusic.TabStop = false;
             this.btnMusic.Tag = "";
-            this.btnMusic.Text = "   Music";
             this.btnMusic.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnMusic.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnMusic.UseVisualStyleBackColor = false;
-            this.btnMusic.Click += new System.EventHandler(this.category_Click);
             // 
             // btnGames
             // 
             this.btnGames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGames.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnGames.Enabled = false;
             this.btnGames.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.btnGames.FlatAppearance.BorderSize = 0;
             this.btnGames.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGames.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F);
             this.btnGames.ForeColor = System.Drawing.Color.White;
-            this.btnGames.Image = global::RTCV.Launcher.Properties.Resources.VRUN_16x16;
-            this.btnGames.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnGames.Location = new System.Drawing.Point(9, 11);
+            this.btnGames.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnGames.Location = new System.Drawing.Point(9, 73);
             this.btnGames.Name = "btnGames";
             this.btnGames.Padding = new System.Windows.Forms.Padding(24, 0, 0, 0);
-            this.btnGames.Size = new System.Drawing.Size(136, 34);
+            this.btnGames.Size = new System.Drawing.Size(136, 8);
             this.btnGames.TabIndex = 138;
             this.btnGames.TabStop = false;
             this.btnGames.Tag = "";
-            this.btnGames.Text = "   Games";
             this.btnGames.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnGames.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnGames.UseVisualStyleBackColor = false;
-            this.btnGames.Click += new System.EventHandler(this.category_Click);
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
+            this.label1.Font = new System.Drawing.Font("Segoe UI Light", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(12, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(95, 21);
+            this.label1.TabIndex = 142;
+            this.label1.Text = "Environment";
             // 
             // SidebarVersionsPanel
             // 
@@ -169,6 +180,7 @@ namespace RTCV.Launcher
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(154, 509);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lbNameVersions);
             this.Controls.Add(this.btnMusic);
             this.Controls.Add(this.btnGames);
@@ -195,5 +207,6 @@ namespace RTCV.Launcher
         public System.Windows.Forms.Button btnMusic;
         public System.Windows.Forms.Button btnGames;
         public System.Windows.Forms.Label lbNameVersions;
+        public System.Windows.Forms.Label label1;
     }
 }

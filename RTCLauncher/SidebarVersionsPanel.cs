@@ -76,7 +76,7 @@ namespace RTCV.Launcher
                 MainForm.mf.pbNewVersionNotification.Visible = false;
                 lbNameVersions.Visible = false;
 
-                MainForm.mf.AnchorPanel(GamesPanel.gpForm);
+                //MainForm.mf.AnchorPanel(GamesPanel.gpForm);
             }
             else if (sender == btnMusic)
             {
@@ -85,7 +85,7 @@ namespace RTCV.Launcher
                 MainForm.mf.pbNewVersionNotification.Visible = false;
                 lbNameVersions.Visible = false;
 
-                MainForm.mf.AnchorPanel(MusicPanel.mpForm);
+                //MainForm.mf.AnchorPanel(MusicPanel.mpForm);
             }
 
 

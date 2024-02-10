@@ -333,6 +333,7 @@ namespace RTCV.Launcher
                     {
                         conf.ConfigFilename = addonJsonConfLocation;
                         conf.IsAddon = true;
+                        conf.ItemClass = "ADDON";
                     }
 
                     lcjiList.AddRange(addonConfigs);
@@ -378,7 +379,7 @@ namespace RTCV.Launcher
 
         //Used for the sidepanel and ordering of cards
         [JsonProperty]
-        public readonly string ItemClass;
+        public string ItemClass;
         [JsonProperty]
         public readonly string ItemName;
         [JsonProperty]

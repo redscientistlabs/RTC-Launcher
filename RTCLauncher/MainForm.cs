@@ -63,12 +63,6 @@ namespace RTCV.Launcher
         internal static string launcherDir => Path.GetDirectoryName(Application.ExecutablePath);
         internal static string versionsDir => Path.Combine(launcherDir, "VERSIONS");
         internal static string packagesDir => Path.Combine(launcherDir, "PACKAGES");
-        internal static string musicDir => Path.Combine(launcherDir, "MUSIC");
-        internal static string gamesDir => Path.Combine(launcherDir, "GAMES");
-
-        internal static string rsdbDir => Path.Combine(launcherDir, "RS_DB");
-
-
 
 
         internal static string releaseServer = "http://redscientist.com/software";
@@ -137,12 +131,6 @@ namespace RTCV.Launcher
                 Directory.CreateDirectory(versionsDir);
             if (!Directory.Exists(packagesDir))
                 Directory.CreateDirectory(packagesDir);
-            if (!Directory.Exists(musicDir))
-                Directory.CreateDirectory(musicDir);
-            if (!Directory.Exists(gamesDir))
-                Directory.CreateDirectory(gamesDir);
-            if (!Directory.Exists(rsdbDir))
-                Directory.CreateDirectory(rsdbDir);
 
             if (File.Exists(Path.Combine(packagesDir, "dev.txt")))
                 webResourceDomain = devServer;
@@ -959,16 +947,18 @@ namespace RTCV.Launcher
                 {
                     pnAnchorRight.Controls.Remove(c);
 
-                    if (c is MusicPanel)
-                    {
-                        //don't close it.
-                    }
-                    else if (c is GamesPanel)
-                    {
-                        //don't close it.
-                    }
-                    else
-                        (c as Form).Close();
+                    (c as Form).Close();
+
+                    //if (c is MusicPanel)
+                    //{
+                    //    //don't close it.
+                    //}
+                    //else if (c is GamesPanel)
+                    //{
+                    //    //don't close it.
+                    //}
+                    //else
+                    //    (c as Form).Close();
                 }
             }
         }

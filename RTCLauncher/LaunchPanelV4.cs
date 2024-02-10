@@ -98,6 +98,7 @@ namespace RTCV.Launcher
             var InstalledItemsTools = installedItems.Where(it => it.ItemClass == "TOOL");
             var InstalledItemsTier2 = installedItems.Where(it => it.ItemClass == "TIER2");
             var InstalledItemsTier1 = installedItems.Where(it => it.ItemClass == "TIER1");
+            var InstalledItemsAddon = installedItems.Where(it => it.ItemClass == "ADDON");
             var InstalledItemsCompat = installedItems.Where(it => it.ItemClass == "COMPATIBILITY");
             var InstalledItemsUnstable = installedItems.Where(it => it.ItemClass == "UNSTABLE");
 
@@ -105,6 +106,7 @@ namespace RTCV.Launcher
             var NotInstalledItemsTools = notInstalledItems.Where(it => it.ItemClass == "TOOL");
             var NotInstalledItemsTier2 = notInstalledItems.Where(it => it.ItemClass == "TIER2");
             var NotInstalledItemsTier1 = notInstalledItems.Where(it => it.ItemClass == "TIER1");
+            var NotInstalledItemsAddon = notInstalledItems.Where(it => it.ItemClass == "ADDON");
             var NotInstalledItemsCompat = notInstalledItems.Where(it => it.ItemClass == "COMPATIBILITY");
             var NotInstalledItemsUnstable = notInstalledItems.Where(it => it.ItemClass == "UNSTABLE");
 
@@ -122,6 +124,8 @@ namespace RTCV.Launcher
             foreach (var item in InstalledItemsTier2)
                 InitializeItem(lc, item, flpInstalled);
             foreach (var item in InstalledItemsTier1)
+                InitializeItem(lc, item, flpInstalled);
+            foreach (var item in InstalledItemsAddon)
                 InitializeItem(lc, item, flpInstalled);
             foreach (var item in InstalledItemsCompat)
                 InitializeItem(lc, item, flpInstalled);
@@ -146,7 +150,7 @@ namespace RTCV.Launcher
 
             if (add != null)
             {
-                InitializeItem(lc, add, flpNotInstalledItemsMain);
+                InitializeItem(lc, add, flpInstalled);
             }
 
             FlowLayoutPanel flpNotInstalledItemsExtras = new FlowLayoutPanel()
@@ -161,6 +165,9 @@ namespace RTCV.Launcher
                 InitializeItem(lc, item, flpNotInstalledItemsExtras);
 
             foreach (var item in NotInstalledItemsTier1)
+                InitializeItem(lc, item, flpNotInstalledItemsExtras);
+
+            foreach (var item in NotInstalledItemsAddon)
                 InitializeItem(lc, item, flpNotInstalledItemsExtras);
 
             flowVisiblePanel.FlowDirection = FlowDirection.TopDown;
@@ -181,7 +188,7 @@ namespace RTCV.Launcher
                 flowVisiblePanel.Controls.Add(new Label() { Text = string.Empty });
                 flowVisiblePanel.Controls.Add(new Label()
                 {
-                    Text = "Available Add-ons",
+                    Text = "Main Add-ons",
                     AutoSize = true,
                     ForeColor = Color.White,
                 });
@@ -220,7 +227,14 @@ namespace RTCV.Launcher
             {
                 if (e.Button == MouseButtons.Right)
                 {
-                    var locate = new Point(((Control)sender).Location.X + e.Location.X, ((Control)sender).Location.Y + e.Location.Y);
+                    var button = (sender as Control);
+                    var categoryPanel = button.Parent;
+                    var panelV4 = categoryPanel.Parent;
+
+                    int absoluteX = e.Location.X + button.Location.X + categoryPanel.Location.X + panelV4.Location.X;
+                    int absoluteY = e.Location.Y + button.Location.Y + categoryPanel.Location.Y + panelV4.Location.Y;
+
+                    var locate = new Point(absoluteX, absoluteY);
 
                     var columnsMenu = new Components.BuildContextMenu();
 
@@ -389,9 +403,17 @@ namespace RTCV.Launcher
 
         private void AddButton_MouseDown(object sender, MouseEventArgs e)
         {
-            //if (e.Button == MouseButtons.Right)
-            //{
-            var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y);
+            InstallCustomPackages();
+
+            return;
+            var button = (sender as Control);
+            var categoryPanel = button.Parent;
+            var panelV4 = categoryPanel.Parent;
+
+            int absoluteX = e.Location.X + button.Location.X + categoryPanel.Location.X + panelV4.Location.X;
+            int absoluteY = e.Location.Y + button.Location.Y + categoryPanel.Location.Y + panelV4.Location.Y;
+
+            var locate = new Point(absoluteX, absoluteY);
 
             var columnsMenu = new BuildContextMenu();
 
