@@ -2,6 +2,8 @@ namespace RTCV.Launcher
 {
     using System;
     using System.Drawing;
+    using System.IO;
+    using System.Linq;
     using System.Windows.Forms;
 
     internal partial class SidebarVersionsPanel : Form
@@ -49,43 +51,79 @@ namespace RTCV.Launcher
             }
         }
 
-        private void category_Click(object sender, EventArgs e)
+        public void category_Click(object sender, EventArgs e)
         {
-            btnGames.BackColor = Color.FromArgb(20, 20, 20);
-            btnMusic.BackColor = Color.FromArgb(20, 20, 20);
-            btnRTCV.BackColor = Color.FromArgb(20, 20, 20);
+            void hide()
+            {
+                btnStepback.BackColor = Color.FromArgb(20, 20, 20);
+                btnRTCV.BackColor = Color.FromArgb(20, 20, 20);
 
-            lbVersions.Visible = false;
-            lbDefaultText.Visible = false;
+                lbVersions.Visible = false;
+                lbDefaultText.Visible = false;
+            }
 
 
             if (sender == btnRTCV)
             {
-                btnRTCV.BackColor = Color.FromArgb(32, 32, 32);
-                MainForm.mf.btnVersionDownloader.Visible = true;
-                MainForm.mf.RefreshInstalledVersions();
-                lbNameVersions.Visible = true;
 
-                if (lbVersions.Items.Count > 0)
-                    lbVersions.SelectedIndex = 0;
+                bool rtcInstalled = MainForm.versions.Any(it => new DirectoryInfo(it).Name.Contains("RTC"));
+                if (rtcInstalled)
+                {
+                    hide();
+
+                    btnRTCV.BackColor = Color.FromArgb(32, 32, 32);
+                    //MainForm.mf.btnVersionDownloader.Visible = true;
+                    MainForm.mf.RefreshInstalledVersions();
+                    lbNameVersions.Visible = true;
+
+                    if (lbVersions.Items.Count > 0)
+                        lbVersions.SelectedIndex = 0;
+                }
+                else
+                {
+                    //if not installed
+                    hide();
+
+                    btnRTCV.BackColor = Color.FromArgb(32, 32, 32);
+                    //MainForm.mf.btnVersionDownloader.Visible = true;
+                    MainForm.mf.RefreshInstalledVersions();
+                    lbNameVersions.Visible = true;
+
+                    MainForm.mf.btnVersionDownloader_Click(null, null);
+
+                    MainForm.vdppForm.cbSelectedServer.SelectedIndex = 0;
+
+                    //pop installer first
+                }
+
+
             }
-            else if (sender == btnGames)
+            else if (sender == btnStepback)
             {
-                btnGames.BackColor = Color.FromArgb(32, 32, 32);
-                MainForm.mf.btnVersionDownloader.Visible = false;
-                MainForm.mf.pbNewVersionNotification.Visible = false;
-                lbNameVersions.Visible = false;
 
-                //MainForm.mf.AnchorPanel(GamesPanel.gpForm);
-            }
-            else if (sender == btnMusic)
-            {
-                btnMusic.BackColor = Color.FromArgb(32, 32, 32);
-                MainForm.mf.btnVersionDownloader.Visible = false;
-                MainForm.mf.pbNewVersionNotification.Visible = false;
-                lbNameVersions.Visible = false;
+                bool stepBackInstalled = MainForm.versions.Any(it => new DirectoryInfo(it).Name.Contains("STEPBACK"));
+                if (stepBackInstalled)
+                {
+                    hide();
 
-                //MainForm.mf.AnchorPanel(MusicPanel.mpForm);
+                    btnStepback.BackColor = Color.FromArgb(32, 32, 32);
+                    //MainForm.mf.btnVersionDownloader.Visible = false;
+                    MainForm.mf.pbNewVersionNotification.Visible = false;
+                    lbNameVersions.Visible = false;
+
+                    MainForm.mf.AnchorPanel(new LaunchPanelV4("STEPBACK"));
+                }
+                else
+                {
+                    //if not installed
+
+                    MainForm.mf.btnVersionDownloader_Click(null, null);
+
+                    MainForm.vdppForm.cbSelectedServer.SelectedIndex = 3;
+
+                    //pop installer first
+                }
+
             }
 
 

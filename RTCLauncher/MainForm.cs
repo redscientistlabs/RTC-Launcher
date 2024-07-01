@@ -20,6 +20,9 @@ namespace RTCV.Launcher
     {
         const int WS_MINIMIZEBOX = 0x20000;
         const int CS_DBLCLKS = 0x8;
+
+        public static List<string> versions => new List<string>(Directory.GetDirectories(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar));
+
         protected override CreateParams CreateParams
         {
             get
@@ -68,6 +71,7 @@ namespace RTCV.Launcher
         internal static string releaseServer = "http://redscientist.com/software";
         internal static string devServer = "http://cc.r5x.cc";
         internal static string historicalServer = "http://historical.optional.fun";
+        internal static string stepbackServer = "http://redscientist.com/stepback";
         internal static string buildFolder = null;
         internal static string webResourceDomain = releaseServer;
 
@@ -136,6 +140,8 @@ namespace RTCV.Launcher
                 webResourceDomain = devServer;
             else if (File.Exists(Path.Combine(packagesDir, "historical.txt")))
                 webResourceDomain = historicalServer;
+            else if (File.Exists(Path.Combine(packagesDir, "stepback.txt")))
+                webResourceDomain = stepbackServer;
             else
                 webResourceDomain = releaseServer;
 
@@ -183,6 +189,12 @@ namespace RTCV.Launcher
             {
                 sideversionForm.lbVersions.SelectedIndex = 0;
             }
+            else
+            {
+                if (versions.Any(it => it.Contains("STEPBACK")))
+                    sideversionForm.category_Click(sideversionForm.btnStepback, null);
+            }
+
 
             RefreshMotd();
 
@@ -269,8 +281,14 @@ namespace RTCV.Launcher
         public void RefreshInstalledVersions()
         {
             sideversionForm.lbVersions.Items.Clear();
-            var versions = new List<string>(Directory.GetDirectories(launcherDir + Path.DirectorySeparatorChar + "VERSIONS" + Path.DirectorySeparatorChar));
-            sideversionForm.lbVersions.Items.AddRange(versions.OrderByNaturalDescending(x => x).Select(it => getFilenameFromFullFilename(it)).ToArray<object>());
+
+            var items = versions
+                .Where(it => !it.Contains("STEPBACK"))
+                .OrderByNaturalDescending(x => x)
+                .Select(it => getFilenameFromFullFilename(it))
+                .ToArray<object>();
+
+            sideversionForm.lbVersions.Items.AddRange(items);
 
             sideversionForm.lbDefaultText.Visible = versions.Count == 0;
             sideversionForm.lbVersions.Visible = versions.Count > 0;
@@ -963,7 +981,7 @@ namespace RTCV.Launcher
             }
         }
 
-        private void btnVersionDownloader_Click(object sender, EventArgs e)
+        public void btnVersionDownloader_Click(object sender, EventArgs e)
         {
             sideversionForm.lbVersions.SelectedIndex = -1;
 

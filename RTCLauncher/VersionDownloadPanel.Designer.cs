@@ -122,7 +122,8 @@ namespace RTCV.Launcher
             this.cbSelectedServer.Items.AddRange(new object[] {
             "Stable Releases",
             "Development",
-            "Historical"});
+            "Historical",
+            "StepBack"});
             this.cbSelectedServer.Location = new System.Drawing.Point(516, 10);
             this.cbSelectedServer.Name = "cbSelectedServer";
             this.cbSelectedServer.Size = new System.Drawing.Size(112, 21);

@@ -18,12 +18,15 @@ namespace RTCV.Launcher
         private readonly Timer sidebarCloseTimer;
         private readonly List<Button> HiddenButtons = new List<Button>();
 
-        public LaunchPanelV4()
+        public LaunchPanelV4(string forceVersion = null)
         {
             InitializeComponent();
             lbSelectedVersion.Visible = false;
 
-            lc = new LauncherConfJsonV4(MainForm.SelectedVersion);
+            if (forceVersion == null)
+                forceVersion = MainForm.SelectedVersion;
+
+            lc = new LauncherConfJsonV4(forceVersion);
 
             sidebarCloseTimer = new Timer
             {
@@ -36,11 +39,16 @@ namespace RTCV.Launcher
 
         public void DrawPanel()
         {
-            var folderPath = Path.Combine(MainForm.versionsDir, MainForm.SelectedVersion);
-            if (!Directory.Exists(folderPath))
+            if (MainForm.SelectedVersion != null)
             {
-                return;
+                var folderPath = Path.Combine(MainForm.versionsDir, MainForm.SelectedVersion);
+                if (!Directory.Exists(folderPath))
+                {
+                    return;
+                }
             }
+
+
 
             flowVisiblePanel.Controls.Clear();
 

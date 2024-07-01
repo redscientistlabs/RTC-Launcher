@@ -49,6 +49,14 @@ namespace RTCV.Launcher
                 if (Init)
                     cbSelectedServer.SelectedIndex = 2;
             }
+            else if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt"))
+            {
+                backgroundColor = Color.FromArgb(32, 16, 32);
+                MainForm.webResourceDomain = MainForm.stepbackServer;
+
+                if (Init)
+                    cbSelectedServer.SelectedIndex = 3;
+            }
             else
             {
                 backgroundColor = Color.FromArgb(16, 16, 16);
@@ -228,6 +236,8 @@ namespace RTCV.Launcher
                 File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt");
             if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt"))
                 File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt");
+            if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt"))
+                File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt");
 
             switch (cbSelectedServer.SelectedIndex)
             {
@@ -239,8 +249,11 @@ namespace RTCV.Launcher
                 case 2: //historical
                     File.WriteAllText(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt", "HISTORICAL");
                     break;
+                case 3: //stepback
+                    File.WriteAllText(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt", "STEPBACK");
+                    break;
                 default:
-                    return;
+                    break;
             }
 
             ReloadPanel();
