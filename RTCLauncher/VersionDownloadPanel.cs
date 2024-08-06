@@ -264,7 +264,7 @@ namespace RTCV.Launcher
             string versionsDir = Path.Combine(MainForm.launcherDir, "VERSIONS");
             string unstableRtcDir = Path.Combine(MainForm.launcherDir, "VERSIONS", "UNSTABLE", "RTCV", "RTC");
             var versions = Directory.GetDirectories(versionsDir);
-            var newestVersion = versions.LastOrDefault();
+            var newestVersion = versions.Where(it => !it.Contains("STEPBACK")).LastOrDefault();
 
             if (newestVersion == null)
             {
