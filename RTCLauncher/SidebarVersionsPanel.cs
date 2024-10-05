@@ -111,7 +111,7 @@ namespace RTCV.Launcher
                     MainForm.mf.pbNewVersionNotification.Visible = false;
                     lbNameVersions.Visible = false;
 
-                    MainForm.mf.AnchorPanel(new LaunchPanelV4("STEPBACK"));
+                    MainForm.mf.AnchorPanel(new LaunchPanelV5("STEPBACK"));
                 }
                 else
                 {

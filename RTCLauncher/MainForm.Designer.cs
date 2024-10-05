@@ -37,6 +37,7 @@ namespace RTCV.Launcher
             this.btnVersionDownloader = new System.Windows.Forms.Button();
             this.pnAnchorRight = new System.Windows.Forms.Panel();
             this.pnTopPanel = new System.Windows.Forms.Panel();
+            this.btnUpdate = new System.Windows.Forms.Button();
             this.btnMaximize = new System.Windows.Forms.Button();
             this.versionLabel = new System.Windows.Forms.Label();
             this.btnMinimize = new System.Windows.Forms.Button();
@@ -148,6 +149,7 @@ namespace RTCV.Launcher
             this.pnTopPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
             this.pnTopPanel.BackgroundImage = global::RTCV.Launcher.Properties.Resources.LauncherBack;
             this.pnTopPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pnTopPanel.Controls.Add(this.btnUpdate);
             this.pnTopPanel.Controls.Add(this.btnMaximize);
             this.pnTopPanel.Controls.Add(this.versionLabel);
             this.pnTopPanel.Controls.Add(this.btnMinimize);
@@ -158,6 +160,26 @@ namespace RTCV.Launcher
             this.pnTopPanel.Size = new System.Drawing.Size(1169, 41);
             this.pnTopPanel.TabIndex = 131;
             this.pnTopPanel.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pnTopPanel_MouseDoubleClick);
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUpdate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(32)))), ((int)(((byte)(16)))));
+            this.btnUpdate.FlatAppearance.BorderSize = 0;
+            this.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUpdate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUpdate.ForeColor = System.Drawing.Color.LawnGreen;
+            this.btnUpdate.Location = new System.Drawing.Point(921, 8);
+            this.btnUpdate.Margin = new System.Windows.Forms.Padding(0);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(121, 24);
+            this.btnUpdate.TabIndex = 135;
+            this.btnUpdate.TabStop = false;
+            this.btnUpdate.Tag = "";
+            this.btnUpdate.Text = "♦ Update Launcher";
+            this.btnUpdate.UseVisualStyleBackColor = false;
+            this.btnUpdate.Visible = false;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // btnMaximize
             // 
@@ -267,6 +289,7 @@ namespace RTCV.Launcher
         private System.Windows.Forms.Label versionLabel;
         private System.Windows.Forms.Button btnMaximize;
         public System.Windows.Forms.PictureBox pbNewVersionNotification;
+        private System.Windows.Forms.Button btnUpdate;
     }
 }
 

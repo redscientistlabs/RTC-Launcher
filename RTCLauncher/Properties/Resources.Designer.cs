@@ -123,6 +123,16 @@ namespace RTCV.Launcher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap orb {
+            get {
+                object obj = ResourceManager.GetObject("orb", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap p16 {
             get {
                 object obj = ResourceManager.GetObject("p16", resourceCulture);

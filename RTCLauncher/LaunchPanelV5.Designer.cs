@@ -1,6 +1,6 @@
 namespace RTCV.Launcher
 {
-    partial class LaunchPanelV4
+    partial class LaunchPanelV5
     {
         /// <summary>
         /// Required designer variable.
@@ -30,9 +30,9 @@ namespace RTCV.Launcher
         {
             this.lbSelectedVersion = new System.Windows.Forms.Label();
             this.flowVisiblePanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnOnlineGuide = new System.Windows.Forms.Button();
             this.btnTutorials = new System.Windows.Forms.Button();
             this.btnDiscord = new System.Windows.Forms.Button();
-            this.btnOnlineGuide = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbSelectedVersion
@@ -64,6 +64,28 @@ namespace RTCV.Launcher
             this.flowVisiblePanel.SizeChanged += new System.EventHandler(this.flowVisiblePanel_SizeChanged);
             this.flowVisiblePanel.MouseEnter += new System.EventHandler(this.flowVisiblePanel_MouseEnter);
             // 
+            // btnOnlineGuide
+            // 
+            this.btnOnlineGuide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOnlineGuide.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.btnOnlineGuide.FlatAppearance.BorderSize = 0;
+            this.btnOnlineGuide.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOnlineGuide.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
+            this.btnOnlineGuide.ForeColor = System.Drawing.Color.White;
+            this.btnOnlineGuide.Image = global::RTCV.Launcher.Properties.Resources.orb;
+            this.btnOnlineGuide.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnOnlineGuide.Location = new System.Drawing.Point(861, 17);
+            this.btnOnlineGuide.Name = "btnOnlineGuide";
+            this.btnOnlineGuide.Size = new System.Drawing.Size(113, 24);
+            this.btnOnlineGuide.TabIndex = 135;
+            this.btnOnlineGuide.TabStop = false;
+            this.btnOnlineGuide.Tag = "";
+            this.btnOnlineGuide.Text = "  Engine guide";
+            this.btnOnlineGuide.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnOnlineGuide.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnOnlineGuide.UseVisualStyleBackColor = false;
+            this.btnOnlineGuide.Click += new System.EventHandler(this.btnOnlineGuide_Click);
+            // 
             // btnTutorials
             // 
             this.btnTutorials.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -81,7 +103,7 @@ namespace RTCV.Launcher
             this.btnTutorials.TabIndex = 137;
             this.btnTutorials.TabStop = false;
             this.btnTutorials.Tag = "";
-            this.btnTutorials.Text = " Tutorials";
+            this.btnTutorials.Text = " Arfyvex";
             this.btnTutorials.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnTutorials.UseVisualStyleBackColor = false;
             this.btnTutorials.Click += new System.EventHandler(this.btnTutorials_Click);
@@ -108,29 +130,7 @@ namespace RTCV.Launcher
             this.btnDiscord.UseVisualStyleBackColor = false;
             this.btnDiscord.Click += new System.EventHandler(this.btnDiscord_Click);
             // 
-            // btnOnlineGuide
-            // 
-            this.btnOnlineGuide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOnlineGuide.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.btnOnlineGuide.FlatAppearance.BorderSize = 0;
-            this.btnOnlineGuide.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOnlineGuide.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
-            this.btnOnlineGuide.ForeColor = System.Drawing.Color.White;
-            this.btnOnlineGuide.Image = global::RTCV.Launcher.Properties.Resources.corruptwiki;
-            this.btnOnlineGuide.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnOnlineGuide.Location = new System.Drawing.Point(861, 17);
-            this.btnOnlineGuide.Name = "btnOnlineGuide";
-            this.btnOnlineGuide.Size = new System.Drawing.Size(113, 24);
-            this.btnOnlineGuide.TabIndex = 135;
-            this.btnOnlineGuide.TabStop = false;
-            this.btnOnlineGuide.Tag = "";
-            this.btnOnlineGuide.Text = " Online guide";
-            this.btnOnlineGuide.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnOnlineGuide.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnOnlineGuide.UseVisualStyleBackColor = false;
-            this.btnOnlineGuide.Click += new System.EventHandler(this.btnOnlineGuide_Click);
-            // 
-            // LaunchPanelV4
+            // LaunchPanelV5
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -143,7 +143,7 @@ namespace RTCV.Launcher
             this.Controls.Add(this.lbSelectedVersion);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "LaunchPanelV4";
+            this.Name = "LaunchPanelV5";
             this.Text = "LaunchPanelV4";
             this.Load += new System.EventHandler(this.LaunchPanelV4_Load);
             this.Resize += new System.EventHandler(this.LaunchPanelV4_Resize);

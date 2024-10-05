@@ -84,7 +84,7 @@ namespace RTCV.Launcher
         internal static DownloadForm dForm = null;
         internal static Form lpForm = null;
 
-        public const int launcherVer = 33;
+        public const int launcherVer = 34;
 
         internal static string SelectedVersion = null;
         internal static string lastSelectedVersion = null;
@@ -195,8 +195,9 @@ namespace RTCV.Launcher
                     sideversionForm.category_Click(sideversionForm.btnStepback, null);
             }
 
-
             RefreshMotd();
+            CheckUpdate();
+
 
             SetRTCColor(Color.FromArgb(120, 180, 155));
         }
@@ -231,6 +232,48 @@ namespace RTCV.Launcher
             }
 
             lbMOTD.Visible = true;
+        }
+
+        public void CheckUpdate()
+        {
+            try
+            {
+                Action a = () =>
+                {
+                    var motdFile = GetFileViaHttp(new Uri($"https://redscientist.com/launcher/version.txt"));
+                    var motd = string.Empty;
+                    if (motdFile == null)
+                    {
+                        FormSync.FormExecute(() => {
+                        btnUpdate.Visible = false;
+                        });
+                    }
+                    else
+                    {
+                        var vers = Encoding.UTF8.GetString(motdFile);
+                        var parsedvers = Convert.ToInt32(vers);
+                        if (parsedvers > launcherVer)
+                        {
+                            FormSync.FormExecute(() => {
+                                btnUpdate.Visible = true;
+                            });
+                        }
+                        else
+                        {
+                            FormSync.FormExecute(() => {
+                                btnUpdate.Visible = false;
+                            });
+                        }
+                    }
+
+                };
+                Task.Run(a);
+            }
+            catch
+            {
+                btnUpdate.Visible = false;
+            }
+
         }
 
         public void SetRTCColor(Color color, Form form = null)
@@ -399,6 +442,9 @@ namespace RTCV.Launcher
                         case "4":
                             lpForm = new LaunchPanelV4();
                             break;
+                        case "5":
+                            lpForm = new LaunchPanelV5();
+                            break;
                     }
                 }
             }
@@ -421,7 +467,7 @@ namespace RTCV.Launcher
 
         private static void UpdateLauncher(string extractDirectory)
         {
-            var batchLocation = extractDirectory + Path.DirectorySeparatorChar + "Launcher\\update.bat";
+            var batchLocation = Path.Combine(extractDirectory, "update.bat");
             var psi = new ProcessStartInfo
             {
                 FileName = Path.GetFileName(batchLocation),
@@ -587,7 +633,7 @@ namespace RTCV.Launcher
                             MessageBoxDefaultButton.Button1,
                             MessageBoxOptions.DefaultDesktopOnly) == DialogResult.OK)
                         {
-                            UpdateLauncher(extractDirectory);
+                            UpdateLauncher(Path.Combine(extractDirectory, "Launcher"));
                         }
                         else
                         {
@@ -599,7 +645,7 @@ namespace RTCV.Launcher
 
                     if (MessageBox.Show("The downloaded package contains a new launcher update.\n\nDo you want to update the Launcher?", "Launcher update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        UpdateLauncher(extractDirectory);
+                        UpdateLauncher(Path.Combine(extractDirectory, "Launcher"));
                     }
                 }
             }
@@ -1154,6 +1200,51 @@ THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMP
         private void pnTopPanel_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             btnMaximize_Click(sender, e);
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string target = Path.Combine(packagesDir, "update.bat");
+
+                if (File.Exists(target))
+                    File.Delete(target);
+
+                WebClient wc = new WebClient();
+                wc.DownloadFile("https://redscientist.com/launcher/update.bat", target);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not fetch update script. \n Attached stacktrace: \n {ex}");
+                return;
+            }
+
+            try
+            {
+                string target = Path.Combine(packagesDir, "RTC_Launcher.exe");
+
+                if (File.Exists(target))
+                    File.Delete(target);
+
+                WebClient wc = new WebClient();
+                wc.DownloadFile("https://redscientist.com/launcher/RTC_Launcher.exe", target);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not fetch update executable. \n Attached stacktrace: \n {ex}");
+                return;
+            }
+
+            try
+            {
+                UpdateLauncher(packagesDir);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"The final step of the update has failed. \n Attached stacktrace: \n {ex}");
+                return;
+            }
         }
     }
 }

@@ -12,13 +12,13 @@ namespace RTCV.Launcher
     using RTCV.Launcher.Components;
 
 #pragma warning disable CA2213 //Component designer classes generate their own Dispose method
-    internal partial class LaunchPanelV4 : Form, ILauncherJsonConfPanelV4
+    internal partial class LaunchPanelV5 : Form, ILauncherJsonConfPanelV5
     {
-        private readonly LauncherConfJsonV4 lc;
+        private readonly LauncherConfJsonV5 lc;
         private readonly Timer sidebarCloseTimer;
         private readonly List<Button> HiddenButtons = new List<Button>();
 
-        public LaunchPanelV4(string forceVersion = null)
+        public LaunchPanelV5(string forceVersion = null)
         {
             InitializeComponent();
             lbSelectedVersion.Visible = false;
@@ -26,7 +26,7 @@ namespace RTCV.Launcher
             if (forceVersion == null)
                 forceVersion = MainForm.SelectedVersion;
 
-            lc = new LauncherConfJsonV4(forceVersion);
+            lc = new LauncherConfJsonV5(forceVersion);
 
             sidebarCloseTimer = new Timer
             {
@@ -55,17 +55,23 @@ namespace RTCV.Launcher
             Size? btnSize = null;
             HiddenButtons.Clear();
 
-            void InitializeItem(LauncherConfJsonV4 lc, LauncherConfJsonItemV4 lcji, FlowLayoutPanel panel) //.Where(it => !it.HideItem))
+            void InitializeItem(LauncherConfJsonV5 lc, LauncherConfJsonItemV5 lcji, FlowLayoutPanel panel) //.Where(it => !it.HideItem))
             {
                 Bitmap btnImage;
-                using (var bmpTemp = new Bitmap(new MemoryStream(File.ReadAllBytes(Path.Combine(lc.LauncherAssetLocation, lcji.ImageName)))))
-                {
-                    btnImage = new Bitmap(bmpTemp);
-                    if (btnSize == null)
+                if (Directory.Exists(lc.LauncherStepbackLocation))
+                    using (var bmpTemp = new Bitmap(new MemoryStream(File.ReadAllBytes(Path.Combine(lc.LauncherStepbackLocation, lcji.ImageName)))))
                     {
-                        btnSize = new Size(btnImage.Width + 1, btnImage.Height + 1);
+                        btnImage = new Bitmap(bmpTemp);
+                        if (btnSize == null)
+                            btnSize = new Size(btnImage.Width + 1, btnImage.Height + 1);
                     }
-                }
+                else
+                    using (var bmpTemp = new Bitmap(new MemoryStream(File.ReadAllBytes(Path.Combine(lc.LauncherAssetLocation, lcji.ImageName)))))
+                    {
+                        btnImage = new Bitmap(bmpTemp);
+                        if (btnSize == null)
+                            btnSize = new Size(btnImage.Width + 1, btnImage.Height + 1);
+                    }
 
                 var newButton = new Button();
                 newButton.Size = btnSize.Value;
@@ -76,7 +82,8 @@ namespace RTCV.Launcher
                 var AddonInstalled = false;
 
 
-                if (isAddon)
+                //if (isAddon)
+                if (lcji.ItemName != "Add")
                     AddonInstalled = PrepareButtonAsAddon(lcji, newButton);
 
                 bool showUnstable = false;
@@ -232,12 +239,12 @@ namespace RTCV.Launcher
             lbSelectedVersion.Visible = true;
         }
 
-        private bool isInstalled(LauncherConfJsonV4 lc, LauncherConfJsonItemV4 lcji)
+        private bool isInstalled(LauncherConfJsonV5 lc, LauncherConfJsonItemV5 lcji)
         {
             return Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName));
         }
 
-        private bool PrepareButtonAsAddon(LauncherConfJsonItemV4 lcji, Button newButton)
+        private bool PrepareButtonAsAddon(LauncherConfJsonItemV5 lcji, Button newButton)
         {
 
             var AddonInstalled = Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName));
@@ -248,10 +255,10 @@ namespace RTCV.Launcher
                 {
                     var button = (sender as Control);
                     var categoryPanel = button.Parent;
-                    var panelV4 = categoryPanel.Parent;
+                    var panelV5 = categoryPanel.Parent;
 
-                    int absoluteX = e.Location.X + button.Location.X + categoryPanel.Location.X + panelV4.Location.X;
-                    int absoluteY = e.Location.Y + button.Location.Y + categoryPanel.Location.Y + panelV4.Location.Y;
+                    int absoluteX = e.Location.X + button.Location.X + categoryPanel.Location.X + panelV5.Location.X;
+                    int absoluteY = e.Location.Y + button.Location.Y + categoryPanel.Location.Y + panelV5.Location.Y;
 
                     var locate = new Point(absoluteX, absoluteY);
 
@@ -266,31 +273,31 @@ namespace RTCV.Launcher
                             Process.Start(addonFolderPath);
                         }
                     }).Enabled = AddonInstalled;
-                    columnsMenu.Items.Add(new ToolStripSeparator());
-                    columnsMenu.Items.Add("Delete Addon", null, (ob, ev) => DeleteAddon(lcji)).Enabled = (lcji.IsAddon || AddonInstalled);
+                    //columnsMenu.Items.Add(new ToolStripSeparator());
+                    //columnsMenu.Items.Add("Delete Addon", null, (ob, ev) => DeleteAddon(lcji)).Enabled = (lcji.IsAddon || AddonInstalled);
 
                     columnsMenu.Show(this, locate);
                 }
             };
 
 
-            var p = new Pen((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red), 1);
-            var b = new System.Drawing.SolidBrush((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red));
+            //var p = new Pen((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red), 1);
+            //var b = new System.Drawing.SolidBrush((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red));
 
-            var x1 = 2;
-            var y1 = newButton.Image.Height - 6;
-            var x2 = 4;
-            var y2 = 4;
-            // Draw line to screen.
-            using (var graphics = Graphics.FromImage(newButton.Image))
-            {
-                graphics.FillRectangle(b, x1, y1, x2, y2);
-            }
+            //var x1 = 2;
+            //var y1 = newButton.Image.Height - 6;
+            //var x2 = 4;
+            //var y2 = 4;
+            //// Draw line to screen.
+            //using (var graphics = Graphics.FromImage(newButton.Image))
+            //{
+            //    graphics.FillRectangle(b, x1, y1, x2, y2);
+            //}
 
             return AddonInstalled;
         }
 
-        private void PrepareButton(LauncherConfJsonItemV4 lcji, Button newButton)
+        private void PrepareButton(LauncherConfJsonItemV5 lcji, Button newButton)
         {
 
             newButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -427,10 +434,10 @@ namespace RTCV.Launcher
             return;
             var button = (sender as Control);
             var categoryPanel = button.Parent;
-            var panelV4 = categoryPanel.Parent;
+            var panelV5 = categoryPanel.Parent;
 
-            int absoluteX = e.Location.X + button.Location.X + categoryPanel.Location.X + panelV4.Location.X;
-            int absoluteY = e.Location.Y + button.Location.Y + categoryPanel.Location.Y + panelV4.Location.Y;
+            int absoluteX = e.Location.X + button.Location.X + categoryPanel.Location.X + panelV5.Location.X;
+            int absoluteY = e.Location.Y + button.Location.Y + categoryPanel.Location.Y + panelV5.Location.Y;
 
             var locate = new Point(absoluteX, absoluteY);
 
@@ -445,7 +452,7 @@ namespace RTCV.Launcher
             {
                 if (ctrl is Button btn)
                 {
-                    if (btn.Tag is LauncherConfJsonItemV4 lcji && lcji.FolderName != null)
+                    if (btn.Tag is LauncherConfJsonItemV5 lcji && lcji.FolderName != null)
                     {
                         var AddonInstalled = Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName));
 
@@ -493,7 +500,7 @@ namespace RTCV.Launcher
         private void NewButton_MouseLeave(object sender, EventArgs e)
         {
             var currentButton = (Button)sender;
-            var lcji = (LauncherConfJsonItemV4)currentButton.Tag;
+            var lcji = (LauncherConfJsonItemV5)currentButton.Tag;
 
             if (!string.IsNullOrWhiteSpace(lcji.ItemName))
             {
@@ -519,7 +526,7 @@ namespace RTCV.Launcher
         private void NewButton_MouseEnter(object sender, EventArgs e)
         {
             var currentButton = (Button)sender;
-            var lcji = (LauncherConfJsonItemV4)currentButton.Tag;
+            var lcji = (LauncherConfJsonItemV5)currentButton.Tag;
 
             if (!string.IsNullOrWhiteSpace(lcji.ItemName))
             {
@@ -572,7 +579,7 @@ namespace RTCV.Launcher
             }
         }
 
-        internal void DeleteAddon(LauncherConfJsonItemV4 lcji)
+        internal void DeleteAddon(LauncherConfJsonItemV5 lcji)
         {
             var AddonFolderName = lcji.FolderName;
             var targetFolder = Path.Combine(MainForm.versionsDir, lc.Version, AddonFolderName);
@@ -634,17 +641,17 @@ namespace RTCV.Launcher
         {
             var currentButton = (Button)sender;
 
-            var lcji = (LauncherConfJsonItemV4)currentButton.Tag;
+            var lcji = (LauncherConfJsonItemV5)currentButton.Tag;
 
             if (!string.IsNullOrEmpty(lcji.FolderName) && !Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName)))
             {
-                LauncherConfJsonV4 lcCandidateForPull = getFolderFromPreviousVersion(lcji.DownloadVersion);
+                LauncherConfJsonV5 lcCandidateForPull = getFolderFromPreviousVersion(lcji.DownloadVersion);
                 if (lcCandidateForPull != null)
                 {
                     var resultAskPull = MessageBox.Show($"The component {lcji.FolderName} could be imported from {lcCandidateForPull.Version}\nDo you wish import it?", "Import candidate found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (resultAskPull == DialogResult.Yes)
                     {
-                        LauncherConfJsonItemV4 candidate = lcCandidateForPull.Items.FirstOrDefault(it => it.DownloadVersion == lcji.DownloadVersion);
+                        LauncherConfJsonItemV5 candidate = lcCandidateForPull.Items.FirstOrDefault(it => it.DownloadVersion == lcji.DownloadVersion);
                         //handle it here
                         try
                         {
@@ -700,7 +707,7 @@ namespace RTCV.Launcher
             lcji.Execute();
         }
 
-        private static LauncherConfJsonV4 getFolderFromPreviousVersion(string downloadVersion)
+        private static LauncherConfJsonV5 getFolderFromPreviousVersion(string downloadVersion)
         {
             foreach (var ver in MainForm.sideversionForm.lbVersions.Items.Cast<string>())
             {
@@ -709,8 +716,8 @@ namespace RTCV.Launcher
                     continue;
                 }
 
-                var _lc = new LauncherConfJsonV4(ver);
-                LauncherConfJsonItemV4 lcji = _lc.Items.FirstOrDefault(it => it.DownloadVersion == downloadVersion);
+                var _lc = new LauncherConfJsonV5(ver);
+                LauncherConfJsonItemV5 lcji = _lc.Items.FirstOrDefault(it => it.DownloadVersion == downloadVersion);
                 if (lcji != null)
                 {
                     if (Directory.Exists(Path.Combine(_lc.VersionLocation, lcji.FolderName)))
@@ -723,7 +730,7 @@ namespace RTCV.Launcher
             return null;
         }
 
-        public LauncherConfJsonV4 GetLauncherJsonConf()
+        public LauncherConfJsonV5 GetLauncherJsonConf()
         {
             return lc;
         }
@@ -749,17 +756,17 @@ namespace RTCV.Launcher
 
         private void btnOnlineGuide_Click(object sender, EventArgs e)
         {
-            Process.Start("https://corrupt.wiki/");
+            Process.Start("https://wiki.virus.run");
         }
 
         private void btnTutorials_Click(object sender, EventArgs e)
         {
-            Process.Start("http://rtctutorialvideo.r5x.cc/");
+            Process.Start("https://youtube.virus.run");
         }
 
         private void btnDiscord_Click(object sender, EventArgs e)
         {
-            Process.Start("https://discord.corrupt.wiki/");
+            Process.Start("https://discord.virus.run/");
         }
 
         private void flowVisiblePanel_MouseEnter(object sender, EventArgs e)

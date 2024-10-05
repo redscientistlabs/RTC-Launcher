@@ -211,7 +211,9 @@ namespace RTCV.Launcher
                 lcjiList.AddRange(vanguardImplementations);
                 lcjiList.AddRange(stubVanguardImplementations);
                 lcjiList.AddRange(everythingElse);
-                lcjiList.Add(addButton);
+
+                if (addButton != null)
+                    lcjiList.Add(addButton);
             }
 
             Items = lcjiList.ToArray();
@@ -356,7 +358,9 @@ namespace RTCV.Launcher
                 lcjiList.AddRange(vanguardImplementations);
                 lcjiList.AddRange(stubVanguardImplementations);
                 lcjiList.AddRange(everythingElse);
-                lcjiList.Add(addButton);
+
+                if (addButton != null)
+                    lcjiList.Add(addButton);
             }
 
             Items = lcjiList.ToArray();
@@ -437,6 +441,164 @@ namespace RTCV.Launcher
     {
         string GetFolderByVersion(string version);
     }
+
+    #endregion
+
+
+    #region JsonV4
+    public class LauncherConfJsonV5
+    {
+        public string LauncherAssetLocation;
+        public string LauncherStepbackLocation;
+        public string LauncherConfLocation;
+        public string[] LauncherAddonConfLocations;
+        public string VersionLocation;
+        public string Version;
+
+        public LauncherConfJsonItemV5[] Items = { };
+
+        public LauncherConfJsonV5(string _version)
+        {
+            Version = _version;
+            LauncherAssetLocation = Path.Combine(MainForm.launcherDir, "VERSIONS", Version, "Launcher");
+            LauncherConfLocation = Path.Combine(LauncherAssetLocation, "launcher.json");
+            LauncherStepbackLocation = Path.Combine(MainForm.launcherDir, "VERSIONS", Version, "EternalDegrade", "DATA", "ADDONS");
+
+            if (Directory.Exists(LauncherAssetLocation))
+            {
+                if (Directory.Exists(LauncherStepbackLocation))
+                    LauncherAddonConfLocations = Directory.GetFiles(LauncherStepbackLocation).Where(it => it.Contains("addon_") && it.Contains(".json")).ToArray();
+                else
+                    LauncherAddonConfLocations = Directory.GetFiles(LauncherAssetLocation).Where(it => it.Contains("addon_") && it.Contains(".json")).ToArray();
+
+            }
+
+            VersionLocation = Path.Combine(MainForm.launcherDir, "VERSIONS", Version);
+
+            if (!File.Exists(LauncherConfLocation))
+            {
+                return;
+            }
+
+            Directory.SetCurrentDirectory(VersionLocation); //Move ourselves to this working directory
+
+            var launcherJson = File.ReadAllText(LauncherConfLocation);
+            var lcjiList = new List<LauncherConfJsonItemV5>();
+            lcjiList.AddRange(JsonConvert.DeserializeObject<LauncherConfJsonItemV5[]>(launcherJson));
+
+            foreach (var addonJsonConfLocation in LauncherAddonConfLocations)
+            {
+                try
+                {
+                    var addonJson = File.ReadAllText(addonJsonConfLocation);
+                    var addonConfigs = JsonConvert.DeserializeObject<LauncherConfJsonItemV5[]>(addonJson);
+
+                    foreach (var conf in addonConfigs)
+                    {
+                        conf.ConfigFilename = addonJsonConfLocation;
+                        conf.IsAddon = true;
+                        conf.ItemClass = "ADDON";
+                    }
+
+                    lcjiList.AddRange(addonConfigs);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Could not load addon json config file at\n{addonJsonConfLocation}\n\n{ex}\n\n{(ex.InnerException != null ? ex.InnerException.ToString() : string.Empty)}");
+                    //eat it
+                }
+            }
+
+            if (lcjiList[0].ItemSubtitle != null) //means we can use metadata to reorder in categories
+            {
+                var vanguardImplementations = lcjiList.Where(it => it.ItemSubtitle != null && it.ItemSubtitle.ToUpper().Contains("VANGUARD")).ToList();
+                var stubVanguardImplementations = lcjiList.Where(it => it.ItemSubtitle != null && it.ItemSubtitle.ToUpper().Contains("STUB")).ToList();
+                var everythingElse = lcjiList.Where(it => it.ItemSubtitle != null && !it.ItemSubtitle.ToUpper().Contains("STUB") && !it.ItemSubtitle.ToUpper().Contains("VANGUARD")).ToList();
+                var addButton = lcjiList.FirstOrDefault(it => it.ImageName == "Add.png");
+
+                lcjiList.Clear();
+                lcjiList.AddRange(vanguardImplementations);
+                lcjiList.AddRange(stubVanguardImplementations);
+                lcjiList.AddRange(everythingElse);
+
+                if (addButton != null)
+                    lcjiList.Add(addButton);
+            }
+
+            Items = lcjiList.ToArray();
+        }
+    }
+
+    [SuppressMessage("Microsoft.Design", "CA1812: Avoid uninstantiated public classes", Justification = "Passed as a type parameter")]
+    public class LauncherConfJsonItemV5
+    {
+        [JsonProperty]
+        public readonly string FolderName;
+        [JsonProperty]
+        public readonly string ImageName;
+        [JsonProperty]
+        public readonly string DownloadVersion;
+        [JsonProperty]
+        public readonly string FirmwareFolder;
+        [JsonProperty]
+        public readonly ReadOnlyDictionary<string, ExecutableCommand> ExecutableCommands;
+
+        //Used for the sidepanel and ordering of cards
+        [JsonProperty]
+        public string ItemClass;
+        [JsonProperty]
+        public readonly string ItemName;
+        [JsonProperty]
+        public readonly string ItemSubtitle;
+        [JsonProperty]
+        public readonly string ItemDescription;
+
+        [JsonProperty]
+        public readonly bool HideItem; //makes the card hide
+
+        //Addon vars that are automatically set when the json is loaded
+        public bool IsAddon;
+        public string ConfigFilename;
+
+        public LauncherConfJsonItemV5(string imageName, string downloadVersion, string folderName, ReadOnlyDictionary<string, ExecutableCommand> executableCommands, string itemName, string itemSubtitle, string itemDescription, bool hideItem, bool isAddon, string configFilename)
+        {
+            ImageName = imageName;
+            DownloadVersion = downloadVersion;
+            FolderName = folderName;
+            ExecutableCommands = executableCommands;
+
+            ItemName = itemName;
+            ItemSubtitle = itemSubtitle;
+            ItemDescription = itemDescription;
+
+            HideItem = hideItem;
+            IsAddon = isAddon;
+            ConfigFilename = configFilename;
+        }
+
+        public bool Execute(bool runPreExecute = true, bool runPostExecute = true)
+        {
+            var success = true;
+            foreach (var e in ExecutableCommands.Values)
+            {
+                success = (e.Execute(runPreExecute, runPostExecute) & success);
+            }
+
+            return success;
+        }
+
+        public bool Execute(string key, bool runPreExecute = true, bool runPostExecute = true)
+        {
+            ExecutableCommands.TryGetValue(key, out ExecutableCommand e);
+            return e?.Execute(runPreExecute, runPostExecute) ?? false;
+        }
+    }
+
+    public interface ILauncherJsonConfPanelV5 : ILauncherJsonConfPanel
+    {
+        LauncherConfJsonV5 GetLauncherJsonConf();
+    }
+
 
     #endregion
 }

@@ -52,6 +52,9 @@
     <Compile Update="LaunchPanelV2.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="LaunchPanelV5.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="LaunchPanelV4.cs">
       <SubType>Form</SubType>
     </Compile>
