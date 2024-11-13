@@ -84,7 +84,7 @@ namespace RTCV.Launcher
         internal static DownloadForm dForm = null;
         internal static Form lpForm = null;
 
-        public const int launcherVer = 34;
+        public const int launcherVer = 36;
 
         internal static string SelectedVersion = null;
         internal static string lastSelectedVersion = null;
@@ -188,6 +188,15 @@ namespace RTCV.Launcher
             if (sideversionForm.lbVersions.Items.Count > 0)
             {
                 sideversionForm.lbVersions.SelectedIndex = 0;
+
+                if (MainForm.webResourceDomain == MainForm.stepbackServer)
+                {
+                    if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt"))
+                        File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt");
+
+                    MainForm.webResourceDomain = MainForm.releaseServer;
+                    MainForm.mf.RefreshMotd();
+                }
             }
             else
             {

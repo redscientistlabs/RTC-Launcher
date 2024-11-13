@@ -93,26 +93,6 @@ namespace RTCV.Launcher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap MusicBack {
-            get {
-                object obj = ResourceManager.GetObject("MusicBack", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap MusicBack1 {
-            get {
-                object obj = ResourceManager.GetObject("MusicBack1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap notificationBadge {
             get {
                 object obj = ResourceManager.GetObject("notificationBadge", resourceCulture);

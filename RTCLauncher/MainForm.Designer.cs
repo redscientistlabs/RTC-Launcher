@@ -33,9 +33,9 @@ namespace RTCV.Launcher
             this.lbMOTD = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.pnLeftSide = new System.Windows.Forms.Panel();
-            this.pbNewVersionNotification = new System.Windows.Forms.PictureBox();
             this.btnVersionDownloader = new System.Windows.Forms.Button();
             this.pnAnchorRight = new System.Windows.Forms.Panel();
+            this.pbNewVersionNotification = new System.Windows.Forms.PictureBox();
             this.pnTopPanel = new System.Windows.Forms.Panel();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnMaximize = new System.Windows.Forms.Button();
@@ -101,18 +101,6 @@ namespace RTCV.Launcher
             this.pnLeftSide.Size = new System.Drawing.Size(170, 625);
             this.pnLeftSide.TabIndex = 134;
             // 
-            // pbNewVersionNotification
-            // 
-            this.pbNewVersionNotification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbNewVersionNotification.Image = global::RTCV.Launcher.Properties.Resources.notificationBadge;
-            this.pbNewVersionNotification.InitialImage = global::RTCV.Launcher.Properties.Resources.notificationBadge;
-            this.pbNewVersionNotification.Location = new System.Drawing.Point(142, 585);
-            this.pbNewVersionNotification.Name = "pbNewVersionNotification";
-            this.pbNewVersionNotification.Size = new System.Drawing.Size(14, 14);
-            this.pbNewVersionNotification.TabIndex = 131;
-            this.pbNewVersionNotification.TabStop = false;
-            this.pbNewVersionNotification.Visible = false;
-            // 
             // btnVersionDownloader
             // 
             this.btnVersionDownloader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -144,6 +132,18 @@ namespace RTCV.Launcher
             this.pnAnchorRight.Size = new System.Drawing.Size(999, 580);
             this.pnAnchorRight.TabIndex = 133;
             // 
+            // pbNewVersionNotification
+            // 
+            this.pbNewVersionNotification.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pbNewVersionNotification.Image = global::RTCV.Launcher.Properties.Resources.notificationBadge;
+            this.pbNewVersionNotification.InitialImage = global::RTCV.Launcher.Properties.Resources.notificationBadge;
+            this.pbNewVersionNotification.Location = new System.Drawing.Point(142, 585);
+            this.pbNewVersionNotification.Name = "pbNewVersionNotification";
+            this.pbNewVersionNotification.Size = new System.Drawing.Size(14, 14);
+            this.pbNewVersionNotification.TabIndex = 131;
+            this.pbNewVersionNotification.TabStop = false;
+            this.pbNewVersionNotification.Visible = false;
+            // 
             // pnTopPanel
             // 
             this.pnTopPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
@@ -172,7 +172,7 @@ namespace RTCV.Launcher
             this.btnUpdate.Location = new System.Drawing.Point(921, 8);
             this.btnUpdate.Margin = new System.Windows.Forms.Padding(0);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(121, 24);
+            this.btnUpdate.Size = new System.Drawing.Size(139, 24);
             this.btnUpdate.TabIndex = 135;
             this.btnUpdate.TabStop = false;
             this.btnUpdate.Tag = "";
