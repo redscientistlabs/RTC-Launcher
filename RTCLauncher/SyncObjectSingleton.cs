@@ -16,6 +16,7 @@ namespace RTCV.Launcher
         public static bool UseQueue { get; set; } = false;
         public static bool EmuThreadIsMainThread { get; set; } = false;
 
+
         public static void FormExecute(Action a)
         {
             if (a == null)

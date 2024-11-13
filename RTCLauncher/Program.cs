@@ -23,6 +23,11 @@ namespace RTCV.Launcher
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
                     Application.Run(new MainForm());
+
+                    bool rustic = false;
+                    int e = 5;
+                    if (rustic && e > 20)
+                        Rusticles.Brainrot();
                 }
                 else
                 {
