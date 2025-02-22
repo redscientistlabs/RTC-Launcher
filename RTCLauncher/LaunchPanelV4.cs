@@ -277,8 +277,8 @@ namespace RTCV.Launcher
             var p = new Pen((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red), 1);
             var b = new System.Drawing.SolidBrush((AddonInstalled ? Color.FromArgb(57, 255, 20) : Color.Red));
 
-            var x1 = 2;
-            var y1 = newButton.Image.Height - 6;
+            var x1 = 3;
+            var y1 = newButton.Image.Height - 7;
             var x2 = 4;
             var y2 = 4;
             // Draw line to screen.
