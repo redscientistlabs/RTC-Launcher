@@ -5,6 +5,7 @@ namespace RTCV.Launcher
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Windows.Forms;
@@ -143,6 +144,34 @@ namespace RTCV.Launcher
             return success;
         }
     }
+
+
+    public class NoclickLabel : Label
+    {
+        public NoclickLabel()
+        {
+            this.SetStyle(ControlStyles.Selectable, false);
+            this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            this.BackColor = Color.Transparent;
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            const int WM_NCHITTEST = 0x84;
+            const int HTTRANSPARENT = -1;
+
+            if (m.Msg == WM_NCHITTEST)
+            {
+                m.Result = (IntPtr)HTTRANSPARENT;
+            }
+            else
+            {
+                base.WndProc(ref m);
+            }
+        }
+    }
+
+
     #region JsonV3
     public class LauncherConfJsonV3
     {

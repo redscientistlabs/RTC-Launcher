@@ -557,13 +557,7 @@ namespace RTCV.Launcher
                 string description = (lcji.ItemDescription ?? string.Empty);
 
                 MainForm.sideinfoForm.lbName.Text = name;
-
-                if (isVanguard)
-                    MainForm.sideinfoForm.lbName.Text += " Vanguard";
-
                 MainForm.sideinfoForm.lbSubtitle.Text = subtitle;
-
-
 
                 MainForm.sideinfoForm.lbDescription.Text = description;
 
