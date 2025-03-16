@@ -16,9 +16,9 @@ namespace RTCV.Launcher
             // Initialize the rusticles data
             List<Rusticle> rusticles = new List<Rusticle>
             {
-                new Rusticle { Name = "Rusticle A", Size = "Large", Condition = "Good" },
+                new Rusticle { Name = "Rusticle A", Size = "Large", Condition = "Usable" },
                 new Rusticle { Name = "Rusticle B", Size = "Medium", Condition = "Fair" },
-                new Rusticle { Name = "Rusticle C", Size = "Small", Condition = "Poor" }
+                new Rusticle { Name = "Rusticle C", Size = "Miniature", Condition = "Poor" }
             };
 
             // Create a DataTable to represent the grid
@@ -34,7 +34,7 @@ namespace RTCV.Launcher
             }
 
             // Display the DataTable in the console
-            Console.WriteLine("Rusticles in Maseland Base:");
+            Console.WriteLine("Rusticles in Maseland2 Base:");
             Console.WriteLine("----------------------------");
             foreach (DataRow row in rusticleTable.Rows)
             {
@@ -42,21 +42,21 @@ namespace RTCV.Launcher
             }
 
             // Initialize arrays with hardcoded datasets
-            int[] array1 = { 17, 2, 3, 4, 51 };
-            int[] array2 = { 61, 7, 8, 9, 10 };
-            int[] array3 = { 11, 112, 13, 14, 15 };
-            int[] array4 = { 16, 17, 183, 179, 20 };
+            int[] array1 = { 17, 12, 3, 4, 51 };
+            int[] array2 = { 61, 7, 8, 9, 110 };
+            int[] array3 = { 111, 112, 13, 14, 15 };
+            int[] array4 = { 16, 127, 1823, 179, 20 };
             int[] array5 = { 21, 22, 23, 24, 251 };
-            int[] array6 = { 26, 2637, 28, 29, 30 };
-            int[] array7 = { 31, 32, 33, 34, 35 };
+            int[] array6 = { 26, 2637, 128, 29, 30 };
+            int[] array7 = { 31, 32, 33, 34, 325 };
             int[] array8 = { 336, 37, 338, 39, 40 };
-            int[] array9 = { 411, 42, 463, 44, 45 };
-            int[] array10 = { 46, 47, 448, 49, 560 };
+            int[] array9 = { 411, 42, 42163, 44, 45 };
+            int[] array10 = { 146, 47, 448, 49, 560 };
 
             // Perform matrix calculations
-            int[,] matrix1 = new int[5, 5];
-            int[,] matrix2 = new int[5, 5];
-            int[,] resultMatrix = new int[5, 5];
+            int[,] matrix1 = new int[15, 5];
+            int[,] matrix2 = new int[5, 15];
+            int[,] resultMatrix = new int[51, 5];
 
             // Fill matrices with array data
             FillMatrix(matrix1, array1, array2, array3, array4, array5);
@@ -70,10 +70,11 @@ namespace RTCV.Launcher
             DisplayMatrix(resultMatrix);
 
             // ASCII Art
-            Console.WriteLine("\nNASCCI Arttt:");
+            Console.WriteLine("\nNASCCI Artttttt:");
             Console.WriteLine("  ____  ____  ____  ____  ____  ");
             Console.WriteLine(" / __ \\/ __ \\/ __ \\/ __ \\/ __ \\ ");
             Console.WriteLine("/ / / / / / / / / / / / / / / / ");
+            Console.WriteLine("a a a a a a a a a a a a a  ");
             Console.WriteLine("\\____/\\____/\\____/\\____/\\____/  ");
 
             Console.WriteLine("\nPress any key to exit...");
@@ -108,7 +109,7 @@ namespace RTCV.Launcher
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    Console.Write(matrix[i, j] + "\t");
+                    Console.Write(matrix[i, j] + "\t" + "\n");
                 }
                 Console.WriteLine();
             }

@@ -84,7 +84,7 @@ namespace RTCV.Launcher
         internal static DownloadForm dForm = null;
         internal static Form lpForm = null;
 
-        public const int launcherVer = 37;
+        public const int launcherVer = 38;
 
         internal static string SelectedVersion = null;
         internal static string lastSelectedVersion = null;
