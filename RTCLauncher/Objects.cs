@@ -120,6 +120,9 @@ namespace RTCV.Launcher
             {
                 var p = Process.Start(psi);
 
+                if (psi.FileName.Contains("StandaloneRTC"))
+                    Program.StandaloneRTCProcess = p;
+
                 if (WaitForExit)
                 {
                     success = p?.WaitForExit(WaitForExitTimeout) ?? false;
