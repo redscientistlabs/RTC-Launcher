@@ -691,20 +691,17 @@ namespace RTCV.Launcher
                 return;
             }
 
-            foreach (var executable in lcji.ExecutableCommands.Values)
-            {
-                foreach (var preExecuteCommand in executable.PreExecuteCommands)
-                {
-                    if (preExecuteCommand.FileName.Contains("StandaloneRTC") && Program.StandaloneRTCProcess != null && !Program.StandaloneRTCProcess.HasExited)
-                    {
-                        var result = MessageBox.Show("An instance of RTC is already running. Running a new Vanguard implementation will close the" +
-                                                        " current instance, losing any unsaved progress. Are you sure you want to continue?", "Warning", MessageBoxButtons.YesNo);
+            var checkForRTC = lcji.ExecutableCommands.Values
+                .SelectMany(d => d.PreExecuteCommands)
+                .Any(c => c != null && c.FileName.Contains("StandaloneRTC"));
 
-                        if (result == DialogResult.No)
-                            return;
-                        break;
-                    }
-                }
+            if (checkForRTC && Program.StandaloneRTCProcess != null && !Program.StandaloneRTCProcess.HasExited)
+            {
+                var result = MessageBox.Show("An instance of RTC is already running. Running a new Vanguard implementation will close the" +
+                                " current instance, losing any unsaved progress. Are you sure you want to continue?", "Warning", MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.No)
+                    return;
             }
 
             lcji.Execute();
