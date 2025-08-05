@@ -166,6 +166,16 @@ namespace RTCV.Launcher
         {
             mf.clearAnchorRight();
 
+            var extractParentDir = Directory.GetParent(extractDirectory);
+            if (extractParentDir.Name.StartsWith("RTC"))
+            {
+                var correctServer = MainForm.GetCorrectServer(Directory.GetParent(extractDirectory).ToString());
+                if (correctServer >= 0)
+                {
+                    MainForm.UpdateSelectedServer(correctServer);
+                }
+            }
+
             dForm = new DownloadForm(downloadURL, downloadedFile, extractDirectory);
 
             mf.pnLeftSide.Visible = false;
@@ -596,7 +606,7 @@ namespace RTCV.Launcher
             finally
             {
                 var serverIniFile = (extractDirectory + Path.DirectorySeparatorChar + "launcher" + Path.DirectorySeparatorChar + "server.ini");
-                if (!File.Exists(serverIniFile))
+                if (Directory.Exists(extractDirectory + Path.DirectorySeparatorChar + "launcher") && !File.Exists(serverIniFile))
                 {
                     int serverIndex;
                     if (MainForm.webResourceDomain == MainForm.devServer)
