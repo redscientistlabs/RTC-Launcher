@@ -1047,6 +1047,8 @@ namespace RTCV.Launcher
         {
             var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y + pnTopPanel.Height);
 
+            sideversionForm.lbVersions.SelectedIndex = sideversionForm.lbVersions.IndexFromPoint(e.Location);
+
             if (sideversionForm.lbVersions.SelectedIndex == -1)
             {
                 if (e.Button == MouseButtons.Right)
