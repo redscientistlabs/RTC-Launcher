@@ -16,13 +16,13 @@ namespace RTCV.Launcher
     using Newtonsoft.Json;
 
 #pragma warning disable CA2213 //Component designer classes generate their own Dispose method
-    internal partial class LaunchPanelV4 : Form, ILauncherJsonConfPanelV4
+    internal partial class LaunchPanelV6 : Form, ILauncherJsonConfPanelV6
     {
-        private readonly LauncherConfJsonV4 lc;
+        private readonly LauncherConfJsonV6 lc;
         private readonly Timer sidebarCloseTimer;
         private readonly List<Button> HiddenButtons = new List<Button>();
 
-        public LaunchPanelV4(string forceVersion = null)
+        public LaunchPanelV6(string forceVersion = null)
         {
             InitializeComponent();
             lbSelectedVersion.Visible = false;
@@ -30,7 +30,7 @@ namespace RTCV.Launcher
             if (forceVersion == null)
                 forceVersion = MainForm.SelectedVersion;
 
-            lc = new LauncherConfJsonV4(forceVersion);
+            lc = new LauncherConfJsonV6(forceVersion);
 
             sidebarCloseTimer = new Timer
             {
@@ -59,7 +59,7 @@ namespace RTCV.Launcher
             Size? btnSize = null;
             HiddenButtons.Clear();
 
-            void InitializeItem(LauncherConfJsonV4 lc, LauncherConfJsonItemV4 lcji, FlowLayoutPanel panel) //.Where(it => !it.HideItem))
+            void InitializeItem(LauncherConfJsonV6 lc, LauncherConfJsonItemV6 lcji, FlowLayoutPanel panel) //.Where(it => !it.HideItem))
             {
                 Bitmap btnImage;
                 using (var bmpTemp = new Bitmap(new MemoryStream(File.ReadAllBytes(Path.Combine(lc.LauncherAssetLocation, lcji.ImageName)))))
@@ -236,12 +236,12 @@ namespace RTCV.Launcher
             lbSelectedVersion.Visible = true;
         }
 
-        private bool isInstalled(LauncherConfJsonV4 lc, LauncherConfJsonItemV4 lcji)
+        private bool isInstalled(LauncherConfJsonV6 lc, LauncherConfJsonItemV6 lcji)
         {
             return Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName));
         }
 
-        private bool PrepareButtonAsAddon(LauncherConfJsonItemV4 lcji, Button newButton)
+        private bool PrepareButtonAsAddon(LauncherConfJsonItemV6 lcji, Button newButton)
         {
 
             var AddonInstalled = Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName));
@@ -252,10 +252,10 @@ namespace RTCV.Launcher
                 {
                     var button = (sender as Control);
                     var categoryPanel = button.Parent;
-                    var panelV4 = categoryPanel.Parent;
+                    var panelV6 = categoryPanel.Parent;
 
-                    int absoluteX = e.Location.X + button.Location.X + categoryPanel.Location.X + panelV4.Location.X;
-                    int absoluteY = e.Location.Y + button.Location.Y + categoryPanel.Location.Y + panelV4.Location.Y;
+                    int absoluteX = e.Location.X + button.Location.X + categoryPanel.Location.X + panelV6.Location.X;
+                    int absoluteY = e.Location.Y + button.Location.Y + categoryPanel.Location.Y + panelV6.Location.Y;
 
                     var locate = new Point(absoluteX, absoluteY);
 
@@ -294,7 +294,7 @@ namespace RTCV.Launcher
             return AddonInstalled;
         }
 
-        private void PrepareButton(LauncherConfJsonItemV4 lcji, Button newButton)
+        private void PrepareButton(LauncherConfJsonItemV6 lcji, Button newButton)
         {
 
             newButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -431,10 +431,10 @@ namespace RTCV.Launcher
             return;
             var button = (sender as Control);
             var categoryPanel = button.Parent;
-            var panelV4 = categoryPanel.Parent;
+            var panelV6 = categoryPanel.Parent;
 
-            int absoluteX = e.Location.X + button.Location.X + categoryPanel.Location.X + panelV4.Location.X;
-            int absoluteY = e.Location.Y + button.Location.Y + categoryPanel.Location.Y + panelV4.Location.Y;
+            int absoluteX = e.Location.X + button.Location.X + categoryPanel.Location.X + panelV6.Location.X;
+            int absoluteY = e.Location.Y + button.Location.Y + categoryPanel.Location.Y + panelV6.Location.Y;
 
             var locate = new Point(absoluteX, absoluteY);
 
@@ -449,7 +449,7 @@ namespace RTCV.Launcher
             {
                 if (ctrl is Button btn)
                 {
-                    if (btn.Tag is LauncherConfJsonItemV4 lcji && lcji.FolderName != null)
+                    if (btn.Tag is LauncherConfJsonItemV6 lcji && lcji.FolderName != null)
                     {
                         var AddonInstalled = Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName));
 
@@ -497,7 +497,7 @@ namespace RTCV.Launcher
         private void NewButton_MouseLeave(object sender, EventArgs e)
         {
             var currentButton = (Button)sender;
-            var lcji = (LauncherConfJsonItemV4)currentButton.Tag;
+            var lcji = (LauncherConfJsonItemV6)currentButton.Tag;
 
             if (!string.IsNullOrWhiteSpace(lcji.ItemName))
             {
@@ -523,7 +523,7 @@ namespace RTCV.Launcher
         private void NewButton_MouseEnter(object sender, EventArgs e)
         {
             var currentButton = (Button)sender;
-            var lcji = (LauncherConfJsonItemV4)currentButton.Tag;
+            var lcji = (LauncherConfJsonItemV6)currentButton.Tag;
 
             if (!string.IsNullOrWhiteSpace(lcji.ItemName))
             {
@@ -570,7 +570,7 @@ namespace RTCV.Launcher
             }
         }
 
-        internal void DeleteAddon(LauncherConfJsonItemV4 lcji)
+        internal void DeleteAddon(LauncherConfJsonItemV6 lcji)
         {
             var AddonFolderName = lcji.FolderName;
             var targetFolder = Path.Combine(MainForm.versionsDir, lc.Version, AddonFolderName);
@@ -626,23 +626,23 @@ namespace RTCV.Launcher
             //MainForm.mf.RefreshInterface();
         }
 
-        private void LaunchPanelV4_Load(object sender, EventArgs e) => DrawPanel();
+        private void LaunchPanelV6_Load(object sender, EventArgs e) => DrawPanel();
 
         private void btnBatchfile_Click(object sender, EventArgs e)
         {
             var currentButton = (Button)sender;
 
-            var lcji = (LauncherConfJsonItemV4)currentButton.Tag;
+            var lcji = (LauncherConfJsonItemV6)currentButton.Tag;
 
             if (!string.IsNullOrEmpty(lcji.FolderName) && !Directory.Exists(Path.Combine(lc.VersionLocation, lcji.FolderName)))
             {
-                LauncherConfJsonV4 lcCandidateForPull = getFolderFromPreviousVersion(lcji.DownloadVersion);
+                LauncherConfJsonV6 lcCandidateForPull = getFolderFromPreviousVersion(lcji.DownloadVersion);
                 if (lcCandidateForPull != null)
                 {
                     var resultAskPull = MessageBox.Show($"The component {lcji.FolderName} could be imported from {lcCandidateForPull.Version}\nDo you wish import it?", "Import candidate found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (resultAskPull == DialogResult.Yes)
                     {
-                        LauncherConfJsonItemV4 candidate = lcCandidateForPull.Items.FirstOrDefault(it => it.DownloadVersion == lcji.DownloadVersion);
+                        LauncherConfJsonItemV6 candidate = lcCandidateForPull.Items.FirstOrDefault(it => it.DownloadVersion == lcji.DownloadVersion);
                         //handle it here
                         try
                         {
@@ -695,10 +695,45 @@ namespace RTCV.Launcher
                 return;
             }
 
-            lcji.Execute();
+            bool checkForRTC = lcji.ExecutableCommands.Values
+                .SelectMany(d => d.PreExecuteCommands)
+                .Any(c => c != null && c.FileName.Contains("StandaloneRTC"));
+
+
+            if (checkForRTC && Program.StandaloneRTCProcess != null && !Program.StandaloneRTCProcess.HasExited)
+            {
+                var form = new RTCOpenForm();
+                if (form.ShowDialog() == DialogResult.No)
+                    return;
+
+                var message = new { Type = "UI|Remote_SwapImplementation", objectValue = new object[] { lcji.FolderName, null } };
+                string jsonString = JsonConvert.SerializeObject(message);
+                byte[] sendBytes = Encoding.UTF8.GetBytes(jsonString);
+
+                string IPAddress = "127.0.0.1";
+                int port = 42069;
+
+                UdpClient udpClient = new UdpClient(IPAddress, port);
+
+                try
+                {
+                    udpClient.Send(sendBytes, sendBytes.Length);
+                    Console.WriteLine($"UDP packet {jsonString} sent to {IPAddress} {port}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error sending UDP packet: {ex.ToString()}");
+                }
+                finally
+                {
+                    udpClient.Close();
+                }
+            }
+            else
+                lcji.Execute();
         }
 
-        private static LauncherConfJsonV4 getFolderFromPreviousVersion(string downloadVersion)
+        private static LauncherConfJsonV6 getFolderFromPreviousVersion(string downloadVersion)
         {
             foreach (var ver in MainForm.sideversionForm.lbVersions.Items.Cast<string>())
             {
@@ -707,8 +742,8 @@ namespace RTCV.Launcher
                     continue;
                 }
 
-                var _lc = new LauncherConfJsonV4(ver);
-                LauncherConfJsonItemV4 lcji = _lc.Items.FirstOrDefault(it => it.DownloadVersion == downloadVersion);
+                var _lc = new LauncherConfJsonV6(ver);
+                LauncherConfJsonItemV6 lcji = _lc.Items.FirstOrDefault(it => it.DownloadVersion == downloadVersion);
                 if (lcji != null)
                 {
                     if (Directory.Exists(Path.Combine(_lc.VersionLocation, lcji.FolderName)))
@@ -721,7 +756,7 @@ namespace RTCV.Launcher
             return null;
         }
 
-        public LauncherConfJsonV4 GetLauncherJsonConf()
+        public LauncherConfJsonV6 GetLauncherJsonConf()
         {
             return lc;
         }
@@ -733,7 +768,7 @@ namespace RTCV.Launcher
             return addonFolderName;
         }
 
-        private void LaunchPanelV4_Resize(object sender, EventArgs e)
+        private void LaunchPanelV6_Resize(object sender, EventArgs e)
         {
             //flowVisiblePanel.MaximumSize = new Size(980, int.MaxValue);
         }

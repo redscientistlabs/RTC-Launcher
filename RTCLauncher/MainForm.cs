@@ -454,6 +454,9 @@ namespace RTCV.Launcher
                         case "5":
                             lpForm = new LaunchPanelV5();
                             break;
+                        case "6":
+                            lpForm = new LaunchPanelV6();
+                            break;
                     }
                 }
             }
