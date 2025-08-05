@@ -173,6 +173,7 @@ namespace RTCV.Launcher
                 if (correctServer >= 0)
                 {
                     MainForm.UpdateSelectedServer(correctServer);
+                    downloadURL = new Uri($"{MainForm.webResourceDomain}/rtc/addons/" + Path.GetFileName(downloadedFile));
                 }
             }
 
