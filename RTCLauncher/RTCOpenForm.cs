@@ -12,13 +12,29 @@ namespace RTCV.Launcher
 {
     public partial class RTCOpenForm : Form
     {
-        public bool result;
+        public string newEmu;
 
-        public RTCOpenForm()
+        public RTCOpenForm(string newString)
         {
             InitializeComponent();
 
-            result = false;
+            newEmu = newString;
+
+            // This kind of sucks but filestub doesn't actually connect until we load something, so we can't swap to it.
+            // Still need to find out a way to check if it is already on filestub to avoid the opposite problem
+            if (newEmu.ToUpper().Contains("FILESTUB"))
+            {
+                label1.Text = "An instance of RTC is already running. Unfortunately, this implementation you selected cannot be swapped to.\r\n\r\nPlease save any work, shut down RTC, and then select this implementation again.";
+                button1.Hide();
+                button2.Text = "OK";
+            }
+            else
+            {
+                label1.Text = "An instance of RTC is already running. By continuing, the current emulator will be closed before opening the new emulator.\r\n\r\nAre you sure you want to continue?";
+                button1.Show();
+                button2.Text = "No";
+            }
+
         }
 
         private void RTCOpenForm_Load(object sender, EventArgs e)

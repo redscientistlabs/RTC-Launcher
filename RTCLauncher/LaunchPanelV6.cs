@@ -702,7 +702,7 @@ namespace RTCV.Launcher
 
             if (checkForRTC && Program.StandaloneRTCProcess != null && !Program.StandaloneRTCProcess.HasExited)
             {
-                var form = new RTCOpenForm();
+                var form = new RTCOpenForm(lcji.FolderName);
                 if (form.ShowDialog() == DialogResult.No)
                     return;
 
