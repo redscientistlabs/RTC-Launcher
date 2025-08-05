@@ -685,9 +685,18 @@ namespace RTCV.Launcher
 
                 if (result == DialogResult.Yes)
                 {
+                    var correctServer = MainForm.GetCorrectServer(lc.VersionLocation);
+                    if (correctServer >= 0)
+                    {
+                        MainForm.UpdateSelectedServer(correctServer);
+                    }
+
                     var downloadUrl = $"{MainForm.webResourceDomain}/rtc/addons/" + lcji.DownloadVersion + ".zip";
                     var downloadedFile = Path.Combine(MainForm.launcherDir, "PACKAGES", lcji.DownloadVersion + ".zip");
                     var extractDirectory = Path.Combine(lc.VersionLocation, lcji.FolderName);
+
+
+
 
                     MainForm.DownloadFile(new Uri(downloadUrl), downloadedFile, extractDirectory);
                 }
