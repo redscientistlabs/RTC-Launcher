@@ -120,10 +120,10 @@ namespace RTCV.Launcher
             this.cbSelectedServer.ForeColor = System.Drawing.Color.White;
             this.cbSelectedServer.FormattingEnabled = true;
             this.cbSelectedServer.Items.AddRange(new object[] {
-            "Stable Releases",
-            "Development",
-            "Historical",
-            "StepBack"});
+            MainForm.Servers.release.Name,
+            MainForm.Servers.dev.Name,
+            MainForm.Servers.historical.Name,
+            MainForm.Servers.stepBack.Name});
             this.cbSelectedServer.Location = new System.Drawing.Point(516, 10);
             this.cbSelectedServer.Name = "cbSelectedServer";
             this.cbSelectedServer.Size = new System.Drawing.Size(112, 21);

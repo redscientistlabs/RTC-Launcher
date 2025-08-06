@@ -228,7 +228,27 @@ namespace RTCV.Launcher
             if (ignoreServerChange)
                 return;
 
-            MainForm.UpdateSelectedServer(cbSelectedServer.SelectedIndex);
+            var server = MainForm.Servers.dev.Name;
+            switch (cbSelectedServer.SelectedIndex)
+            {
+                case 0:
+                    server = "Stable Releases";
+                    break;
+                case 1:
+                    server = "Development";
+                    break;
+                case 2:
+                    server = "Historical";
+                    break;
+                case 3:
+                    server = "StepBack";
+                    break;
+                default:
+                    server = "Development";
+                    break;
+            }
+
+            MainForm.UpdateSelectedServer(server);
 
             ReloadPanel();
         }
