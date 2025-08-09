@@ -706,7 +706,7 @@ namespace RTCV.Launcher
                 if (form.ShowDialog() == DialogResult.No)
                     return;
 
-                var message = new { Type = "UI|Remote_SwapImplementation", objectValue = new object[] { lcji.FolderName, null } };
+                var message = new { Type = "UI|Remote_SwapImplementation", objectValue = new object[] { lcji.FolderName } };
                 string jsonString = JsonConvert.SerializeObject(message);
                 byte[] sendBytes = Encoding.UTF8.GetBytes(jsonString);
 
