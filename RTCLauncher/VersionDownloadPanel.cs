@@ -36,7 +36,6 @@ namespace RTCV.Launcher
             if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
             {
                 backgroundColor = Color.FromArgb(32, 16, 16);
-                MainForm.webResourceDomain = MainForm.devServer;
 
                 if (Init)
                     cbSelectedServer.SelectedIndex = 1;
@@ -44,7 +43,6 @@ namespace RTCV.Launcher
             else if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt"))
             {
                 backgroundColor = Color.FromArgb(16, 16, 32);
-                MainForm.webResourceDomain = MainForm.historicalServer;
 
                 if (Init)
                     cbSelectedServer.SelectedIndex = 2;
@@ -52,7 +50,6 @@ namespace RTCV.Launcher
             else if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt"))
             {
                 backgroundColor = Color.FromArgb(32, 16, 32);
-                MainForm.webResourceDomain = MainForm.stepbackServer;
 
                 if (Init)
                     cbSelectedServer.SelectedIndex = 3;
@@ -60,7 +57,6 @@ namespace RTCV.Launcher
             else
             {
                 backgroundColor = Color.FromArgb(16, 16, 16);
-                MainForm.webResourceDomain = MainForm.releaseServer;
 
                 if (Init)
                     cbSelectedServer.SelectedIndex = 0;
@@ -232,29 +228,27 @@ namespace RTCV.Launcher
             if (ignoreServerChange)
                 return;
 
-            if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
-                File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt");
-            if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt"))
-                File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt");
-            if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt"))
-                File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt");
-
+            var server = MainForm.Servers.dev.Name;
             switch (cbSelectedServer.SelectedIndex)
             {
-                case 0: //release
+                case 0:
+                    server = "Stable Releases";
                     break;
-                case 1: //dev
-                    File.WriteAllText(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt", "DEV");
+                case 1:
+                    server = "Development";
                     break;
-                case 2: //historical
-                    File.WriteAllText(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt", "HISTORICAL");
+                case 2:
+                    server = "Historical";
                     break;
-                case 3: //stepback
-                    File.WriteAllText(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt", "STEPBACK");
+                case 3:
+                    server = "StepBack";
                     break;
                 default:
+                    server = "Development";
                     break;
             }
+
+            MainForm.UpdateSelectedServer(server);
 
             ReloadPanel();
         }

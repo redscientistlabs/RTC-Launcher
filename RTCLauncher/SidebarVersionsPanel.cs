@@ -79,12 +79,12 @@ namespace RTCV.Launcher
                     if (lbVersions.Items.Count > 0)
                         lbVersions.SelectedIndex = 0;
 
-                    if (MainForm.webResourceDomain == MainForm.stepbackServer)
+                    if (MainForm.webResourceDomain == MainForm.Servers.stepBack.URL)
                     {
                         if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt"))
                             File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt");
 
-                        MainForm.webResourceDomain = MainForm.releaseServer;
+                        MainForm.webResourceDomain = MainForm.Servers.release.URL;
                         MainForm.mf.RefreshMotd();
                     }
 

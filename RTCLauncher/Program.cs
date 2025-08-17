@@ -8,6 +8,8 @@ namespace RTCV.Launcher
 
     static class Program
     {
+        public static Process StandaloneRTCProcess = null;
+
         [DllImport("user32.dll")]
         static extern bool SetForegroundWindow(IntPtr hWnd);
         /// <summary>

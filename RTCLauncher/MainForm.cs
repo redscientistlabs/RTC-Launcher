@@ -67,14 +67,16 @@ namespace RTCV.Launcher
         internal static string versionsDir => Path.Combine(launcherDir, "VERSIONS");
         internal static string packagesDir => Path.Combine(launcherDir, "PACKAGES");
 
+        public static class Servers
+        {
+            public static (string Name, string URL) release = ("Stable Releases", "http://redscientist.com/software");
+            public static(string Name, string URL) dev = ("Development", "http://cc.r5x.cc");
+            public static(string Name, string URL) historical = ("Historical", "http://historical.optional.fun");
+            public static(string Name, string URL) stepBack = ("StepBack", "http://redscientist.com/stepback");
+        }
 
-        internal static string releaseServer = "http://redscientist.com/software";
-        internal static string devServer = "http://cc.r5x.cc";
-        internal static string historicalServer = "http://historical.optional.fun";
-        internal static string stepbackServer = "http://redscientist.com/stepback";
         internal static string buildFolder = null;
-        internal static string webResourceDomain = releaseServer;
-
+        internal static string webResourceDomain = Servers.release.URL;
 
         internal static MainForm mf = null;
         internal static VersionDownloadPanel vdppForm = null;
@@ -84,7 +86,7 @@ namespace RTCV.Launcher
         internal static DownloadForm dForm = null;
         internal static Form lpForm = null;
 
-        public const int launcherVer = 38;
+        public const int launcherVer = 39;
 
         internal static string SelectedVersion = null;
         internal static string lastSelectedVersion = null;
@@ -137,13 +139,13 @@ namespace RTCV.Launcher
                 Directory.CreateDirectory(packagesDir);
 
             if (File.Exists(Path.Combine(packagesDir, "dev.txt")))
-                webResourceDomain = devServer;
+                webResourceDomain = Servers.dev.URL;
             else if (File.Exists(Path.Combine(packagesDir, "historical.txt")))
-                webResourceDomain = historicalServer;
+                webResourceDomain = Servers.historical.URL;
             else if (File.Exists(Path.Combine(packagesDir, "stepback.txt")))
-                webResourceDomain = stepbackServer;
+                webResourceDomain = Servers.stepBack.URL;
             else
-                webResourceDomain = releaseServer;
+                webResourceDomain = Servers.release.URL;
 
             if (File.Exists(Path.Combine(packagesDir, "build.txt")))
                 buildFolder = File.ReadAllText(Path.Combine(packagesDir, "build.txt"));
@@ -165,6 +167,17 @@ namespace RTCV.Launcher
         public static void DownloadFile(Uri downloadURL, string downloadedFile, string extractDirectory)
         {
             mf.clearAnchorRight();
+
+            var extractParentDir = Directory.GetParent(extractDirectory);
+            if (extractParentDir.Name.StartsWith("RTC"))
+            {
+                var correctServer = GetCorrectServer(Directory.GetParent(extractDirectory).ToString());
+                if (correctServer != null)
+                {
+                    UpdateSelectedServer(correctServer);
+                    downloadURL = new Uri($"{webResourceDomain}/rtc/addons/" + Path.GetFileName(downloadedFile));
+                }
+            }
 
             dForm = new DownloadForm(downloadURL, downloadedFile, extractDirectory);
 
@@ -189,13 +202,13 @@ namespace RTCV.Launcher
             {
                 sideversionForm.lbVersions.SelectedIndex = 0;
 
-                if (MainForm.webResourceDomain == MainForm.stepbackServer)
+                if (webResourceDomain == Servers.stepBack.URL)
                 {
-                    if (File.Exists(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt"))
-                        File.Delete(MainForm.launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt");
+                    if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt"))
+                        File.Delete(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt");
 
-                    MainForm.webResourceDomain = MainForm.releaseServer;
-                    MainForm.mf.RefreshMotd();
+                    webResourceDomain = Servers.release.URL;
+                    mf.RefreshMotd();
                 }
             }
             else
@@ -454,6 +467,9 @@ namespace RTCV.Launcher
                         case "5":
                             lpForm = new LaunchPanelV5();
                             break;
+                        case "6":
+                            lpForm = new LaunchPanelV6();
+                            break;
                     }
                 }
             }
@@ -592,6 +608,10 @@ namespace RTCV.Launcher
             }
             finally
             {
+                var serverIniFile = (extractDirectory + Path.DirectorySeparatorChar + "launcher" + Path.DirectorySeparatorChar + "server.ini");
+                if (Directory.Exists(extractDirectory + Path.DirectorySeparatorChar + "launcher") && !File.Exists(serverIniFile))
+                    File.WriteAllText(serverIniFile, GetSelectedServer());
+
                 sideversionForm.lbVersions.SelectedIndex = -1;
 
                 RefreshInstalledVersions();
@@ -682,7 +702,7 @@ namespace RTCV.Launcher
 
         internal void InstallFromZip(string[] files = null, bool ask = true)
         {
-            var versionLocation = Path.Combine(MainForm.launcherDir, "VERSIONS");
+            var versionLocation = Path.Combine(launcherDir, "VERSIONS");
 
             if (files != null && files.Length > 0)
             {
@@ -807,6 +827,9 @@ namespace RTCV.Launcher
                             }
                         }
                     }
+                    var serverIniFile = (versionFolderPath + Path.DirectorySeparatorChar + "launcher" + Path.DirectorySeparatorChar + "server.ini");
+                    if (Directory.Exists(versionFolderPath + Path.DirectorySeparatorChar + "launcher") && !File.Exists(serverIniFile))
+                        File.WriteAllText(serverIniFile, GetSelectedServer());
                 }
                 catch (Exception ex)
                 {
@@ -817,7 +840,7 @@ namespace RTCV.Launcher
 
                 CheckForNeededLauncherUpdate(versionFolderPath);
 
-                MainForm.mf.RefreshPanel();
+                mf.RefreshPanel();
             }
         }
 
@@ -970,9 +993,73 @@ namespace RTCV.Launcher
             }
         }
 
+        public static string GetCorrectServer(string dir)
+        {
+            var serverVerIniPath = Path.Combine(Path.Combine(dir, "Launcher", "server.ini"));
+            string server = File.ReadAllText(serverVerIniPath).Trim();
+
+            if (server != null)
+            {
+                return server;
+            }
+
+            // If we couldn't find it, default to the dev server
+            return Servers.dev.Name;
+        }
+
+        public static string GetSelectedServer()
+        {
+            if (webResourceDomain == Servers.release.URL)
+                return Servers.release.Name;
+            else if (webResourceDomain == Servers.dev.URL)
+                return Servers.dev.Name;
+            else if (webResourceDomain == Servers.historical.URL)
+                return Servers.historical.Name;
+            else if (webResourceDomain == Servers.stepBack.URL)
+                return Servers.stepBack.Name;
+
+            // If we somehow don't have any, default to development
+            return Servers.dev.Name;
+        }
+
+        public static void UpdateSelectedServer(string server)
+        {
+            if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt"))
+                File.Delete(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt");
+            if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt"))
+                File.Delete(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt");
+            if (File.Exists(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt"))
+                File.Delete(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt");
+
+            if (server == Servers.release.Name)
+                webResourceDomain = Servers.release.URL;
+            else if (server == Servers.dev.Name)
+            {
+                File.WriteAllText(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt", "DEV");
+                webResourceDomain = Servers.dev.URL;
+            }
+            else if (server == Servers.historical.Name)
+            {
+                File.WriteAllText(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\historical.txt", "HISTORICAL");
+                webResourceDomain = Servers.historical.URL;
+            }
+            else if (server == Servers.stepBack.Name)
+            {
+                File.WriteAllText(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\stepback.txt", "STEPBACK");
+                webResourceDomain = Servers.stepBack.URL;
+            }
+            else
+            {
+                File.WriteAllText(launcherDir + Path.DirectorySeparatorChar + "PACKAGES\\dev.txt", "DEV");
+                webResourceDomain = Servers.dev.URL;
+            }
+        }
+
         internal void lbVersions_MouseDown(object sender, MouseEventArgs e)
         {
             var locate = new Point((sender as Control).Location.X + e.Location.X, (sender as Control).Location.Y + e.Location.Y + pnTopPanel.Height);
+
+            sideversionForm.lbVersions.SelectedIndex = sideversionForm.lbVersions.IndexFromPoint(e.Location);
 
             if (sideversionForm.lbVersions.SelectedIndex == -1)
             {
