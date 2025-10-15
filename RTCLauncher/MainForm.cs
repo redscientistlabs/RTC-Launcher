@@ -995,6 +995,11 @@ namespace RTCV.Launcher
 
         public static string GetCorrectServer(string dir)
         {
+            if (!File.Exists(Path.Combine(dir, "Launcher", "server.ini")))
+            {
+                return Servers.dev.Name;
+            }
+
             var serverVerIniPath = Path.Combine(Path.Combine(dir, "Launcher", "server.ini"));
             string server = File.ReadAllText(serverVerIniPath).Trim();
 
