@@ -91,6 +91,21 @@ namespace RTCV.Launcher
         internal static string SelectedVersion = null;
         internal static string lastSelectedVersion = null;
 
+        // https://stackoverflow.com/questions/58744/copy-the-entire-contents-of-a-directory-in-c-sharp
+        private void DirectoryCopy(string sourcePath, string targetPath)
+        {
+            // Now Create all the directories
+            foreach (var dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+            {
+                Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
+            }
+
+            // Copy all the files & Replaces any files with the same name
+            foreach (var newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+            {
+                File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
+            }
+        }
         public MainForm()
         {
             InitializeComponent();
@@ -104,6 +119,51 @@ namespace RTCV.Launcher
             {
                 MessageBox.Show("This is the wrong file. Please run the Launcher.exe located in the same root directory where your VERSIONS and PACKAGES folder reside. If that exe is missing, you can copy this one to that location and run it from there.");
                 Environment.Exit(-1);
+            }
+
+            string currentFolder = launcherDir;
+            string oneDriveFolder = oneDriveFolders.FirstOrDefault(s => currentFolder.Contains(Environment.GetEnvironmentVariable(s) ?? "|"));
+            while (oneDriveFolder != null)
+            {
+                MessageBox.Show($"RTC cannot be run from inside the OneDrive folder {oneDriveFolder}.\n" +
+                                "Please select a new folder to move RTC to.");
+                FolderBrowserDialog fbd = new FolderBrowserDialog
+                {
+                    Description = "Select a folder to move RTC to",
+                    ShowNewFolderButton = true,
+                    SelectedPath = @"C:\"
+                };
+                if (fbd.ShowDialog() == DialogResult.OK)
+                {
+                    currentFolder = fbd.SelectedPath;
+                }
+                var targetLauncherPath = Path.Combine(currentFolder, Path.GetFileName(Application.ExecutablePath));
+                if (File.Exists(targetLauncherPath))
+                {
+                    MessageBox.Show("RTC Launcher already exists in the selected folder. Please remove it first before moving RTC.");
+                    continue;
+                }
+                oneDriveFolder = oneDriveFolders.FirstOrDefault(s => currentFolder.Contains(Environment.GetEnvironmentVariable(s) ?? "|"));
+            }
+
+            if (currentFolder != launcherDir)
+            {
+                try
+                {
+                    DirectoryCopy(launcherDir, currentFolder);
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = currentFolder + Path.DirectorySeparatorChar + Path.GetFileName(Application.ExecutablePath),
+                        WorkingDirectory = currentFolder
+                    };
+                    Process.Start(psi);
+                    Environment.Exit(0);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred while moving RTC to the selected folder:\n\n{ex}\n\nPlease move it manually.");
+                    Environment.Exit(-1);
+                }
             }
 
             var preAnchorLeftPanelSize = new Size(pnLeftSide.Width, pnLeftSide.Height - btnVersionDownloader.Height);
@@ -484,6 +544,7 @@ namespace RTCV.Launcher
 
             AnchorPanel(lpForm);
         }
+        internal static readonly string[] oneDriveFolders = new[] { "OneDrive", "OneDriveConsumer", "OneDriveCommercial" };
 
         public void InvokeUI(Action a)
         {
