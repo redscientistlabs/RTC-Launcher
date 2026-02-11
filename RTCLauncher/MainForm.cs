@@ -1232,7 +1232,7 @@ namespace RTCV.Launcher
 
         private void btnQuit_MouseLeave(object sender, EventArgs e)
         {
-            btnQuit.BackColor = Color.FromArgb(64, 64, 64);
+            btnQuit.BackColor = Color.FromArgb(32, 32, 32);
         }
 
 
