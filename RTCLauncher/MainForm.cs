@@ -15,6 +15,7 @@ namespace RTCV.Launcher
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using RTCV.Launcher.Exceptions;
+    using Windows.Storage;
 
     internal partial class MainForm : Form
     {
@@ -122,16 +123,15 @@ namespace RTCV.Launcher
             }
 
             string currentFolder = launcherDir;
-            string oneDriveFolder = oneDriveFolders.FirstOrDefault(s => currentFolder.Contains(Environment.GetEnvironmentVariable(s) ?? "|"));
-            while (oneDriveFolder != null)
+            while (IsFolderInOneDrive(currentFolder))
             {
-                MessageBox.Show($"RTC cannot be run from inside the OneDrive folder {oneDriveFolder}.\n" +
+                MessageBox.Show($"RTC cannot be run from inside the OneDrive-backed folder {currentFolder}.\n" +
                                 "Please select a new folder to move RTC to.");
                 FolderBrowserDialog fbd = new FolderBrowserDialog
                 {
                     Description = "Select a folder to move RTC to",
                     ShowNewFolderButton = true,
-                    SelectedPath = @"C:\"
+                    SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
                 };
                 if (fbd.ShowDialog() == DialogResult.OK)
                 {
@@ -143,7 +143,6 @@ namespace RTCV.Launcher
                     MessageBox.Show("RTC Launcher already exists in the selected folder. Please remove it first before moving RTC.");
                     continue;
                 }
-                oneDriveFolder = oneDriveFolders.FirstOrDefault(s => currentFolder.Contains(Environment.GetEnvironmentVariable(s) ?? "|"));
             }
 
             if (currentFolder != launcherDir)
@@ -154,6 +153,7 @@ namespace RTCV.Launcher
                     ProcessStartInfo psi = new ProcessStartInfo
                     {
                         FileName = currentFolder + Path.DirectorySeparatorChar + Path.GetFileName(Application.ExecutablePath),
+                        Arguments = "--oldlauncherexe=\"" + Application.ExecutablePath + "\"",
                         WorkingDirectory = currentFolder
                     };
                     Process.Start(psi);
@@ -210,6 +210,20 @@ namespace RTCV.Launcher
             if (File.Exists(Path.Combine(packagesDir, "build.txt")))
                 buildFolder = File.ReadAllText(Path.Combine(packagesDir, "build.txt"));
 
+        }
+
+        private bool IsFolderInOneDrive(string dir)
+        {
+            try
+            {
+                Windows.Foundation.IAsyncOperation<StorageFolder> task = StorageFolder.GetFolderFromPathAsync(dir);
+                StorageFolder folder = WindowsRuntimeSystemExtensions.GetAwaiter(task).GetResult();
+                return folder.Provider.Id.ToLowerInvariant().Contains("onedrive");
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void RewireMouseMove()
@@ -544,7 +558,6 @@ namespace RTCV.Launcher
 
             AnchorPanel(lpForm);
         }
-        internal static readonly string[] oneDriveFolders = new[] { "OneDrive", "OneDriveConsumer", "OneDriveCommercial" };
 
         public void InvokeUI(Action a)
         {
