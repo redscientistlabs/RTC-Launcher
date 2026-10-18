@@ -46,11 +46,21 @@ namespace RTCV.Launcher
         private const int HT_BOTTOMLEFT = 0x10;
         private const int HT_BOTTOMRIGHT = 0x11;
 
-        [DllImportAttribute("user32.dll")]
+        [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
-        [DllImportAttribute("user32.dll")]
+        [DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern IntPtr LoadLibrary(string lpFileName);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
+        private static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool FreeLibrary(IntPtr hModule);
+
 
         internal void SuggestInstallZip(object sender, MouseEventArgs e)
         {
@@ -212,8 +222,32 @@ namespace RTCV.Launcher
 
         }
 
-        private bool IsFolderInOneDrive(string dir)
+        private static bool IsWine()
         {
+            IntPtr ntdll = LoadLibrary("ntdll.dll");
+            if (ntdll == IntPtr.Zero)
+                return false;
+
+            try
+            {
+                return GetProcAddress(ntdll, "wine_get_version") != IntPtr.Zero;
+            }
+            finally
+            {
+                FreeLibrary(ntdll);
+            }
+        }
+
+        private static bool IsFolderInOneDrive(string dir)
+        {
+            MessageBox.Show("IsFolderInOneDrive");
+            if (IsWine())
+            {
+                MessageBox.Show("Wine");
+                return false;
+            }
+            MessageBox.Show("not Wine");
+
             try
             {
                 Windows.Foundation.IAsyncOperation<StorageFolder> task = StorageFolder.GetFolderFromPathAsync(dir);
